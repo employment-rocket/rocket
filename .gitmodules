@@ -1,3 +1,0 @@
-[submodule "job-rocket-backend/config-files"]
-	path = job-rocket-backend/config-files
-	url = https://github.com/employment-rocket/rocket-backend-config.git
