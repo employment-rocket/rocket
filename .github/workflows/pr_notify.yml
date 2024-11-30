@@ -21,7 +21,7 @@ jobs:
                                 {
                                   "title" : "리뷰해주세요",                                    
                                   "short" : true,
-                                  "value" : "${{github.repositoryUrl}}"                         
+                                  "value" : "https://github.com/${{ github.repository }}"                   
                                 }
                               ]
                           }
