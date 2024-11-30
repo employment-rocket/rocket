@@ -1,0 +1,33 @@
+name: pr_notify
+on:
+    workflow_dispatch:
+#    pull_request:
+#       types: [opened]
+
+jobs:
+    slack:
+        runs-on: ubuntu-latest
+        steps:
+            - name: slack
+              uses: slackapi/slack-github-action@v1.24.0
+              with:
+                  payload: |
+                      {
+                      "attachments" : [
+                          {
+                            "pretext" : "새로운 PR이 있습니다.",
+                            "color" : "28a745",
+                            "fields" : [
+                                {
+                                  "title" : "리뷰해주세요",  
+                                  "title_link" : ${{github.repositoryUrl}}
+                                  "short" : true,
+                                  "value" : "리뷰해주세요"                              
+                                }
+                              ]
+                          }
+                        ]
+                      }
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
