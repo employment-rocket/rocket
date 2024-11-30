@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: slack
-              uses: slackapi/slack-github-action@v2.0.0
+              uses: slackapi/slack-github-action@v1.24.0
               with:
                   payload: |
                       {
@@ -29,4 +29,4 @@ jobs:
                       }
         env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL}}
-            SLACK_WEBHOOK_TYPE: incoming-webhook
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
