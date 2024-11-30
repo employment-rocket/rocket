@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: slack
-              uses: slackapi/slack-github-action@v1.24.0
+              uses: slackapi/slack-github-action@v2.0.0
               with:
                   payload: |
                       {
@@ -19,10 +19,9 @@ jobs:
                             "color" : "28a745",
                             "fields" : [
                                 {
-                                  "title" : "리뷰해주세요",  
-                                  "title_link" : ${{github.repositoryUrl}},
+                                  "title" : "리뷰해주세요",                                    
                                   "short" : true,
-                                  "value" : "리뷰해주세요"                              
+                                  "value" : "${{github.repositoryUrl}}"                         
                                 }
                               ]
                           }
