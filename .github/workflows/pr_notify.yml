@@ -20,7 +20,7 @@ jobs:
                             "fields" : [
                                 {
                                   "title" : "리뷰해주세요",  
-                                  "title_link" : ${{github.repositoryUrl}}
+                                  "title_link" : ${{github.repositoryUrl}},
                                   "short" : true,
                                   "value" : "리뷰해주세요"                              
                                 }
