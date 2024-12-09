@@ -6,7 +6,7 @@ const Site = () => {
 			className="flex justify-center content-center mt-20 space-x-11"
 			style={{ fontFamily: "CookieRegular" }}
 		>
-			<div className="flex flex-col w-[15%] items-center ">
+			<div className="flex flex-col w-[12%] items-center ">
 				<div
 					className="p-5 justify-center rounded-[10px] w-full flex"
 					style={{
@@ -72,7 +72,7 @@ const Site = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-[15%] items-center ">
+			<div className="flex flex-col w-[12%] items-center ">
 				<div
 					className="p-5 justify-center rounded-[10px] w-full flex"
 					style={{
@@ -105,7 +105,7 @@ const Site = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-[15%] items-center ">
+			<div className="flex flex-col w-[12%] items-center ">
 				<div
 					className="p-5 justify-center rounded-[10px] w-full flex"
 					style={{
@@ -138,7 +138,7 @@ const Site = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-[15%] items-center ">
+			<div className="flex flex-col w-[12%] items-center ">
 				<div
 					className="p-5 justify-center rounded-[10px] w-full flex"
 					style={{
@@ -189,7 +189,7 @@ const Site = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col w-[15%] items-center ">
+			<div className="flex flex-col w-[12%] items-center ">
 				<div
 					className="p-5 justify-center rounded-[10px] w-full flex"
 					style={{
