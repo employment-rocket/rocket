@@ -15,7 +15,7 @@ const Header = () => {
 			style={{ fontFamily: "CookieBold" }}
 		>
 			<div
-				className="flex justify-items-start content-center mx-2"
+				className="flex justify-items-start content-center mx-2 cursor-pointer"
 				onClick={() => navigate("/board")}
 			>
 				<img
@@ -35,7 +35,7 @@ const Header = () => {
 				style={{ fontSize: "1.3rem" }}
 			>
 				<div
-					className={`content-end ${
+					className={`cursor-pointer content-end ${
 						location.pathname.startsWith("/board")
 							? "text-blue-500"
 							: ""
@@ -45,7 +45,7 @@ const Header = () => {
 					게시판
 				</div>
 				<div
-					className={`content-end ${
+					className={`cursor-pointer content-end ${
 						location.pathname.startsWith("/schedule")
 							? "text-blue-500"
 							: ""
@@ -55,7 +55,7 @@ const Header = () => {
 					일정 관리
 				</div>
 				<div
-					className={`content-end ${
+					className={`cursor-pointer content-end ${
 						location.pathname.startsWith("/question")
 							? "text-blue-500"
 							: ""
@@ -65,7 +65,7 @@ const Header = () => {
 					면접 질문
 				</div>
 				<div
-					className={`content-end ${
+					className={`cursor-pointer content-end ${
 						location.pathname.startsWith("/site")
 							? "text-blue-500"
 							: ""
@@ -75,7 +75,7 @@ const Header = () => {
 					취준 도움 사이트
 				</div>
 				<div
-					className={`content-end ${
+					className={`cursor-pointer content-end ${
 						location.pathname.startsWith("/career")
 							? "text-blue-500"
 							: ""
