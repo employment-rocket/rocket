@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Header from "./components/common/Header.jsx";
 import Board from "./pages/Board.jsx";
 import Career from "./pages/Career.jsx";
@@ -14,7 +14,8 @@ createRoot(document.getElementById("root")).render(
 		<BrowserRouter>
 			<Header />
 			<Routes>
-				<Route path="/" element={<Board />} />
+				<Route path="/" element={<Navigate to="/board" replace />} />
+				<Route path="/board" element={<Board />} />
 				<Route path="/schedule" element={<Schedule />} />
 				<Route path="/question" element={<Question />} />
 				<Route path="/site" element={<Site />} />

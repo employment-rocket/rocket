@@ -1,11 +1,13 @@
 import React from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
+import profile from "../../assets/profile.png";
 
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 const Header = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	return (
 		<div
@@ -14,7 +16,7 @@ const Header = () => {
 		>
 			<div
 				className="flex justify-items-start content-center mx-2"
-				onClick={() => navigate("/")}
+				onClick={() => navigate("/board")}
 			>
 				<img
 					src={logo}
@@ -32,33 +34,59 @@ const Header = () => {
 				className="flex p-3 space-x-5 mx-5"
 				style={{ fontSize: "1.3rem" }}
 			>
-				<div className="content-end " onClick={() => navigate("/")}>
+				<div
+					className={`content-end ${
+						location.pathname.startsWith("/board")
+							? "text-blue-500"
+							: ""
+					}`}
+					onClick={() => navigate("/board")}
+				>
 					게시판
 				</div>
 				<div
-					className="content-end "
+					className={`content-end ${
+						location.pathname.startsWith("/schedule")
+							? "text-blue-500"
+							: ""
+					}`}
 					onClick={() => navigate("/schedule")}
 				>
 					일정 관리
 				</div>
 				<div
-					className="content-end "
+					className={`content-end ${
+						location.pathname.startsWith("/question")
+							? "text-blue-500"
+							: ""
+					}`}
 					onClick={() => navigate("/question")}
 				>
 					면접 질문
 				</div>
-				<div className="content-end " onClick={() => navigate("/site")}>
+				<div
+					className={`content-end ${
+						location.pathname.startsWith("/site")
+							? "text-blue-500"
+							: ""
+					}`}
+					onClick={() => navigate("/site")}
+				>
 					취준 도움 사이트
 				</div>
 				<div
-					className="content-end "
+					className={`content-end ${
+						location.pathname.startsWith("/career")
+							? "text-blue-500"
+							: ""
+					}`}
 					onClick={() => navigate("/career")}
 				>
 					커리어
 				</div>
 			</div>
 			<div className="flex items-center space-x-4 ml-auto mx-6">
-				<div>프로필</div>
+				<img src={profile} alt="프로필이미지" />
 				<img src={bell} alt="종" />
 			</div>
 		</div>
