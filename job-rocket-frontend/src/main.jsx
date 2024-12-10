@@ -8,9 +8,9 @@ import Career from "./pages/Career.jsx";
 import Schedule from "./pages/Schedule.jsx";
 import Question from "./pages/Question.jsx";
 import Site from "./pages/Site.jsx";
-import Calendar from "./components/schedule/Calendar.jsx";
-import ScheduleMain from "./components/schedule/ScheduleMain.jsx";
-import Statistics from "./components/schedule/Statistics.jsx";
+import Calendar from "./components/schedule/calendar/Calendar.jsx";
+import ScheduleMain from "./components/schedule/schedule/ScheduleMain.jsx";
+import Statistics from "./components/schedule/statistics/Statistics.jsx";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
