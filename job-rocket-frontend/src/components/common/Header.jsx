@@ -1,13 +1,15 @@
-import React from "react";
+import React,{useState} from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
 import profile from "../../assets/profile.png";
+import LoginPage from "../../pages/Login";
 
 import { useNavigate, useLocation } from "react-router";
 
 const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [isModalOpen, setModalOpen] = useState(false);
 
 	return (
 		<div
@@ -86,9 +88,16 @@ const Header = () => {
 				</div>
 			</div>
 			<div className="flex items-center space-x-4 ml-auto mx-6">
-				<img src={profile} alt="프로필이미지" />
+				<img src={profile} alt="프로필이미지"
+				onClick={()=>setModalOpen(true)}
+				/>
 				<img src={bell} alt="종" />
 			</div>
+
+			<LoginPage
+			isOpen={isModalOpen}
+			onClose ={()=>setModalOpen(false)}
+			/>
 		</div>
 	);
 };
