@@ -1,7 +1,21 @@
 import { React, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { api } from "../../../api/api";
 
 const ScheduleMain = () => {
+	api.get("/schedule")
+		.then(function (response) {
+			// 성공 핸들링
+			console.log(response);
+		})
+		.catch(function (error) {
+			// 에러 핸들링
+			console.log(error);
+		})
+		.finally(function () {
+			// 항상 실행되는 영역
+		});
+
 	// 초기 데이터
 	const [items, setItems] = useState([
 		{ id: "1", content: "Test 1" },
