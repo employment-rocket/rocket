@@ -1,34 +1,31 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { api } from "../../../api/api";
+import { useQuery } from "@tanstack/react-query";
+import { getSchedules } from "../../../api/schedule/schedule";
 
 const ScheduleMain = () => {
-	api.get("/schedule")
-		.then(function (response) {
-			// 성공 핸들링
-			console.log(response);
-		})
-		.catch(function (error) {
-			// 에러 핸들링
-			console.log(error);
-		})
-		.finally(function () {
-			// 항상 실행되는 영역
-		});
+	const { data, isLoading } = useQuery({
+		queryKey: ["schedule"], // 쿼리 식별자
+		queryFn: getSchedules, // 데이터 fetch 함수
+	});
 
 	// 초기 데이터
-	const [items, setItems] = useState([
-		{ id: "1", content: "Test 1" },
-		{ id: "2", content: "Test 2" },
-		{ id: "3", content: "Test 3" },
-	]);
+	const [documentItems, setDocumentItems] = useState([]);
+	const [firstItems, setFirstItems] = useState([]);
+	const [secondItems, setSecondItems] = useState([]);
+	const [finalItems, setFinalItems] = useState([]);
 
-	const [items2, setItems2] = useState([
-		{ id: "4", content: "Test 4" },
-		{ id: "5", content: "Test 5" },
-		{ id: "6", content: "Test 6" },
-	]);
+	useEffect(() => {
+		if (!isLoading || data) {
+			setDocumentItems(data.document);
+			setFirstItems(data.first);
+			setSecondItems(data.second);
+			setFinalItems(data.final);
+		}
+	}, [isLoading, data]);
 
+	if (isLoading) return <div>Loading...</div>;
+	console.log(data.first);
 	// 드래그 종료 시 처리 함수
 	const handleDragEnd = (result) => {
 		const { source, destination } = result;
@@ -36,166 +33,118 @@ const ScheduleMain = () => {
 		// 드롭 대상이 없을 경우 처리
 		if (!destination) return;
 
-		// 동일한 Droppable에서 아이템 재정렬
-		if (source.droppableId === destination.droppableId) {
-			const itemsToUpdate =
-				source.droppableId === "document" ? [...items] : [...items2];
-			const [movedItem] = itemsToUpdate.splice(source.index, 1);
-			itemsToUpdate.splice(destination.index, 0, movedItem);
+		const sourceList = getListByDroppableId(source.droppableId);
+		const destList = getListByDroppableId(destination.droppableId);
 
-			if (source.droppableId === "document") {
-				setItems(itemsToUpdate);
-			} else {
-				setItems2(itemsToUpdate);
-			}
-		} else {
-			// 다른 Droppable로 아이템 이동
-			const sourceList =
-				source.droppableId === "document" ? [...items] : [...items2];
-			const destList =
-				destination.droppableId === "document"
-					? [...items]
-					: [...items2];
+		// 아이템 이동 처리
+		const [movedItem] = sourceList.splice(source.index, 1);
+		destList.splice(destination.index, 0, movedItem);
 
-			const [movedItem] = sourceList.splice(source.index, 1);
-			destList.splice(destination.index, 0, movedItem);
+		// 상태 업데이트
+		updateListState(source.droppableId, sourceList);
+		updateListState(destination.droppableId, destList);
+	};
 
-			if (source.droppableId === "document") {
-				setItems(sourceList);
-				setItems2(destList);
-			} else {
-				setItems2(sourceList);
-				setItems(destList);
-			}
+	// Droppable ID에 따라 리스트 가져오기
+	const getListByDroppableId = (droppableId) => {
+		switch (droppableId) {
+			case "서류전형":
+				return documentItems;
+			case "1차면접":
+				console.log("test");
+				return firstItems;
+			case "2차면접":
+				return secondItems;
+			case "최종":
+				return finalItems;
+			default:
+				return [];
 		}
 	};
 
+	// Droppable ID에 따라 상태 업데이트
+	const updateListState = (droppableId, newList) => {
+		switch (droppableId) {
+			case "서류전형":
+				setDocumentItems(newList);
+				break;
+			case "1차면접":
+				console.log("test");
+				setFirstItems(newList);
+				break;
+			case "2차면접":
+				setSecondItems(newList);
+				break;
+			case "최종":
+				setFinalItems(newList);
+				break;
+			default:
+				break;
+		}
+	};
+
+	if (isLoading) return <div>Loading...</div>;
+
 	return (
 		<div className="flex flex-col space-y-4 h-screen w-full">
-			<div>test중입니다</div>
+			<div>Drag and Drop Example</div>
 
 			<div
-				className=" w-full h-[65%] rounded-[20px] p-3"
+				className="w-full h-[65%] rounded-[20px] p-3"
 				style={{ backgroundColor: "#3F83F8" }}
 			>
 				<DragDropContext onDragEnd={handleDragEnd}>
 					<div className="flex justify-around items-center h-full w-full">
-						<Droppable droppableId="document">
-							{(provided) => (
-								<div
-									ref={provided.innerRef}
-									{...provided.droppableProps}
-									className="bg-white h-[90%] w-[20%] rounded-2xl p-3 flex flex-col items-center space-y-7"
-								>
-									<div className="pt-6">서류 전형</div>
-									{items.map((item, index) => (
-										<Draggable
-											key={item.id}
-											index={index}
-											draggableId={item.id}
-										>
-											{(provided) => (
-												<div
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													ref={provided.innerRef}
-												>
-													{item.content}
-												</div>
-											)}
-										</Draggable>
-									))}
-								</div>
-							)}
-						</Droppable>
-
-						<Droppable droppableId="1">
-							{(provided) => (
-								<div
-									ref={provided.innerRef}
-									{...provided.droppableProps}
-									className="bg-white h-[90%] w-[20%] rounded-2xl p-3"
-								>
-									{items2.map((item, index) => (
-										<Draggable
-											key={item.id}
-											index={index}
-											draggableId={item.id}
-										>
-											{(provided) => (
-												<div
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													ref={provided.innerRef}
-												>
-													{item.content}
-												</div>
-											)}
-										</Draggable>
-									))}
-								</div>
-							)}
-						</Droppable>
-
-						<Droppable droppableId="1">
-							{(provided) => (
-								<div
-									ref={provided.innerRef}
-									{...provided.droppableProps}
-									className="bg-white h-[90%] w-[20%] rounded-2xl p-3"
-								>
-									{items2.map((item, index) => (
-										<Draggable
-											key={item.id}
-											index={index}
-											draggableId={item.id}
-										>
-											{(provided) => (
-												<div
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													ref={provided.innerRef}
-												>
-													{item.content}
-												</div>
-											)}
-										</Draggable>
-									))}
-								</div>
-							)}
-						</Droppable>
-
-						<Droppable droppableId="1">
-							{(provided) => (
-								<div
-									ref={provided.innerRef}
-									{...provided.droppableProps}
-									className="bg-white h-[90%] w-[20%] rounded-2xl p-3"
-								>
-									{items2.map((item, index) => (
-										<Draggable
-											key={item.id}
-											index={index}
-											draggableId={item.id}
-										>
-											{(provided) => (
-												<div
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-													ref={provided.innerRef}
-												>
-													{item.content}
-												</div>
-											)}
-										</Draggable>
-									))}
-								</div>
-							)}
-						</Droppable>
+						{["서류전형", "1차면접", "2차면접", "최종"].map(
+							(droppableId) => (
+								<DroppableArea
+									key={droppableId}
+									droppableId={droppableId}
+									items={getListByDroppableId(droppableId)}
+								/>
+							)
+						)}
 					</div>
 				</DragDropContext>
 			</div>
 		</div>
+	);
+};
+
+// Droppable 영역 컴포넌트
+const DroppableArea = ({ droppableId, items }) => {
+	return (
+		<Droppable droppableId={droppableId}>
+			{(provided) => (
+				<div
+					ref={provided.innerRef}
+					{...provided.droppableProps}
+					className="bg-white h-[90%] w-[20%] rounded-2xl p-3 flex flex-col items-center space-y-7"
+				>
+					<div className="pt-6 capitalize">{droppableId}</div>
+					{items.map((item, index) => (
+						<Draggable
+							key={item.id.toString()}
+							draggableId={item.id.toString()}
+							index={index}
+						>
+							{(provided) => (
+								<div
+									{...provided.draggableProps}
+									{...provided.dragHandleProps}
+									ref={provided.innerRef}
+									className="p-2 bg-gray-200 rounded-md"
+								>
+									{item.title}
+									{item.dueDate}
+								</div>
+							)}
+						</Draggable>
+					))}
+					{provided.placeholder}
+				</div>
+			)}
+		</Droppable>
 	);
 };
 
