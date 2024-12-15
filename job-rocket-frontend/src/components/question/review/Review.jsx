@@ -1,15 +1,15 @@
 import React from "react";
 
-const Introduce = ({ text, onDelete, onSelect }) => {
+const Review = ({ text, onDelete, onSelect }) => {
     return (
         <div
-            className="relative p-6 bg-blue-100 rounded-lg shadow-md cursor-pointer hover:bg-blue-200 transition"
+            className="relative p-6 bg-blue-100 rounded-lg shadow-md cursor-pointer hover:bg-blue-200 flex items-center justify-between"
             onClick={onSelect}
             style={{ fontFamily: "CookieBold" }}
         >
             <span className="text-sm text-gray-700">{text}</span>
             <button
-                className="absolute top-2 right-2 text-red-500 font-bold hover:text-red-700 transition"
+                className="absolute top-2 right-2 text-red-500 font-bold"
                 onClick={(e) => {
                     e.stopPropagation();
                     onDelete();
@@ -21,4 +21,4 @@ const Introduce = ({ text, onDelete, onSelect }) => {
     );
 };
 
-export default Introduce;
+export default Review;

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+import CheckedQuestion from "./CheckedQuestion";
 
-const CheckedQuestions = ({ className }) => {
-    const [checkedQuestions, setCheckedQuestions] = useState([]);
+const CheckedQuestions = ({ className, checkedQuestions, setCheckedQuestions }) => {
+    const handleDelete = (index) => {
+        setCheckedQuestions((prev) => prev.filter((_, i) => i !== index));
+    };
 
     return (
         <div
@@ -17,11 +20,11 @@ const CheckedQuestions = ({ className }) => {
             ) : (
                 <ul className="space-y-2">
                     {checkedQuestions.map((question, index) => (
-                        <li
-                            key={index}
-                            className="text-sm text-gray-700 border rounded-md p-2 hover:bg-gray-100"
-                        >
-                            {question}
+                        <li key={index}>
+                            <CheckedQuestion
+                                question={question}
+                                onDelete={() => handleDelete(index)}
+                            />
                         </li>
                     ))}
                 </ul>
