@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import CsQuestion from "./CsQuestion";
 
 const allQuestions = [
-    { id: 1, category: "네트워크", question: "점심 메뉴로 뜨뜻국수가 좋은가 아니면 붕어빵이 좋은가?" },
-    { id: 2, category: "데이터베이스", question: "왜 침대에 누워있으면 중력이 강해지는 걸까?" },
-    { id: 3, category: "운영체제", question: "나는 언제 취업할 수 있는가?" },
-    { id: 4, category: "자료구조", question: "동구 히야는 언제쯤 정처기를 따는 걸까" },
-    { id: 5, category: "네트워크", question: "CS 지식 5" },
-    { id: 6, category: "데이터베이스", question: "CS 지식 6" },
+    { id: 1, category: "네트워크", question: "점심 메뉴로 뜨뜻국수가 좋은가 아니면 붕어빵이 좋은가?", recommendedAnswer: "날씨에 따라 다르지만 국수가 더 따뜻할 겁니다." },
+    { id: 2, category: "데이터베이스", question: "왜 침대에 누워있으면 중력이 강해지는 걸까?", recommendedAnswer: "이는 몸의 피로가 해소되며 느껴지는 심리적 영향 때문입니다." },
+    { id: 3, category: "운영체제", question: "나는 언제 취업할 수 있는가?", recommendedAnswer: "노력한 만큼 결과가 나올 테니 포기하지 마세요." },
+    { id: 4, category: "자료구조", question: "동구 히야는 언제쯤 정처기를 따는 걸까", recommendedAnswer: "준비를 꾸준히 하면 올해 안에도 가능합니다." },
+    { id: 5, category: "네트워크", question: "CS 지식 5", recommendedAnswer: "이 질문에 대한 적절한 자료를 참고하세요." },
+    { id: 6, category: "데이터베이스", question: "CS 지식 6", recommendedAnswer: "데이터 모델링과 쿼리 최적화를 공부해 보세요." },
 ];
 
 const subcategories = ["네트워크", "데이터베이스", "운영체제", "자료구조"];
@@ -76,6 +76,7 @@ const CsQuestionBox = ({ onAddCheckedQuestion, onRemoveCheckedQuestion }) => {
                                 key={q.id}
                                 question={q.question}
                                 category={q.category}
+                                recommendedAnswer={q.recommendedAnswer}
                                 onAddCheckedQuestion={onAddCheckedQuestion}
                                 onRemoveCheckedQuestion={onRemoveCheckedQuestion}
                             />
