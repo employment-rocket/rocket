@@ -8,8 +8,7 @@ services:
     backend:
         build: ./job-rocket-backend
         container_name: rocket-backend
-        ports:
-            - "8080:8080"
+
     frontend:
         build: ./job-rocket-frontend
         container_name: rocket-frontend

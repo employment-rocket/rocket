@@ -2,11 +2,12 @@ import { React, useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQuery } from "@tanstack/react-query";
 import { getSchedules } from "../../../api/schedule/schedule";
+import ScheduleItem from "./ScheduleItem";
 
 const ScheduleMain = () => {
 	const { data, isLoading } = useQuery({
-		queryKey: ["schedule"], // 쿼리 식별자
-		queryFn: getSchedules, // 데이터 fetch 함수
+		queryKey: ["schedule"],
+		queryFn: getSchedules,
 	});
 
 	// 초기 데이터
@@ -25,7 +26,7 @@ const ScheduleMain = () => {
 	}, [isLoading, data]);
 
 	if (isLoading) return <div>Loading...</div>;
-	console.log(data.first);
+
 	// 드래그 종료 시 처리 함수
 	const handleDragEnd = (result) => {
 		const { source, destination } = result;
@@ -51,7 +52,6 @@ const ScheduleMain = () => {
 			case "서류전형":
 				return documentItems;
 			case "1차면접":
-				console.log("test");
 				return firstItems;
 			case "2차면접":
 				return secondItems;
@@ -69,7 +69,6 @@ const ScheduleMain = () => {
 				setDocumentItems(newList);
 				break;
 			case "1차면접":
-				console.log("test");
 				setFirstItems(newList);
 				break;
 			case "2차면접":
@@ -87,10 +86,8 @@ const ScheduleMain = () => {
 
 	return (
 		<div className="flex flex-col space-y-4 h-screen w-full">
-			<div>Drag and Drop Example</div>
-
 			<div
-				className="w-full h-[65%] rounded-[20px] p-3"
+				className="w-full h-[70%] rounded-[20px] p-3"
 				style={{ backgroundColor: "#3F83F8" }}
 			>
 				<DragDropContext onDragEnd={handleDragEnd}>
@@ -119,7 +116,7 @@ const DroppableArea = ({ droppableId, items }) => {
 				<div
 					ref={provided.innerRef}
 					{...provided.droppableProps}
-					className="bg-white h-[90%] w-[20%] rounded-2xl p-3 flex flex-col items-center space-y-7"
+					className="bg-white h-[90%] w-[20%] rounded-2xl p-3 flex flex-col items-center space-y-7 overflow-y-auto"
 				>
 					<div className="pt-6 capitalize">{droppableId}</div>
 					{items.map((item, index) => (
@@ -133,10 +130,9 @@ const DroppableArea = ({ droppableId, items }) => {
 									{...provided.draggableProps}
 									{...provided.dragHandleProps}
 									ref={provided.innerRef}
-									className="p-2 bg-gray-200 rounded-md"
+									className="p-2 rounded-md w-full bg-blue-300"
 								>
-									{item.title}
-									{item.dueDate}
+									<ScheduleItem item={item} />
 								</div>
 							)}
 						</Draggable>
