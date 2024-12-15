@@ -10,6 +10,7 @@ import lombok.Getter;
 public class CsResDto {
     private Long qid;
     private String question;
+    private String subcategory;
     private String suggested;
     private String answer;
 }

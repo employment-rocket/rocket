@@ -25,5 +25,5 @@ public class AnswerEntity {
 
     private String category;
 
-    private boolean isIn = false;
+    private boolean isIn;
 }

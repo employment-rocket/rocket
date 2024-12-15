@@ -20,7 +20,7 @@ public class CsEntity {
     @Id
     @GeneratedValue
     private Long qid;
-
     private String question;
+    private String subcategory;
     private String suggested;
 }

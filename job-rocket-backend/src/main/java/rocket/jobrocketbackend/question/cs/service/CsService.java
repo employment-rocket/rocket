@@ -34,6 +34,7 @@ public class CsService {
         return new CsResDto(
                 entity.getQid(),
                 entity.getQuestion(),
+                entity.getSubcategory(),
                 entity.getSuggested(),
                 answerEntity.map(AnswerEntity::getContent).orElse("")
         );

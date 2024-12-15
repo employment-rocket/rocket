@@ -10,7 +10,7 @@ import rocket.jobrocketbackend.question.personal.dto.response.PersonalResDto;
 import rocket.jobrocketbackend.question.personal.service.PersonalService;
 
 @RestController
-@RequestMapping("/questions/cs")
+@RequestMapping("/questions/personal")
 @RequiredArgsConstructor
 public class PersonalController {
     private final PersonalService personalService;
