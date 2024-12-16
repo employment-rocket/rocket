@@ -2,8 +2,21 @@ import React from "react";
 import logo from "../assets/logo.png";
 import naver from "../assets/naver.png";
 import kakao from "../assets/kakao.png";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
+
+
 
 const LoginPage = ({ isOpen, onClose }) => {
+
+    const host = 'http://localhost:8080';
+
+    const handleClickKakaoLogin = () =>{
+        window.kakao.Auth.authorize({
+            redirectUri: `${host}/login/oauth2/code/kakao`,
+        });
+    };
+
 	if (!isOpen) return null;
 
 	return (
@@ -16,7 +29,6 @@ const LoginPage = ({ isOpen, onClose }) => {
 				>
 					&times;
 				</button>
-				{/* 로그인 UI */}
 				<div className="text-center">
 					<h2 className="text-3xl font-bold mb-4">시작하기</h2>
                     <img
@@ -45,6 +57,7 @@ const LoginPage = ({ isOpen, onClose }) => {
    
                 <button
                     class="w-full max-w-[416px] h-20 bg-white border border-blue-500 shadow rounded-xl flex items-center px-6 mt-8 ml-4"
+                    onClick={handleClickKakaoLogin}
                  >
                     <img
                         class="ml-3 w-15 h-14 rounded-lg"
