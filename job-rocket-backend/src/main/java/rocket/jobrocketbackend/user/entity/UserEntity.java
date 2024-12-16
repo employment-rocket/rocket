@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.user.domain;
+package rocket.jobrocketbackend.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import rocket.jobrocketbackend.common.entity.Role;
 @NoArgsConstructor
 @Table(name="member")
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -23,7 +24,7 @@ public class UserEntity {
 
     private String nickname;
     private String profile;
-    private String setemail;
+    private Boolean setemail;
     private String refreshToken;
 
     @Builder
@@ -33,7 +34,7 @@ public class UserEntity {
         this.role=role;
         this.nickname=nickname;
         this.profile=profile;
-        this.setemail= String.valueOf(setemail);
+        this.setemail=setemail;
         this.refreshToken=refreshToken;
     }
 }
