@@ -82,6 +82,13 @@ const ScheduleMain = () => {
 		}
 	};
 
+	const handleDelete = (id, droppableId) => {
+		console.log("id = ", id, " droppableId = ", id);
+		const list = getListByDroppableId(droppableId);
+		const updatedList = list.filter((item) => item.id !== id);
+		updateListState(droppableId, updatedList);
+	};
+
 	if (isLoading) return <div>Loading...</div>;
 
 	return (
@@ -98,6 +105,7 @@ const ScheduleMain = () => {
 									key={droppableId}
 									droppableId={droppableId}
 									items={getListByDroppableId(droppableId)}
+									handleDelete={handleDelete}
 								/>
 							)
 						)}
@@ -109,38 +117,44 @@ const ScheduleMain = () => {
 };
 
 // Droppable 영역 컴포넌트
-const DroppableArea = ({ droppableId, items }) => {
+const DroppableArea = ({ droppableId, items, handleDelete }) => {
 	return (
-		<Droppable droppableId={droppableId}>
-			{(provided) => (
-				<div
-					ref={provided.innerRef}
-					{...provided.droppableProps}
-					className="bg-white h-[90%] w-[20%] rounded-2xl p-3 flex flex-col items-center space-y-7 overflow-y-auto"
-				>
-					<div className="pt-6 capitalize">{droppableId}</div>
-					{items.map((item, index) => (
-						<Draggable
-							key={item.id.toString()}
-							draggableId={item.id.toString()}
-							index={index}
-						>
-							{(provided) => (
-								<div
-									{...provided.draggableProps}
-									{...provided.dragHandleProps}
-									ref={provided.innerRef}
-									className="p-2 rounded-md w-full bg-blue-300"
-								>
-									<ScheduleItem item={item} />
-								</div>
-							)}
-						</Draggable>
-					))}
-					{provided.placeholder}
-				</div>
-			)}
-		</Droppable>
+		<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl ">
+			<div className="pt-6 capitalize">{droppableId}</div>
+			<Droppable droppableId={droppableId}>
+				{(provided) => (
+					<div
+						ref={provided.innerRef}
+						{...provided.droppableProps}
+						className=" h-full w-full  p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
+					>
+						{items.map((item, index) => (
+							<Draggable
+								key={item.id.toString()}
+								draggableId={item.id.toString()}
+								index={index}
+							>
+								{(provided) => (
+									<div
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+										ref={provided.innerRef}
+										className="p-2 rounded-md w-full bg-blue-300"
+									>
+										<ScheduleItem
+											item={item}
+											droppableId={droppableId}
+											handleDelete={handleDelete}
+										/>
+									</div>
+								)}
+							</Draggable>
+						))}
+						{provided.placeholder}
+					</div>
+				)}
+			</Droppable>
+		</div>
 	);
 };
 
