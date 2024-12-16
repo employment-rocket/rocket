@@ -5,9 +5,17 @@ networks:
         driver: bridge
 
 services:
+    database:
+        build: ./job-rocket-database
+        container_name: rocket-database
+        volumes:
+            - mysql_data:/var/lib/mysql
+
     backend:
         build: ./job-rocket-backend
         container_name: rocket-backend
+        depends_on:
+            - database
 
     frontend:
         build: ./job-rocket-frontend
@@ -16,3 +24,6 @@ services:
             - "80:80"
         depends_on:
             - backend
+
+volumes:
+    mysql_data:
