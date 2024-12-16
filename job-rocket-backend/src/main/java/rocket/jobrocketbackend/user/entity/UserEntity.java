@@ -24,17 +24,17 @@ public class UserEntity {
 
     private String nickname;
     private String profile;
-    private Boolean setemail;
+    private Boolean allowEmail;
     private String refreshToken;
 
     @Builder
-    public UserEntity(Long id, String email, Role role, String nickname, String profile, Boolean setemail, String refreshToken){
+    public UserEntity(Long id, String email, Role role, String nickname, String profile, Boolean allowEmail, String refreshToken){
         this.id=id;
         this.email=email;
         this.role=role;
         this.nickname=nickname;
         this.profile=profile;
-        this.setemail=setemail;
+        this.allowEmail=allowEmail;
         this.refreshToken=refreshToken;
     }
 }
