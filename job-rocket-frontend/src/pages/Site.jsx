@@ -2,235 +2,96 @@ import React from "react";
 
 const Site = () => {
 	return (
-		<div
-			className="flex justify-center content-center mt-20 space-x-11"
-			style={{ fontFamily: "CookieRegular" }}
-		>
-			<div className="flex flex-col w-[12%] items-center ">
+		<div className="flex justify-center w-full mt-5" style={{ fontFamily: "CookieRegular" }}>
+			{[
+				{
+					title: "채용 공고",
+					links: [
+						{ name: "잡코리아", url: "https://www.jobkorea.co.kr/" },
+						{ name: "사람인", url: "https://www.saramin.co.kr/zf_user/" },
+						{ name: "원티드", url: "https://www.wanted.co.kr/" },
+						{ name: "로켓펀치", url: "https://www.rocketpunch.com/" },
+						{ name: "점핏", url: "https://jumpit.saramin.co.kr/" },
+						{ name: "자소설닷컴", url: "https://jasoseol.com/" },
+						{ name: "직행", url: "https://zighang.com/" },
+						{ name: "잡플래닛", url: "https://www.jobplanet.co.kr/job" },
+						{ name: "캐치", url: "https://www.catch.co.kr/" },
+						{ name: "슈퍼루키", url: "https://www.superookie.com/" },
+					],
+				},
+				{
+					title: "취준 커뮤니티",
+					links: [
+						{ name: "링커리어", url: "https://linkareer.com/" },
+						{ name: "스펙업", url: "https://cafe.naver.com/specup" },
+						{ name: "독취사", url: "https://cafe.naver.com/dokchi" },
+						{ name: "코멘토", url: "https://comento.kr/?index" },
+					],
+				},
+				{
+					title: "기업 분석",
+					links: [
+						{ name: "잡플래닛", url: "https://www.jobplanet.co.kr/job" },
+						{ name: "캐치", url: "https://www.catch.co.kr/" },
+						{ name: "DART", url: "https://dart.fss.or.kr/" },
+						{ name: "한경 컨센서스", url: "https://consensus.hankyung.com/" },
+					],
+				},
+				{
+					title: "대외 활동",
+					links: [
+						{ name: "슈퍼루키", url: "https://www.superookie.com/" },
+						{ name: "링커리어", url: "https://linkareer.com/" },
+						{ name: "요즘것들", url: "https://www.allforyoung.com/" },
+						{ name: "슥삭", url: "https://www.ssgsag.kr/" },
+						{ name: "캠퍼스픽", url: "https://www.campuspick.com/" },
+						{ name: "씽굿", url: "https://www.thinkcontest.com/thinkgood/index.do" },
+						{ name: "올콘", url: "https://www.all-con.co.kr/" },
+					],
+				},
+				{
+					title: "코딩 테스트",
+					links: [
+						{ name: "백준", url: "https://www.acmicpc.net/" },
+						{ name: "프로그래머스", url: "https://programmers.co.kr/" },
+						{ name: "소프티어", url: "https://www.softeer.ai/" },
+						{ name: "리트코드", url: "https://leetcode.com/" },
+						{ name: "구름", url: "https://level.goorm.io/" },
+						{ name: "코드트리", url: "https://www.codetree.ai/landing" },
+					],
+				},
+			].map((section, idx) => (
 				<div
-					className="p-5 justify-center rounded-[10px] w-full flex"
-					style={{
-						backgroundColor: "#3F83F8",
-						color: "white",
-						fontFamily: "CookieBold",
-					}}
+					key={idx}
+					className={`flex flex-col w-[18%] items-center px-3 ${idx !== 4 ? "border-r border-gray-300" : ""
+						}`}
 				>
-					<div>채용 공고</div>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.jobkorea.co.kr/" target="_blank">
-						잡코리아
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a
-						href="https://www.saramin.co.kr/zf_user/"
-						target="_blank"
+					<div
+						className="p-4 justify-center rounded-[10px] w-full flex mb-3"
+						style={{
+							backgroundColor: "#3F83F8",
+							color: "white",
+							fontFamily: "CookieBold",
+							marginBottom: "10px",
+						}}
 					>
-						사람인
-					</a>
+						{section.title}
+					</div>
+					<div className="space-y-3">
+						{section.links.map((link, linkIdx) => (
+							<a
+								key={linkIdx}
+								href={link.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="block text-center"
+							>
+								{link.name}
+							</a>
+						))}
+					</div>
 				</div>
-				<div className="p-4 ">
-					<a href="https://www.wanted.co.kr/" target="_blank">
-						원티드
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.rocketpunch.com/" target="_blank">
-						로켓펀치
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://jumpit.saramin.co.kr/" target="_blank">
-						점핏
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://jasoseol.com/" target="_blank">
-						자소설닷컴
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://zighang.com/" target="_blank">
-						직행
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.jobplanet.co.kr/job" target="_blank">
-						잡플래닛
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.catch.co.kr/" target="_blank">
-						캐치
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.superookie.com/" target="_blank">
-						슈퍼루키
-					</a>
-				</div>
-			</div>
-
-			<div className="flex flex-col w-[12%] items-center ">
-				<div
-					className="p-5 justify-center rounded-[10px] w-full flex"
-					style={{
-						backgroundColor: "#3F83F8",
-						color: "white",
-						fontFamily: "CookieBold",
-					}}
-				>
-					<div>취준 커뮤니티</div>
-				</div>
-				<div className="p-4 ">
-					<a href="https://linkareer.com/" target="_blank">
-						링커리어
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://cafe.naver.com/specup" target="_blank">
-						스펙업
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://cafe.naver.com/dokchi" target="_blank">
-						독취사
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://comento.kr/?index" target="_blank">
-						코멘토
-					</a>
-				</div>
-			</div>
-
-			<div className="flex flex-col w-[12%] items-center ">
-				<div
-					className="p-5 justify-center rounded-[10px] w-full flex"
-					style={{
-						backgroundColor: "#3F83F8",
-						color: "white",
-						fontFamily: "CookieBold",
-					}}
-				>
-					<div>기업 분석</div>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.jobplanet.co.kr/job" target="_blank">
-						잡플래닛
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.catch.co.kr/" target="_blank">
-						캐치
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://dart.fss.or.kr/" target="_blank">
-						DART
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://consensus.hankyung.com/" target="_blank">
-						한경 컨센서스
-					</a>
-				</div>
-			</div>
-
-			<div className="flex flex-col w-[12%] items-center ">
-				<div
-					className="p-5 justify-center rounded-[10px] w-full flex"
-					style={{
-						backgroundColor: "#3F83F8",
-						color: "white",
-						fontFamily: "CookieBold",
-					}}
-				>
-					<div>대외 활동</div>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.superookie.com/" target="_blank">
-						슈퍼루키
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://linkareer.com/" target="_blank">
-						링커리어
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.allforyoung.com/" target="_blank">
-						요즘것들
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.ssgsag.kr/" target="_blank">
-						슥삭
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.campuspick.com/" target="_blank">
-						캠퍼스픽
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a
-						href="https://www.thinkcontest.com/thinkgood/index.do"
-						target="_blank"
-					>
-						씽굿
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.all-con.co.kr/" target="_blank">
-						올콘
-					</a>
-				</div>
-			</div>
-
-			<div className="flex flex-col w-[12%] items-center ">
-				<div
-					className="p-5 justify-center rounded-[10px] w-full flex"
-					style={{
-						backgroundColor: "#3F83F8",
-						color: "white",
-						fontFamily: "CookieBold",
-					}}
-				>
-					<div>코딩 테스트</div>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.acmicpc.net/" target="_blank">
-						백준
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://programmers.co.kr/" target="_blank">
-						프로그래머스
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.softeer.ai/" target="_blank">
-						소프티어
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://leetcode.com/" target="_blank">
-						리트코드
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://level.goorm.io/" target="_blank">
-						구름
-					</a>
-				</div>
-				<div className="p-4 ">
-					<a href="https://www.codetree.ai/landing" target="_blank">
-						코드트리
-					</a>
-				</div>
-			</div>
+			))}
 		</div>
 	);
 };
