@@ -1,4 +1,3 @@
-/*
 package rocket.jobrocketbackend.aouth.util;
 
 import jakarta.servlet.FilterChain;
@@ -79,4 +78,3 @@ public class JWTFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-*/

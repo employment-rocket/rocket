@@ -1,4 +1,3 @@
-/*
 package rocket.jobrocketbackend.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -16,4 +15,3 @@ public class CorsMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:5173");
     }
 }
-*/
