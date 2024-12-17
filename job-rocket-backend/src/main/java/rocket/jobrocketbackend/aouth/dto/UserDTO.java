@@ -1,11 +1,13 @@
 package rocket.jobrocketbackend.aouth.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import rocket.jobrocketbackend.common.entity.Role;
 
 @Getter
 @RequiredArgsConstructor
+@Builder
 public class UserDTO {
     private Role role;       // ROLE_MEMBER 등 역할
     private String nickname;   // 사용자 닉네임
