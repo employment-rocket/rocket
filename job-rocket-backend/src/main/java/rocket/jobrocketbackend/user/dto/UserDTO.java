@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.aouth.dto;
+package rocket.jobrocketbackend.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;

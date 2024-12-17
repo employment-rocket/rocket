@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.aouth.dto.*;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.common.entity.SocialType;
+import rocket.jobrocketbackend.user.dto.UserDTO;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 

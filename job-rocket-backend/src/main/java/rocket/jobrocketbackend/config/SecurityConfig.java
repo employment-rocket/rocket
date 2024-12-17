@@ -1,3 +1,4 @@
+/*
 package rocket.jobrocketbackend.config;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +20,6 @@ import rocket.jobrocketbackend.aouth.util.JWTUtil;
 import java.util.Collections;
 
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -38,7 +38,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -76,7 +76,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/","/h2-console/**").permitAll()
                         .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
@@ -88,3 +88,4 @@ public class SecurityConfig {
 
     }
 }
+ */
