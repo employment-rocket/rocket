@@ -22,26 +22,28 @@ public class UserEntity {
     private String nickname;
     private String profile;
 
+    private String username;
+
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean allowEmail;
+    @Column(nullable = false)
+    private Boolean allowEmail=false;
 
     @Builder
-    public UserEntity(String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail) {
+    public UserEntity(Long id, String email, String nickname, String profile, String username, SocialType socialType, Role role, Boolean allowEmail) {
+        this.id=id;
         this.email = email;
         this.nickname = nickname;
         this.profile = profile;
+        this.username=username;
         this.socialType=socialType;
         this.allowEmail=allowEmail;
         this.role = role;
     }
 
-    public UserEntity oAuthInfoUpdate(String nickname) {
-        this.nickname = nickname;
-        return this;
-    }
+
 }
