@@ -1,21 +1,26 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import naver from "../assets/naver.png";
-import kakao from "../assets/kakao.png";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import kakaoImage from "../assets/kakao.png";
+
 
 
 
 const LoginPage = ({ isOpen, onClose }) => {
 
-    const host = 'http://localhost:8080';
+    // 환경 변수에서 API 키와 Redirect URL 가져오기
+  const REST_API_KEY = '714bf4a422faf6cbe152f3e8b10c01e7';
+  const REDIRECT_URI = 'http://localhost:5173/login/oauth2/callback/kakao';
 
-    const handleClickKakaoLogin = () =>{
-        window.kakao.Auth.authorize({
-            redirectUri: `${host}/login/oauth2/code/kakao`,
-        });
-    };
+  // 카카오 인증 URL 생성
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  // 카카오 로그인 버튼 클릭 핸들러
+  const handleClickKakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
+
+      };
+    
 
 	if (!isOpen) return null;
 
@@ -61,7 +66,7 @@ const LoginPage = ({ isOpen, onClose }) => {
                  >
                     <img
                         class="ml-3 w-15 h-14 rounded-lg"
-                        src={kakao}
+                        src={kakaoImage}
                         alt="카카오 로고"
                     />
                 <p class="flex-grow text-center text-2xl font-bold text-black">
@@ -75,6 +80,5 @@ const LoginPage = ({ isOpen, onClose }) => {
 			</div>
 		</div>
 	);
-};
-
+}
 export default LoginPage;
