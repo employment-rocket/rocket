@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import rocket.jobrocketbackend.common.entity.Role;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 @Getter
 @RequiredArgsConstructor
@@ -19,6 +20,13 @@ public class UserDTO {
         this.nickname=nickname;
         this.profile=profile;
         this.email=email;
-
+    }
+    public static  UserDTO from(UserEntity userEntity){
+        return UserDTO.builder()
+                .role(userEntity.getRole())
+                .nickname(userEntity.getNickname())
+                .email(userEntity.getEmail())
+                .profile(userEntity.getProfile())
+                .build();
     }
 }

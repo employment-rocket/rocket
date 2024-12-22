@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router";
+import api from "../../api/api";
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
@@ -11,14 +11,16 @@ const KakaoLogin = () => {
   useEffect(() => {
     const kakaoLogin = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/login/oauth2/kakao", {
+            const response = await api.get("/login/oauth2/kakao", {
               params: { code }, // 쿼리 파라미터로 'code' 전달
               withCredentials: true, // 쿠키 저장을 위해 필요
             });
             
             // 서버로부터 받은 데이터를 확인
             console.log("Access Token: ",response.data);
-    
+
+            localStorage.setItem("Authorization", response.data);
+            
             // 로그인 성공 후, 메인 페이지로 이동
             if (response.status === 200) {
               navigate("/");

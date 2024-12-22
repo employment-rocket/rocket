@@ -13,21 +13,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("/login")
 @Slf4j
+@RequiredArgsConstructor
 public class OAuthController {
 
 
     private final KakaoOAuthService kakaoOAuthService;
 
-    @Autowired
-    public OAuthController(KakaoOAuthService kakaoOAuthService) {
-        this.kakaoOAuthService = kakaoOAuthService;
-    }
-
 
     @GetMapping("/oauth2/kakao")
-    public ResponseEntity<String> getKakao(@RequestParam String code) throws JsonProcessingException {
-        log.info("code = {}", code);
-        String token = kakaoOAuthService.getKakaoAccessToken(code);
-        return ResponseEntity.ok("Access Token"+token);
+    public ResponseEntity<String> getKakao(@RequestParam("code") String code) throws JsonProcessingException {
+        String token = kakaoOAuthService.getAccessToken(code);
+        return ResponseEntity.ok(token);
     }
 }

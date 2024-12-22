@@ -1,4 +1,4 @@
-/*
+
 package rocket.jobrocketbackend.oauth.util;
 
 import jakarta.servlet.FilterChain;
@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +16,7 @@ import rocket.jobrocketbackend.user.dto.UserDTO;
 import rocket.jobrocketbackend.common.entity.Role;
 
 import java.io.IOException;
-
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
@@ -28,28 +29,14 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 쿠키들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
-        String authorization = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) { // 쿠키가 존재하는 경우만 탐색
-            for (Cookie cookie : cookies) {
-                System.out.println(cookie.getName());
-                if (cookie.getName().equals("Authorization")) {
-                    authorization = cookie.getValue();
-                    break; // Authorization 쿠키를 찾으면 더 이상 탐색하지 않음
-                }
-            }
-        }
-
+        String token = request.getHeader("Authorization");
+        log.info("token = {}", token);
         // Authorization 헤더 검증
-        if (authorization == null) {
+        if (token == null) {
             System.out.println("token null");
             filterChain.doFilter(request, response);
             return; // 조건이 해당되면 메소드 종료 (필수)
         }
-
-        // 토큰
-        String token = authorization;
 
         // 토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
@@ -58,13 +45,9 @@ public class JWTFilter extends OncePerRequestFilter {
             return; // 조건이 해당되면 메소드 종료 (필수)
         }
 
-        // 토큰에서 username과 role 획득
-        Role role = Role.valueOf(jwtUtil.getRole(token));
 
         // UserDTO를 생성하여 값 set
-        UserDTO userDTO = UserDTO.builder()
-                .role(role)
-                .build();
+        UserDTO userDTO = jwtUtil.getUserDto(token);
 
         // UserDetails에 회원 정보 객체 담기
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
@@ -77,5 +60,3 @@ public class JWTFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-*/
-

@@ -9,9 +9,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import rocket.jobrocketbackend.oauth.util.JWTFilter;
+import rocket.jobrocketbackend.oauth.util.JWTUtil;
 
 import java.util.Collections;
 
@@ -21,7 +24,8 @@ public class SecurityConfig {
 
 //    private final CustomOAuth2UserService customOAuth2UserService;
 //    private final CustomSuccessHandler customSuccessHandler;
-//    private final JWTUtil jwtUtil;
+    private final JWTUtil jwtUtil;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,13 +35,14 @@ public class SecurityConfig {
                 .csrf((auth) -> auth.disable())
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
-//                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+               .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
 //                .oauth2Login((oauth2) -> oauth2
 //                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
 //                                .userService(customOAuth2UserService))
 //                        .successHandler(customSuccessHandler))
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/career").authenticated()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
 //                        .anyRequest().authenticated()
                         .anyRequest().permitAll())

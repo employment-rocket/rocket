@@ -1,4 +1,3 @@
-/*
 package rocket.jobrocketbackend.oauth.dto;
 
 import lombok.RequiredArgsConstructor;
@@ -31,11 +30,6 @@ public class CustomOAuth2User implements OAuth2User {
     public String getName() {
         return userDTO.getNickname(); // 닉네임을 name으로 반환
     }
-
-    public String getUsername() {
-        return userDTO.getUsername();
-    }
-
     public String getEmail() {
         return userDTO.getEmail();
     }
@@ -44,5 +38,3 @@ public class CustomOAuth2User implements OAuth2User {
         return userDTO.getProfile();
     }
 }
-
- */
