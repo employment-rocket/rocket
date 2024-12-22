@@ -4,21 +4,19 @@ import naver from "../assets/naver.png";
 import kakaoImage from "../assets/kakao.png";
 
 
-
-
 const LoginPage = ({ isOpen, onClose }) => {
 
-    // 환경 변수에서 API 키와 Redirect URL 가져오기
+   
   const REST_API_KEY = '714bf4a422faf6cbe152f3e8b10c01e7';
   const REDIRECT_URI = 'http://localhost:5173/login/oauth2/callback/kakao';
 
-  // 카카오 인증 URL 생성
+
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-  // 카카오 로그인 버튼 클릭 핸들러
+
   const handleClickKakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
-
+        console.log(window)
       };
     
 

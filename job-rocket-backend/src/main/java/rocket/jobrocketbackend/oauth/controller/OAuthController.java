@@ -1,0 +1,33 @@
+package rocket.jobrocketbackend.oauth.controller;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import rocket.jobrocketbackend.oauth.service.KakaoOAuthService;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/login")
+@Slf4j
+public class OAuthController {
+
+
+    private final KakaoOAuthService kakaoOAuthService;
+
+    @Autowired
+    public OAuthController(KakaoOAuthService kakaoOAuthService) {
+        this.kakaoOAuthService = kakaoOAuthService;
+    }
+
+
+    @GetMapping("/oauth2/kakao")
+    public ResponseEntity<String> getKakao(@RequestParam String code) throws JsonProcessingException {
+        log.info("code = {}", code);
+        String token = kakaoOAuthService.getKakaoAccessToken(code);
+        return ResponseEntity.ok("Access Token"+token);
+    }
+}

@@ -1,4 +1,5 @@
-package rocket.jobrocketbackend.aouth.dto;
+/*
+package rocket.jobrocketbackend.oauth.dto;
 
 public interface OAuth2Response {
 
@@ -8,3 +9,4 @@ public interface OAuth2Response {
     String getNickname();
     String getProfile();
 }
+*/

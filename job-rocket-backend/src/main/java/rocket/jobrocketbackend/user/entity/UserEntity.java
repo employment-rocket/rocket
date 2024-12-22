@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.common.entity.SocialType;
 
+import java.util.Optional;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -22,8 +24,6 @@ public class UserEntity {
     private String nickname;
     private String profile;
 
-    private String username;
-
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
@@ -34,15 +34,26 @@ public class UserEntity {
     private Boolean allowEmail=false;
 
     @Builder
-    public UserEntity(Long id, String email, String nickname, String profile, String username, SocialType socialType, Role role, Boolean allowEmail) {
+    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail) {
         this.id=id;
         this.email = email;
         this.nickname = nickname;
         this.profile = profile;
-        this.username=username;
         this.socialType=socialType;
         this.allowEmail=allowEmail;
         this.role = role;
+    }
+
+
+
+    public UserEntity update(String nickname, String profile) {
+        if (!this.nickname.equals(nickname)) {
+            this.nickname = nickname;
+        }
+        if (!this.profile.equals(profile)) {
+            this.profile = profile;
+        }
+        return this;
     }
 
 

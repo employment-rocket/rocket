@@ -1,11 +1,12 @@
-package rocket.jobrocketbackend.aouth.service;
+/*
+package rocket.jobrocketbackend.oauth.service;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import rocket.jobrocketbackend.aouth.dto.*;
+import rocket.jobrocketbackend.oauth.dto.*;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.common.entity.SocialType;
 import rocket.jobrocketbackend.user.dto.UserDTO;
@@ -50,7 +51,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if(existData==null){
             UserEntity userEntity = UserEntity.builder()
-            .username(username)
                     .email(oAuth2Response.getEmail())
                     .nickname(oAuth2Response.getNickname())
                     .profile(oAuth2Response.getProfile())
@@ -62,14 +62,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO userDTO = new UserDTO(userEntity.getRole(),
                     userEntity.getNickname(),
                     userEntity.getProfile(),
-                    userEntity.getEmail(),
-                    userEntity.getUsername());
+                    userEntity.getEmail());
             return new CustomOAuth2User(userDTO);
         }
         else{
             UserEntity updatedEntity = UserEntity.builder()
                     .id(existData.getId())
-                    .username(existData.getUsername())
                     .email(oAuth2Response.getEmail())
                     .nickname(oAuth2Response.getNickname())
                     .profile(oAuth2Response.getProfile())
@@ -82,9 +80,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDTO userDTO = new UserDTO(updatedEntity.getRole(),
                     updatedEntity.getNickname(),
                     updatedEntity.getProfile(),
-                    updatedEntity.getEmail(),
-                    updatedEntity.getUsername());
+                    updatedEntity.getEmail());
             return new CustomOAuth2User(userDTO);
         }
     }
 }
+
+ */

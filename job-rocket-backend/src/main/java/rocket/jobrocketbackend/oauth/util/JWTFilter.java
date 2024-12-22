@@ -1,4 +1,5 @@
-package rocket.jobrocketbackend.aouth.util;
+/*
+package rocket.jobrocketbackend.oauth.util;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import rocket.jobrocketbackend.aouth.dto.CustomOAuth2User;
+import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.user.dto.UserDTO;
 import rocket.jobrocketbackend.common.entity.Role;
 
@@ -58,12 +59,10 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰에서 username과 role 획득
-        String username = jwtUtil.getUsername(token);
         Role role = Role.valueOf(jwtUtil.getRole(token));
 
         // UserDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
-                .username(username)
                 .role(role)
                 .build();
 
@@ -78,3 +77,5 @@ public class JWTFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+*/
+

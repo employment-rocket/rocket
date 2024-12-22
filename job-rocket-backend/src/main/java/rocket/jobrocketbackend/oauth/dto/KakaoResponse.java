@@ -1,4 +1,5 @@
-package rocket.jobrocketbackend.aouth.dto;
+/*
+package rocket.jobrocketbackend.oauth.dto;
 
 import java.util.Map;
 
@@ -42,3 +43,4 @@ public class KakaoResponse implements OAuth2Response {
         return profile.get("profile_image_url") != null ? profile.get("profile_image_url").toString() : null;
     }
 }
+*/

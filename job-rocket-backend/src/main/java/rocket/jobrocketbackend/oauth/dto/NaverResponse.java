@@ -1,4 +1,5 @@
-package rocket.jobrocketbackend.aouth.dto;
+/*
+package rocket.jobrocketbackend.oauth.dto;
 
 import java.util.Map;
 
@@ -36,4 +37,4 @@ public class NaverResponse implements OAuth2Response{
     public String getProfile() {
         return attribute.get("profile_image").toString();
     }
-}
+}*/

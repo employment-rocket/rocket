@@ -1,4 +1,5 @@
-package rocket.jobrocketbackend.aouth.dto;
+/*
+package rocket.jobrocketbackend.oauth.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,3 +44,5 @@ public class CustomOAuth2User implements OAuth2User {
         return userDTO.getProfile();
     }
 }
+
+ */
