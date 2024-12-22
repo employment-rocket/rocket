@@ -9,6 +9,7 @@ daemon/**
 native/**
 wrapper/**
 .idea/**
+src/main/resources/config-files/**
 
 ### STS ###
 .apt_generated
