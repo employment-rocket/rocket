@@ -1,31 +1,36 @@
-package rocket.jobrocketbackend.schedule.repository;
+package rocket.jobrocketbackend.schedule.service;
 
-import jakarta.persistence.EntityManager;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
+import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@SpringBootTest
+
 @ActiveProfiles("test")
 @Transactional
-class ScheduleRepositoryTest {
+class ScheduleServiceTest {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
     @Autowired
-    private EntityManager em;
+    private ScheduleService scheduleService;
 
     @BeforeEach
     void init(){
@@ -48,42 +53,21 @@ class ScheduleRepositoryTest {
         scheduleRepository.save(entity7);
     }
 
-    @DisplayName("새로운 ScheduleEntity를 DB에 저장한다.")
     @Test
-    void createScheduleEntity(){
-        //given
-        ScheduleEntity newSchedule = ScheduleEntity.builder()
-                .title("삼성전자")
-                .userId(1L)
-                .state(ScheduleState.Ongoing)
-                .memo("메모입니다.")
-                .type(ScheduleType.Document)
-                .dueDate(LocalDate.of(2024, 12, 23))
-                .build();
-
-        //when
-        scheduleRepository.save(newSchedule);
-        Long id = newSchedule.getId();
-        em.clear();
-        ScheduleEntity result = scheduleRepository.findById(id).get();
-
-        //then
-        assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo("삼성전자");
-        assertThat(result.getMemo()).isEqualTo("메모입니다.");
-        assertThat(result.getDueDate()).isEqualTo(LocalDate.of(2024,12,23));
-        assertThat(result.getType()).isEqualTo(ScheduleType.Document);
-        assertThat(result.getState()).isEqualTo(ScheduleState.Ongoing);
-        assertThat(result.getId()).isEqualTo(id);
-    }
-
-    @Test
-    @DisplayName("userID를 가지고 해당 유저가 가지고 있는 모든 일정관리 리스트를 반환")
-    void findByUserId(){
+    @DisplayName("사용자 정보에 해당하는 일정관리를 map<type, dto> 형태로 반환")
+    void getScheduleList(){
         //given
         //when
-        List<ScheduleEntity> list = scheduleRepository.findByUserId(1L);
+        Map<String, List<ScheduleDTO>> scheduleList = scheduleService.getScheduleList(1L);
+        List<ScheduleDTO> documentList = scheduleList.get(ScheduleType.Document.name());
+        List<ScheduleDTO> firstList = scheduleList.get(ScheduleType.First.name());
+        List<ScheduleDTO> secondeList = scheduleList.get(ScheduleType.Second.name());
+        List<ScheduleDTO> finalList = scheduleList.get(ScheduleType.Final.name());
         //then
-        assertThat(list).hasSize(7);
+        assertThat(documentList).hasSize(3);
+        assertThat(firstList).hasSize(2);
+        assertThat(secondeList).hasSize(1);
+        assertThat(finalList).hasSize(1);
+
     }
 }

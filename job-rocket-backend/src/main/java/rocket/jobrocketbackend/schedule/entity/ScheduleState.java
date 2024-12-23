@@ -16,7 +16,7 @@ public enum ScheduleState {
 
     public static ScheduleState from(String value){
         for(ScheduleState state : ScheduleState.values()) {
-            if (state.getText().equals(value)) {
+            if (state.name().equals(value)) {
                 return state;
             }
         }

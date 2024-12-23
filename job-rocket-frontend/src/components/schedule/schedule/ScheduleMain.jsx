@@ -22,10 +22,10 @@ const ScheduleMain = () => {
 
 	useEffect(() => {
 		if (!isLoading || data) {
-			setDocumentItems(data.document);
-			setFirstItems(data.first);
-			setSecondItems(data.second);
-			setFinalItems(data.final);
+			setDocumentItems(data.Document);
+			setFirstItems(data.First);
+			setSecondItems(data.Second);
+			setFinalItems(data.Final);
 		}
 	}, [isLoading, data]);
 

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 
 import java.time.LocalDate;
 
