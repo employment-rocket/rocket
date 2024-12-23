@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.schedule.response;
+package rocket.jobrocketbackend.schedule.controller.response;
 
 import lombok.*;
 
