@@ -1,14 +1,18 @@
 import { React, useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQuery } from "@tanstack/react-query";
+import addIcon from "../../../assets/icon-add.png";
 import { getSchedules } from "../../../api/schedule/schedule";
 import ScheduleItem from "./ScheduleItem";
+import CreateModal from "./CreateModal";
 
 const ScheduleMain = () => {
 	const { data, isLoading } = useQuery({
 		queryKey: ["schedule"],
 		queryFn: getSchedules,
 	});
+
+	const [isModalOpen, setModalOpen] = useState(false);
 
 	// 초기 데이터
 	const [documentItems, setDocumentItems] = useState([]);
@@ -92,70 +96,130 @@ const ScheduleMain = () => {
 	if (isLoading) return <div>Loading...</div>;
 
 	return (
-		<div className="flex flex-col space-y-4 h-screen w-full">
-			<div
-				className="w-full h-[70%] rounded-[20px] p-3"
-				style={{ backgroundColor: "#3F83F8" }}
-			>
-				<DragDropContext onDragEnd={handleDragEnd}>
-					<div className="flex justify-around items-center h-full w-full">
-						{["서류전형", "1차면접", "2차면접", "최종"].map(
-							(droppableId) => (
-								<DroppableArea
-									key={droppableId}
-									droppableId={droppableId}
-									items={getListByDroppableId(droppableId)}
-									handleDelete={handleDelete}
-								/>
-							)
-						)}
-					</div>
-				</DragDropContext>
+		<>
+			<div className="flex flex-col space-y-4 h-screen w-full">
+				<div
+					className="w-full h-[70%] rounded-[20px] p-3"
+					style={{ backgroundColor: "#3F83F8" }}
+				>
+					<DragDropContext onDragEnd={handleDragEnd}>
+						<div className="flex justify-around items-center h-full w-full">
+							{["서류전형", "1차면접", "2차면접", "최종"].map(
+								(droppableId) => (
+									<DroppableArea
+										key={droppableId}
+										droppableId={droppableId}
+										items={getListByDroppableId(
+											droppableId
+										)}
+										handleDelete={handleDelete}
+										setModalOpen={setModalOpen}
+									/>
+								)
+							)}
+						</div>
+					</DragDropContext>
+				</div>
 			</div>
-		</div>
+			<CreateModal
+				isOpen={isModalOpen}
+				onCancel={() => setModalOpen(false)}
+			/>
+		</>
 	);
 };
 
 // Droppable 영역 컴포넌트
-const DroppableArea = ({ droppableId, items, handleDelete }) => {
-	return (
-		<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl ">
-			<div className="pt-6 capitalize">{droppableId}</div>
-			<Droppable droppableId={droppableId}>
-				{(provided) => (
-					<div
-						ref={provided.innerRef}
-						{...provided.droppableProps}
-						className=" h-full w-full  p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
-					>
-						{items.map((item, index) => (
-							<Draggable
-								key={item.id.toString()}
-								draggableId={item.id.toString()}
-								index={index}
-							>
-								{(provided) => (
-									<div
-										{...provided.draggableProps}
-										{...provided.dragHandleProps}
-										ref={provided.innerRef}
-										className="p-2 rounded-md w-full bg-blue-300"
-									>
-										<ScheduleItem
-											item={item}
-											droppableId={droppableId}
-											handleDelete={handleDelete}
-										/>
-									</div>
-								)}
-							</Draggable>
-						))}
-						{provided.placeholder}
+const DroppableArea = ({ droppableId, items, handleDelete, setModalOpen }) => {
+	if (droppableId === "서류전형") {
+		return (
+			<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl ">
+				<div className="pt-6 px-3 capitalize flex w-full ">
+					<div className="w-[20px] h-[20px]"></div>
+					<div className="grow flex justify-center items-center">
+						<div>{droppableId}</div>
 					</div>
-				)}
-			</Droppable>
-		</div>
-	);
+					<img
+						src={addIcon}
+						alt="추가 버튼"
+						className="w-[20px] h-[20px] self-center"
+						onClick={() => setModalOpen(true)}
+					/>
+				</div>
+				<Droppable droppableId={droppableId}>
+					{(provided) => (
+						<div
+							ref={provided.innerRef}
+							{...provided.droppableProps}
+							className=" h-full w-full  p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
+						>
+							{items.map((item, index) => (
+								<Draggable
+									key={item.id.toString()}
+									draggableId={item.id.toString()}
+									index={index}
+								>
+									{(provided) => (
+										<div
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											ref={provided.innerRef}
+											className="p-2 rounded-md w-full bg-blue-300"
+										>
+											<ScheduleItem
+												item={item}
+												droppableId={droppableId}
+												handleDelete={handleDelete}
+											/>
+										</div>
+									)}
+								</Draggable>
+							))}
+							{provided.placeholder}
+						</div>
+					)}
+				</Droppable>
+			</div>
+		);
+	} else {
+		return (
+			<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl ">
+				<div className="pt-6 px-3 capitalize">{droppableId}</div>
+				<Droppable droppableId={droppableId}>
+					{(provided) => (
+						<div
+							ref={provided.innerRef}
+							{...provided.droppableProps}
+							className=" h-full w-full  p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
+						>
+							{items.map((item, index) => (
+								<Draggable
+									key={item.id.toString()}
+									draggableId={item.id.toString()}
+									index={index}
+								>
+									{(provided) => (
+										<div
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											ref={provided.innerRef}
+											className="p-2 rounded-md w-full bg-blue-300"
+										>
+											<ScheduleItem
+												item={item}
+												droppableId={droppableId}
+												handleDelete={handleDelete}
+											/>
+										</div>
+									)}
+								</Draggable>
+							))}
+							{provided.placeholder}
+						</div>
+					)}
+				</Droppable>
+			</div>
+		);
+	}
 };
-
 export default ScheduleMain;
