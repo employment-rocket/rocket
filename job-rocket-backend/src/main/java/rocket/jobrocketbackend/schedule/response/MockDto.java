@@ -19,17 +19,17 @@ public class MockDto {
     private String memo;
     private LocalDate dueDate;
     private String type;
-
+    private String state; // 진행중, 탈락, 최종합격
 
     public static List<MockDto> getDocumentTypeMocks(){
         LocalDate localDate = LocalDate.of(2024, 12, 13);
         LocalDate localDate2 = LocalDate.of(2024, 12, 11);
         List<MockDto> list = List.of(
-                new MockDto(1, "삼성전자", "잘쓰자", localDate2, "document"),
-                new MockDto(2, "삼숭전자", "진짜잘쓰자", localDate, "document"),
-                new MockDto(3, "샘성전자", "정말잘쓰자", localDate2, "document"),
-                new MockDto(4, "샘숭전자", "최종잘쓰자", localDate, "document"),
-                new MockDto(5, "송송전자", "찐잘쓰자", localDate2, "document")
+                new MockDto(1, "삼성전자", "잘쓰자", localDate2, "document","진행중"),
+                new MockDto(2, "삼숭전자", "진짜잘쓰자", localDate, "document","진행중"),
+                new MockDto(3, "샘성전자", "정말잘쓰자", localDate2, "document","진행중"),
+                new MockDto(4, "샘숭전자", "최종잘쓰자", localDate, "document","진행중"),
+                new MockDto(5, "송송전자", "찐잘쓰자", localDate2, "document","진행중")
         );
         return list.stream().sorted(Comparator.comparing(MockDto::getDueDate)).toList();
     }
@@ -38,11 +38,11 @@ public class MockDto {
         LocalDate localDate = LocalDate.of(2024, 12, 12);
         LocalDate localDate2 = LocalDate.of(2024, 12, 11);
         List<MockDto> list = List.of(
-                new MockDto(6, "네이버", "잘쓰자", localDate, "first"),
-                new MockDto(7, "누이버", "진짜잘쓰자", localDate, "first"),
-                new MockDto(8, "도이버", "정말잘쓰자", localDate2, "first"),
-                new MockDto(9, "다이버", "최종잘쓰자", localDate2, "first"),
-                new MockDto(10, "데이버", "찐잘쓰자", localDate, "first")
+                new MockDto(6, "네이버", "잘쓰자", localDate, "first","진행중"),
+                new MockDto(7, "누이버", "진짜잘쓰자", localDate, "first","진행중"),
+                new MockDto(8, "도이버", "정말잘쓰자", localDate2, "first","진행중"),
+                new MockDto(9, "다이버", "최종잘쓰자", localDate2, "first","진행중"),
+                new MockDto(10, "데이버", "찐잘쓰자", localDate, "first","진행중")
         );
         return list.stream().sorted(Comparator.comparing(MockDto::getDueDate)).toList();
     }
@@ -51,9 +51,9 @@ public class MockDto {
         LocalDate localDate = LocalDate.of(2024, 12, 11);
         LocalDate localDate2 = LocalDate.of(2024, 12, 9);
         List<MockDto> list = List.of(
-                new MockDto(11, "카카오", "잘쓰자", localDate, "second"),
-                new MockDto(12, "캐캐오", "진짜잘쓰자", localDate, "second"),
-                new MockDto(13, "크크오", "정말잘쓰자", localDate2, "second")
+                new MockDto(11, "카카오", "잘쓰자", localDate, "second","진행중"),
+                new MockDto(12, "캐캐오", "진짜잘쓰자", localDate, "second","진행중"),
+                new MockDto(13, "크크오", "정말잘쓰자", localDate2, "second","진행중")
         );
         return list.stream().sorted(Comparator.comparing(MockDto::getDueDate)).toList();
     }
@@ -61,7 +61,8 @@ public class MockDto {
     public static List<MockDto> getFinalTypeMocks(){
         LocalDate localDate = LocalDate.of(2024, 12, 11);
         List<MockDto> list = List.of(
-                new MockDto(14, "bnk시스템", "잘쓰자", localDate, "final")
+                new MockDto(14, "bnk시스템", "잘쓰자", localDate, "final","최종합격"),
+                new MockDto(15, "bnk시스템2", "잘쓰자", localDate, "final","진행중")
         );
         return list.stream().sorted(Comparator.comparing(MockDto::getDueDate)).toList();
     }

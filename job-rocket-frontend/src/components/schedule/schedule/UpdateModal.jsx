@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import del from "../../../assets/delete.png";
 
-const CreateModal = ({ isOpen, onClose, onCancel }) => {
-	const [title, setTitle] = useState("");
-	const [date, setDate] = useState("");
-	const [memo, setMemo] = useState("");
-	const [state, setState] = useState("작성중");
+const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
+	const [title, setTitle] = useState(data.title);
+	const [date, setDate] = useState(data.dueDate);
+	const [memo, setMemo] = useState(data.memo);
+	const [state, setState] = useState(data.state);
 
 	if (!isOpen) return null;
 
@@ -77,7 +77,7 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 						className="py-2 bg-blue-500 text-white rounded-lg w-full"
 						onClick={onSave}
 					>
-						저장
+						수장
 					</button>
 				</div>
 			</div>
@@ -85,4 +85,4 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 	);
 };
 
-export default CreateModal;
+export default UpdateModal;
