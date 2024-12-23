@@ -18,14 +18,6 @@ public class ScheduleService {
 
     @Transactional
     public void createScheduleFrom(ScheduleDTO dto){
-        ScheduleEntity newSchedule = ScheduleEntity.builder()
-                .title(dto.getTitle())
-                .type(ScheduleType.Document)
-                .dueDate(dto.getDueDate())
-                .memo(dto.getMemo())
-                .userId(1L)
-                .state(ScheduleState.from(dto.getState()))
-                .build();
-        scheduleRepository.save(newSchedule);
+        scheduleRepository.save(dto.toNewScheduleEntity());
     }
 }

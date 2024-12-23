@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest;
+import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
+import rocket.jobrocketbackend.schedule.entity.ScheduleState;
+import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 
 import java.time.LocalDate;
 
@@ -25,5 +28,16 @@ public class ScheduleDTO {
                 .dueDate(request.getDueDate())
                 .memo(request.getMemo())
                 .state(request.getState()).build();
+    }
+
+    public ScheduleEntity toNewScheduleEntity(){
+        return ScheduleEntity.builder()
+                .title(this.getTitle())
+                .type(ScheduleType.Document)
+                .dueDate(this.getDueDate())
+                .memo(this.getMemo())
+                .userId(1L)
+                .state(ScheduleState.from(this.getState()))
+                .build();
     }
 }
