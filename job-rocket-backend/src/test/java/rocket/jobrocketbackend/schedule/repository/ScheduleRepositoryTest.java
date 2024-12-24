@@ -86,4 +86,19 @@ class ScheduleRepositoryTest {
         //then
         assertThat(list).hasSize(7);
     }
+    @Test
+    @DisplayName("scheduleId에 해당하는 schdeule를 삭제한다.")
+    void deleteById() {
+        // given
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).userId(1L).build();
+        scheduleRepository.save(entity);
+        List<ScheduleEntity> list = scheduleRepository.findAll();
+        int count = list.size();
+        ScheduleEntity schedule = list.get(0);
+        // when
+        scheduleRepository.deleteById(schedule.getId());
+        list = scheduleRepository.findAll();
+        // then
+        assertThat(list).hasSize(count - 1);
+    }
 }

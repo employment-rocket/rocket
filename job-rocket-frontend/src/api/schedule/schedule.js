@@ -46,4 +46,21 @@ const modifyScheduleItem = async ({ id, type }) => {
 	}
 };
 
-export { getSchedules, createScheduleItem, modifyScheduleItem };
+const deleteScheduleItem = async ({ id }) => {
+	console.log(id);
+	try {
+		const response = await api.delete(`/schedule/${id}`);
+		if (response.status !== 204) {
+			console.log("/schedule api delete error");
+		}
+	} catch (error) {
+		console.log("/schedule api delete error", error);
+	}
+};
+
+export {
+	getSchedules,
+	createScheduleItem,
+	modifyScheduleItem,
+	deleteScheduleItem,
+};

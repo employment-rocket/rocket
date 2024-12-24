@@ -36,7 +36,7 @@ public class ScheduleController {
 
     @PatchMapping
     public ResponseEntity<ScheduleResponse> scheduleTypeModify(@RequestBody ScheduleModifyTypeRequest request){
-        ScheduleDTO dto = scheduleService.modifyScheduleType(request.toTypeModifyDto());
+        ScheduleDTO dto = scheduleService.modifyType(request.toTypeModifyDto());
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.OK);
 
     }
@@ -44,8 +44,15 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<ScheduleResponse> scheduleCreate(@RequestBody ScheduleCreateRequest request){
         //TODO 로그인 기능관련 병합후 추후 처리
-        ScheduleDTO dto = scheduleService.createScheduleFrom(request.toCreateDTO());
+        ScheduleDTO dto = scheduleService.create(request.toCreateDTO());
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> scheduleDelete(@PathVariable("scheduleId") Long scheduleId){
+        log.info("deleteId = {}",scheduleId);
+        scheduleService.delete(scheduleId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
 

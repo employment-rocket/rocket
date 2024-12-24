@@ -75,7 +75,7 @@ class ScheduleServiceTest {
 
     @Test
     @DisplayName("새로운 일정관리 생성")
-    void createScheduleFrom() {
+    void create() {
         //given
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder()
                 .title("제목")
@@ -84,7 +84,7 @@ class ScheduleServiceTest {
                 .dueDate(LocalDate.of(2024, 03, 21))
                 .build();
         //when
-        ScheduleDTO result = scheduleService.createScheduleFrom(dto);
+        ScheduleDTO result = scheduleService.create(dto);
         //then
         assertThat(result.getState()).isEqualTo(ScheduleState.from(dto.getState()));
         assertThat(result.getType()).isEqualTo(ScheduleType.Document);
@@ -95,7 +95,7 @@ class ScheduleServiceTest {
 
     @Test
     @DisplayName("새로운 일정관리 생성시 상태값이 이상하면 예외를 던진다.")
-    void createScheduleFromException() {
+    void createException() {
         //given
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder()
                 .title("제목")
@@ -105,21 +105,21 @@ class ScheduleServiceTest {
                 .build();
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.createScheduleFrom(dto))
+        assertThatThrownBy(() -> scheduleService.create(dto))
                 .isInstanceOf(IllegalScheduleStateException.class)
                 .hasMessage("잘못된 상태 값입니다.");
     }
 
     @Test
     @DisplayName("입력받은 id와 타입으로 해당하는 일정관리의 타입을 변경한다.")
-    void modifyScheduleType() {
+    void modifyType() {
         //given
         LocalDate date = LocalDate.of(2024, 12, 22);
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).userId(1L).build();
         scheduleRepository.save(entity);
         //when
         ScheduleTypeModifyDTO dto = ScheduleTypeModifyDTO.builder().scheduleId(entity.getId()).type(ScheduleType.Final).build();
-        ScheduleDTO result = scheduleService.modifyScheduleType(dto);
+        ScheduleDTO result = scheduleService.modifyType(dto);
         //then
         assertThat(result.getId()).isEqualTo(entity.getId());
         assertThat(result.getType()).isEqualTo(ScheduleType.Final);
@@ -127,13 +127,29 @@ class ScheduleServiceTest {
 
     @Test
     @DisplayName("입력받은 id와 타입으로 해당하는 일정관리의 타입을 변경한지만 일치하는id가 없으면 예외를 던진다.")
-    void modifyScheduleTypeException() {
+    void modifyTypeException() {
         //given
         ScheduleTypeModifyDTO dto = ScheduleTypeModifyDTO.builder().scheduleId(123459L).type(ScheduleType.Final).build();
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.modifyScheduleType(dto))
+        assertThatThrownBy(() -> scheduleService.modifyType(dto))
                 .isInstanceOf(ScheduleNotFoundException.class)
                 .hasMessage("해당하는 일정을 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("scheduleId에 해당하는 schdeule를 삭제한다.")
+    void delete() {
+        // given
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).userId(1L).build();
+        scheduleRepository.save(entity);
+        List<ScheduleEntity> list = scheduleRepository.findAll();
+        int count = list.size();
+        ScheduleEntity schedule = list.get(0);
+        // when
+        scheduleService.delete(schedule.getId());
+        list = scheduleRepository.findAll();
+        // then
+        assertThat(list).hasSize(count - 1);
     }
 }

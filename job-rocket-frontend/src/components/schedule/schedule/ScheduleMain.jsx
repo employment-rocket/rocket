@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQuery } from "@tanstack/react-query";
 import addIcon from "../../../assets/icon-add.png";
 import {
+	deleteScheduleItem,
 	getSchedules,
 	modifyScheduleItem,
 } from "../../../api/schedule/schedule";
@@ -121,6 +122,7 @@ export default function ScheduleMain() {
 	// 5. 삭제 로직
 	// ----------------------------------------------------------------
 	function handleDelete(id, droppableId) {
+		deleteScheduleItem({ id });
 		const list = getListByDroppableId(droppableId);
 		const updatedList = list.filter((item) => item.id !== id);
 		updateListState(droppableId, updatedList);

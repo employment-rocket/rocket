@@ -24,7 +24,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public ScheduleDTO createScheduleFrom(ScheduleCreateDTO dto){
+    public ScheduleDTO create(ScheduleCreateDTO dto){
         ScheduleEntity schedule = scheduleRepository.save(dto.toCreateEntity());
         return ScheduleDTO.from(schedule);
     }
@@ -41,9 +41,13 @@ public class ScheduleService {
         return result;
     }
     @Transactional
-    public ScheduleDTO modifyScheduleType(ScheduleTypeModifyDTO dto){
+    public ScheduleDTO modifyType(ScheduleTypeModifyDTO dto){
         ScheduleEntity schedule = scheduleRepository.findById(dto.getScheduleId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
         schedule.modifyType(dto.getType());
         return ScheduleDTO.from(schedule);
+    }
+    @Transactional
+    public void delete(Long id) {
+        scheduleRepository.deleteById(id);
     }
 }
