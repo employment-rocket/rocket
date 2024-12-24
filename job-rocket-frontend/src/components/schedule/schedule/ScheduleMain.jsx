@@ -9,42 +9,56 @@ import {
 import ScheduleItem from "./ScheduleItem";
 import CreateModal from "./CreateModal";
 
-const ScheduleMain = () => {
+// droppableId(한글) ↔ 서버 type(영문) 맵핑을 관리
+const TYPE_MAP = {
+	서류전형: "Document",
+	"1차면접": "First",
+	"2차면접": "Second",
+	최종: "Final",
+};
+
+const typeList = Object.keys(TYPE_MAP); // ["서류전형", "1차면접", "2차면접", "최종"]
+
+export default function ScheduleMain() {
 	const { data, isLoading } = useQuery({
 		queryKey: ["schedule"],
 		queryFn: getSchedules,
 	});
-	const typeList = ["서류전형", "1차면접", "2차면접", "최종"];
+
 	const [isModalOpen, setModalOpen] = useState(false);
 
-	// 초기 데이터
+	// 영역별 리스트 상태
 	const [documentItems, setDocumentItems] = useState([]);
 	const [firstItems, setFirstItems] = useState([]);
 	const [secondItems, setSecondItems] = useState([]);
 	const [finalItems, setFinalItems] = useState([]);
 
+	// ----------------------------------------------------------------
+	// 1. 초기 로드: DB에서 가져온 data를 각 영역 state에 세팅
+	// ----------------------------------------------------------------
 	useEffect(() => {
-		if (!isLoading || data) {
-			setDocumentItems(data.Document);
-			setFirstItems(data.First);
-			setSecondItems(data.Second);
-			setFinalItems(data.Final);
+		if (!isLoading && data) {
+			setDocumentItems(data.Document || []);
+			setFirstItems(data.First || []);
+			setSecondItems(data.Second || []);
+			setFinalItems(data.Final || []);
 		}
 	}, [isLoading, data]);
 
 	if (isLoading) return <div>Loading...</div>;
 
-	// 드래그 종료 시 처리 함수
-	const handleDragEnd = async (result) => {
+	// ----------------------------------------------------------------
+	// 2. 드래그 종료 시 처리 (handleDragEnd)
+	// ----------------------------------------------------------------
+	async function handleDragEnd(result) {
 		const { source, destination } = result;
-
-		// 드롭 대상이 없을 경우 처리
 		if (!destination) return;
 
+		// 소스/대상 리스트 추출
 		const sourceList = getListByDroppableId(source.droppableId);
 		const destList = getListByDroppableId(destination.droppableId);
 
-		// 아이템 이동 처리
+		// 아이템 이동
 		const [movedItem] = sourceList.splice(source.index, 1);
 		destList.splice(destination.index, 0, movedItem);
 
@@ -52,33 +66,21 @@ const ScheduleMain = () => {
 		updateListState(source.droppableId, sourceList);
 		updateListState(destination.droppableId, destList);
 
+		// 서버 API 호출하여 DB에 반영
 		try {
-			await modifyScheduleItem({
-				id: movedItem.id,
-				type: type(destination.droppableId),
-			});
+			const serverType = TYPE_MAP[destination.droppableId]; // 예: "Document"
+			await modifyScheduleItem({ id: movedItem.id, type: serverType });
+			console.log("수정 성공");
 		} catch (error) {
 			console.error("수정 실패", error);
-			// 롤백 or 오류 처리
+			// 필요시 롤백 처리
 		}
-	};
+	}
 
-	const type = (droppableId) => {
-		switch (droppableId) {
-			case "서류전형":
-				return "Document";
-			case "1차면접":
-				return "First";
-			case "2차면접":
-				return "Second";
-			case "최종":
-				return "Final";
-			default:
-				return "error";
-		}
-	};
-	// Droppable ID에 따라 리스트 가져오기
-	const getListByDroppableId = (droppableId) => {
+	// ----------------------------------------------------------------
+	// 3. 영역별 리스트 반환
+	// ----------------------------------------------------------------
+	function getListByDroppableId(droppableId) {
 		switch (droppableId) {
 			case "서류전형":
 				return documentItems;
@@ -91,10 +93,12 @@ const ScheduleMain = () => {
 			default:
 				return [];
 		}
-	};
+	}
 
-	// Droppable ID에 따라 상태 업데이트
-	const updateListState = (droppableId, newList) => {
+	// ----------------------------------------------------------------
+	// 4. 영역별 setState
+	// ----------------------------------------------------------------
+	function updateListState(droppableId, newList) {
 		switch (droppableId) {
 			case "서류전형":
 				setDocumentItems(newList);
@@ -111,17 +115,20 @@ const ScheduleMain = () => {
 			default:
 				break;
 		}
-	};
+	}
 
-	const handleDelete = (id, droppableId) => {
-		console.log("id = ", id, " droppableId = ", id);
+	// ----------------------------------------------------------------
+	// 5. 삭제 로직
+	// ----------------------------------------------------------------
+	function handleDelete(id, droppableId) {
 		const list = getListByDroppableId(droppableId);
 		const updatedList = list.filter((item) => item.id !== id);
 		updateListState(droppableId, updatedList);
-	};
+	}
 
-	if (isLoading) return <div>Loading...</div>;
-
+	// ----------------------------------------------------------------
+	// 6. 렌더링
+	// ----------------------------------------------------------------
 	return (
 		<>
 			<div className="flex flex-col space-y-4 h-screen w-full">
@@ -144,105 +151,75 @@ const ScheduleMain = () => {
 					</DragDropContext>
 				</div>
 			</div>
+
+			{/* 생성 모달 */}
 			<CreateModal
 				isOpen={isModalOpen}
 				onCancel={() => setModalOpen(false)}
 			/>
 		</>
 	);
-};
+}
 
-// Droppable 영역 컴포넌트
-const DroppableArea = ({ droppableId, items, handleDelete, setModalOpen }) => {
-	if (droppableId === "서류전형") {
-		return (
-			<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl ">
-				<div className="pt-6 px-3 capitalize flex w-full ">
-					<div className="w-[20px] h-[20px]"></div>
-					<div className="grow flex justify-center items-center">
-						<div>{droppableId}</div>
-					</div>
+// ----------------------------------------------------------------
+// DroppableArea: "서류전형"만 추가 버튼 노출
+// ----------------------------------------------------------------
+function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
+	const showAddButton = droppableId === "서류전형";
+
+	return (
+		<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl">
+			<div className="pt-6 px-3 capitalize flex w-full">
+				{/* 왼쪽 여백 */}
+				<div className="w-[20px] h-[20px]" />
+				{/* 중앙 영역 */}
+				<div className="grow flex justify-center items-center">
+					<div>{droppableId}</div>
+				</div>
+				{/* 우측 + 버튼 (서류전형일 때만) */}
+				{showAddButton && (
 					<img
 						src={addIcon}
 						alt="추가 버튼"
-						className="w-[20px] h-[20px] self-center"
+						className="w-[20px] h-[20px] self-center cursor-pointer"
 						onClick={() => setModalOpen(true)}
 					/>
-				</div>
-				<Droppable droppableId={droppableId}>
-					{(provided) => (
-						<div
-							ref={provided.innerRef}
-							{...provided.droppableProps}
-							className=" h-full w-full  p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
-						>
-							{items.map((item, index) => (
-								<Draggable
-									key={item.id.toString()}
-									draggableId={item.id.toString()}
-									index={index}
-								>
-									{(provided) => (
-										<div
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											ref={provided.innerRef}
-											className="p-2 rounded-md w-full bg-blue-300"
-										>
-											<ScheduleItem
-												item={item}
-												droppableId={droppableId}
-												handleDelete={handleDelete}
-											/>
-										</div>
-									)}
-								</Draggable>
-							))}
-							{provided.placeholder}
-						</div>
-					)}
-				</Droppable>
+				)}
 			</div>
-		);
-	} else {
-		return (
-			<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl ">
-				<div className="pt-6 px-3 capitalize">{droppableId}</div>
-				<Droppable droppableId={droppableId}>
-					{(provided) => (
-						<div
-							ref={provided.innerRef}
-							{...provided.droppableProps}
-							className=" h-full w-full  p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
-						>
-							{items.map((item, index) => (
-								<Draggable
-									key={item.id.toString()}
-									draggableId={item.id.toString()}
-									index={index}
-								>
-									{(provided) => (
-										<div
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											ref={provided.innerRef}
-											className="p-2 rounded-md w-full bg-blue-300"
-										>
-											<ScheduleItem
-												item={item}
-												droppableId={droppableId}
-												handleDelete={handleDelete}
-											/>
-										</div>
-									)}
-								</Draggable>
-							))}
-							{provided.placeholder}
-						</div>
-					)}
-				</Droppable>
-			</div>
-		);
-	}
-};
-export default ScheduleMain;
+
+			<Droppable droppableId={droppableId}>
+				{(provided) => (
+					<div
+						ref={provided.innerRef}
+						{...provided.droppableProps}
+						className="h-full w-full p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide"
+					>
+						{items.map((item, index) => (
+							<Draggable
+								key={item.id.toString()}
+								draggableId={item.id.toString()}
+								index={index}
+							>
+								{(provided) => (
+									<div
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+										ref={provided.innerRef}
+										className="p-2 rounded-md w-full bg-blue-300"
+									>
+										<ScheduleItem
+											item={item}
+											droppableId={droppableId}
+											handleDelete={handleDelete}
+										/>
+									</div>
+								)}
+							</Draggable>
+						))}
+						{provided.placeholder}
+					</div>
+				)}
+			</Droppable>
+		</div>
+	);
+}
