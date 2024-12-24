@@ -4,7 +4,7 @@ import naver from "../assets/naver.png";
 import kakaoImage from "../assets/kakao.png";
 
 
-const LoginPage = ({ isOpen, onClose }) => {
+const LoginPage = ({ isOpen, onClose}) => {
 
    
   const REST_API_KEY = '714bf4a422faf6cbe152f3e8b10c01e7';

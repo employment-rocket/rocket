@@ -42,7 +42,7 @@ public class SecurityConfig {
 //                        .successHandler(customSuccessHandler))
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/schedule").authenticated()
+ //                       .requestMatchers("/schedule").authenticated()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
 //                        .anyRequest().authenticated()
                         .anyRequest().permitAll())

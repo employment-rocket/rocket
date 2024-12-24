@@ -15,6 +15,9 @@ import ScheduleMain from "./components/schedule/schedule/ScheduleMain.jsx";
 import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PrivateRoute from "./components/common/PrivateRoute";
+import Retrospect from "./pages/Retrospect";
+import MyPage from "./pages/MyPage";
+import Note from "./pages/Note";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -34,10 +37,14 @@ createRoot(document.getElementById("root")).render(
 							<Route path="calendar" element={<Calendar />} />
 							<Route path="statistics" element={<Statistics />} />
 						</Route>
+						<Route path="/mypage" element={<MyPage />}/>
+						<Route path="/retrospect" element={<Retrospect/>}/>
+						<Route path="/note" element={<Note />}/>
 					</Route>
 					<Route path="/question" element={<Question />} />
 					<Route path="/site" element={<Site />} />
 					<Route path="/career" element={<Career />} />
+					
 				</Routes>
 			</QueryClientProvider>
 		</BrowserRouter>
