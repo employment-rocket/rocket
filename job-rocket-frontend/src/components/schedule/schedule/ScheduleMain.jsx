@@ -2,7 +2,10 @@ import { React, useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQuery } from "@tanstack/react-query";
 import addIcon from "../../../assets/icon-add.png";
-import { getSchedules } from "../../../api/schedule/schedule";
+import {
+	getSchedules,
+	modifyScheduleItem,
+} from "../../../api/schedule/schedule";
 import ScheduleItem from "./ScheduleItem";
 import CreateModal from "./CreateModal";
 
@@ -11,7 +14,7 @@ const ScheduleMain = () => {
 		queryKey: ["schedule"],
 		queryFn: getSchedules,
 	});
-
+	const typeList = ["서류전형", "1차면접", "2차면접", "최종"];
 	const [isModalOpen, setModalOpen] = useState(false);
 
 	// 초기 데이터
@@ -32,7 +35,7 @@ const ScheduleMain = () => {
 	if (isLoading) return <div>Loading...</div>;
 
 	// 드래그 종료 시 처리 함수
-	const handleDragEnd = (result) => {
+	const handleDragEnd = async (result) => {
 		const { source, destination } = result;
 
 		// 드롭 대상이 없을 경우 처리
@@ -48,8 +51,32 @@ const ScheduleMain = () => {
 		// 상태 업데이트
 		updateListState(source.droppableId, sourceList);
 		updateListState(destination.droppableId, destList);
+
+		try {
+			await modifyScheduleItem({
+				id: movedItem.id,
+				type: type(destination.droppableId),
+			});
+		} catch (error) {
+			console.error("수정 실패", error);
+			// 롤백 or 오류 처리
+		}
 	};
 
+	const type = (droppableId) => {
+		switch (droppableId) {
+			case "서류전형":
+				return "Document";
+			case "1차면접":
+				return "First";
+			case "2차면접":
+				return "Second";
+			case "최종":
+				return "Final";
+			default:
+				return "error";
+		}
+	};
 	// Droppable ID에 따라 리스트 가져오기
 	const getListByDroppableId = (droppableId) => {
 		switch (droppableId) {
@@ -104,19 +131,15 @@ const ScheduleMain = () => {
 				>
 					<DragDropContext onDragEnd={handleDragEnd}>
 						<div className="flex justify-around items-center h-full w-full">
-							{["서류전형", "1차면접", "2차면접", "최종"].map(
-								(droppableId) => (
-									<DroppableArea
-										key={droppableId}
-										droppableId={droppableId}
-										items={getListByDroppableId(
-											droppableId
-										)}
-										handleDelete={handleDelete}
-										setModalOpen={setModalOpen}
-									/>
-								)
-							)}
+							{typeList.map((droppableId) => (
+								<DroppableArea
+									key={droppableId}
+									droppableId={droppableId}
+									items={getListByDroppableId(droppableId)}
+									handleDelete={handleDelete}
+									setModalOpen={setModalOpen}
+								/>
+							))}
 						</div>
 					</DragDropContext>
 				</div>
