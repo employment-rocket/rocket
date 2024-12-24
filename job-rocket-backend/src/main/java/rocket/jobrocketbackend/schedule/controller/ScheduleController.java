@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest;
+import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyTypeRequest;
 import rocket.jobrocketbackend.schedule.controller.response.ScheduleResponse;
-import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.service.ScheduleService;
 
@@ -25,7 +25,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @GetMapping
-    public ResponseEntity<Map<String ,List<ScheduleResponse>>> getScheduleList(){
+    public ResponseEntity<Map<String ,List<ScheduleResponse>>> scheduleList(){
         HashMap<String, List<ScheduleResponse>> response = new HashMap<>();
         Map<String, List<ScheduleDTO>> map = scheduleService.getScheduleList(1L);
         for(String key : map.keySet()){
@@ -35,14 +35,16 @@ public class ScheduleController {
     }
 
     @PatchMapping
-    public void updateSchedule(){
-        // TODO 나중에 내용 넣기
+    public ResponseEntity<ScheduleResponse> scheduleTypeModify(@RequestBody ScheduleModifyTypeRequest request){
+        ScheduleDTO dto = scheduleService.modifyScheduleType(request.toTypeModifyDto());
+        return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.OK);
+
     }
 
     @PostMapping
-    public ResponseEntity createSchedule(@RequestBody ScheduleCreateRequest request){
+    public ResponseEntity<ScheduleResponse> scheduleCreate(@RequestBody ScheduleCreateRequest request){
         //TODO 로그인 기능관련 병합후 추후 처리
-        ScheduleDTO dto = scheduleService.createScheduleFrom(ScheduleCreateDTO.from(request));
+        ScheduleDTO dto = scheduleService.createScheduleFrom(request.toCreateDTO());
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
     }
 }

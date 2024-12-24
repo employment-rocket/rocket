@@ -3,11 +3,12 @@ package rocket.jobrocketbackend.schedule.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import rocket.jobrocketbackend.schedule.controller.request.ScheduleUpdateTypeRequest;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleTypeModifyDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
+import rocket.jobrocketbackend.schedule.exception.ScheduleNotFoundException;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ScheduleService {
 
     @Transactional
     public ScheduleDTO createScheduleFrom(ScheduleCreateDTO dto){
-        ScheduleEntity schedule = scheduleRepository.save(dto.toNewScheduleEntity());
+        ScheduleEntity schedule = scheduleRepository.save(dto.toCreateEntity());
         return ScheduleDTO.from(schedule);
     }
 
@@ -39,8 +40,10 @@ public class ScheduleService {
         }
         return result;
     }
-
-    public ScheduleDTO updateSceduleType(ScheduleUpdateTypeRequest request){
-        return null;
+    @Transactional
+    public ScheduleDTO modifyScheduleType(ScheduleTypeModifyDTO dto){
+        ScheduleEntity schedule = scheduleRepository.findById(dto.getScheduleId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
+        schedule.modifyType(dto.getType());
+        return ScheduleDTO.from(schedule);
     }
 }

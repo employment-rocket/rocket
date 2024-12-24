@@ -33,4 +33,8 @@ public class ScheduleEntity {
 
     @Enumerated(EnumType.STRING)
     private ScheduleState state;
+
+    public void modifyType(ScheduleType type){
+        this.type = type;
+    }
 }
