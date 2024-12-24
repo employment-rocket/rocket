@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import api from "../../api/api";
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
+  const [isLogin, setLogin] = useState(false);
 
   // 인가 코드 추출
   const code = new URL(window.location.href).searchParams.get("code");
@@ -22,9 +23,10 @@ const KakaoLogin = () => {
             localStorage.setItem("Authorization", response.data);
             
             // 로그인 성공 후, 메인 페이지로 이동
-            if (response.status === 200) {
-              navigate("/");
-            }
+            //if (response.status === 200) {/
+              setLogin(true);
+             //navigate("/");
+            // }
           } catch (error) {
             console.error("Kakao Login Failed:", error);
           }
@@ -33,7 +35,14 @@ const KakaoLogin = () => {
         if (code) {
           kakaoLogin();
         }
-      }, [code, navigate]);
+      }, [code]);
+
+        // 로그인 성공 후 이동
+    useEffect(() => {
+      if (isLogin) {
+        navigate("/career");
+      }
+    }, [isLogin, navigate]);
       
   return (
     <div className="LoginHandler">

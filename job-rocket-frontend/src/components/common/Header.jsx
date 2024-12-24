@@ -32,6 +32,11 @@ const Header = () => {
 		}
 	};
 
+	const handleLogin = () => {
+		setLogin(true);
+		setModalOpen(false);
+	  };
+
 	return (
 		<div
 			className="flex items-center w-full top-0 h-[60px] px-6 border-b border-gray-300"
@@ -118,16 +123,11 @@ const Header = () => {
 			</>
     		)}	
 			</div>
-			
-
-      <LoginPage
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onLogin={() => {
-          setLogin(true);
-          setModalOpen(false);
-        }}
-      />
+      		<LoginPage
+        		isOpen={isModalOpen}
+        		onClose={() => setModalOpen(false)}
+        		onLogin={handleLogin}
+      		/>
     </div>
   );
 };
