@@ -2,6 +2,7 @@ package rocket.jobrocketbackend.schedule.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest;
@@ -39,10 +40,10 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createSchedule(@RequestBody ScheduleCreateRequest request){
+    public ResponseEntity createSchedule(@RequestBody ScheduleCreateRequest request){
         //TODO 로그인 기능관련 병합후 추후 처리
-        scheduleService.createScheduleFrom(ScheduleCreateDTO.from(request));
-        return ResponseEntity.ok(null);
+        ScheduleDTO dto = scheduleService.createScheduleFrom(ScheduleCreateDTO.from(request));
+        return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
     }
 }
 

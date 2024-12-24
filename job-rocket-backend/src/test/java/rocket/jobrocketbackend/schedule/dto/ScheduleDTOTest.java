@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
+import rocket.jobrocketbackend.schedule.exception.IllegalScheduleStateException;
 
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class ScheduleDTOTest {
@@ -29,6 +31,21 @@ class ScheduleDTOTest {
         assertThat(newScheduleEntity.getDueDate()).isEqualTo(LocalDate.of(2024, 12, 23));
         assertThat(newScheduleEntity.getType()).isEqualTo(ScheduleType.Document);
         assertThat(newScheduleEntity.getState()).isEqualTo(ScheduleState.Ongoing);
+    }
+    @Test
+    @DisplayName("ScheduleCreateDTO에 유효하지 않은 state를 넣으면 예외를 발생시킨다.")
+    void toNewScheduleEntityThrowException() {
+        //given
+        ScheduleCreateDTO dto = ScheduleCreateDTO.builder().memo("메모입니다")
+                .title("제목입니다")
+                .state("ongoing")
+                .dueDate(LocalDate.of(2024, 12, 23))
+                .build();
+        //when
+        //then
+        assertThatThrownBy(dto::toNewScheduleEntity)
+                .isInstanceOf(IllegalScheduleStateException.class)
+                .hasMessage("잘못된 상태 값입니다.");
     }
 
     @Test

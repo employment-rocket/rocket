@@ -3,6 +3,7 @@ package rocket.jobrocketbackend.schedule.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.schedule.controller.request.ScheduleUpdateTypeRequest;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
@@ -22,8 +23,9 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public void createScheduleFrom(ScheduleCreateDTO dto){
-        scheduleRepository.save(dto.toNewScheduleEntity());
+    public ScheduleDTO createScheduleFrom(ScheduleCreateDTO dto){
+        ScheduleEntity schedule = scheduleRepository.save(dto.toNewScheduleEntity());
+        return ScheduleDTO.from(schedule);
     }
 
     public Map<String, List<ScheduleDTO>> getScheduleList(Long userId){
@@ -36,5 +38,9 @@ public class ScheduleService {
             result.putIfAbsent(key, new ArrayList<ScheduleDTO>());
         }
         return result;
+    }
+
+    public ScheduleDTO updateSceduleType(ScheduleUpdateTypeRequest request){
+        return null;
     }
 }
