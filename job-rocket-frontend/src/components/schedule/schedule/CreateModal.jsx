@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import del from "../../../assets/delete.png";
 import { createScheduleItem } from "../../../api/schedule/schedule";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CreateModal = ({ isOpen, onClose, onCancel }) => {
+	const queryClient = useQueryClient();
 	const [title, setTitle] = useState("");
 	const [date, setDate] = useState("");
 	const [memo, setMemo] = useState("");
@@ -17,13 +19,14 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 		setState("진행중"); // 초기값을 진행중으로
 	};
 
-	const onSave = () => {
+	const onSave = async () => {
 		// 저장 로직 (title, date, memo, state 사용)
 		console.log("제목:", title);
 		console.log("마감일:", date);
 		console.log("메모:", memo);
 		console.log("상태:", state);
-		createScheduleItem({ title, dueDate: date, memo, state });
+		await createScheduleItem({ title, dueDate: date, memo, state });
+		queryClient.invalidateQueries(["schedule"]);
 		resetForm();
 		onCancel();
 	};
