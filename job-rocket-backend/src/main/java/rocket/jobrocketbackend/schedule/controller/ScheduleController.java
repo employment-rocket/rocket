@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest;
+import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyRequest;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyTypeRequest;
 import rocket.jobrocketbackend.schedule.controller.response.ScheduleResponse;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
@@ -53,6 +54,13 @@ public class ScheduleController {
         log.info("deleteId = {}",scheduleId);
         scheduleService.delete(scheduleId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponse> scheduleModify(@PathVariable("scheduleId") Long scheduleId,@RequestBody ScheduleModifyRequest request){
+        log.info("request = {}",request);
+        scheduleService.modify(request.toModifyDto(scheduleId));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

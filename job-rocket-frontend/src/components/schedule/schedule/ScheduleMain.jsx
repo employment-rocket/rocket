@@ -9,16 +9,11 @@ import {
 } from "../../../api/schedule/schedule";
 import ScheduleItem from "./ScheduleItem";
 import CreateModal from "./CreateModal";
+import { TYPE_MAP } from "./const";
 
 // droppableId(한글) ↔ 서버 type(영문) 맵핑을 관리
-const TYPE_MAP = {
-	서류전형: "Document",
-	"1차면접": "First",
-	"2차면접": "Second",
-	최종: "Final",
-};
 
-const typeList = Object.keys(TYPE_MAP); // ["서류전형", "1차면접", "2차면접", "최종"]
+const typeList = Object.keys(TYPE_MAP);
 
 export default function ScheduleMain() {
 	const { data, isLoading } = useQuery({

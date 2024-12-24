@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleTypeModifyDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
@@ -49,5 +50,10 @@ public class ScheduleService {
     @Transactional
     public void delete(Long id) {
         scheduleRepository.deleteById(id);
+    }
+    @Transactional
+    public void modify(ScheduleModifyDTO dto){
+        ScheduleEntity schedule = scheduleRepository.findById(dto.getId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
+        schedule.modify(dto);
     }
 }

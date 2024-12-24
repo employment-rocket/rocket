@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleTypeModifyDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
@@ -151,5 +152,24 @@ class ScheduleServiceTest {
         list = scheduleRepository.findAll();
         // then
         assertThat(list).hasSize(count - 1);
+    }
+
+    @Test
+    @DisplayName("DTO에 담겨있는 정보로 일정관리를 수정한다.")
+    void modify() {
+        // given
+        LocalDate date = LocalDate.of(2024, 12, 22);
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).userId(1L).build();
+        scheduleRepository.save(entity);
+        ScheduleModifyDTO dto = ScheduleModifyDTO.builder().id(entity.getId()).state(ScheduleState.Passed).title("test2").memo("test2").dueDate(date).build();
+        // when
+        scheduleService.modify(dto);
+        // then
+        assertThat(entity.getId()).isEqualTo(dto.getId());
+        assertThat(entity.getMemo()).isEqualTo(dto.getMemo());
+        assertThat(entity.getType()).isEqualTo(ScheduleType.Final);
+        assertThat(entity.getTitle()).isEqualTo(dto.getTitle());
+        assertThat(entity.getDueDate()).isEqualTo(dto.getDueDate());
+        assertThat(entity.getState()).isEqualTo(dto.getState());
     }
 }

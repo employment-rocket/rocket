@@ -58,9 +58,26 @@ const deleteScheduleItem = async ({ id }) => {
 	}
 };
 
+const updateScheduleItem = async ({ id, title, memo, dueDate, state }) => {
+	const body = {
+		title: title,
+		memo: memo,
+		dueDate: dueDate,
+		state: state,
+	};
+	try {
+		const response = await api.put(`/schedule/${id}`, body);
+		if (response.status !== 201) {
+			console.log("/schedule api update error");
+		}
+	} catch (error) {
+		console.log("/schedule api update error", error);
+	}
+};
 export {
 	getSchedules,
 	createScheduleItem,
 	modifyScheduleItem,
 	deleteScheduleItem,
+	updateScheduleItem,
 };

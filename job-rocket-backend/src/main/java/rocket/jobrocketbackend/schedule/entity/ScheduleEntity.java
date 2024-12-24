@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 
 import java.time.LocalDate;
 
@@ -36,5 +38,11 @@ public class ScheduleEntity {
 
     public void modifyType(ScheduleType type){
         this.type = type;
+    }
+    public void modify(ScheduleModifyDTO dto){
+        this.title = dto.getTitle();
+        this.dueDate = dto.getDueDate();
+        this.memo = dto.getMemo();
+        this.state = dto.getState();
     }
 }

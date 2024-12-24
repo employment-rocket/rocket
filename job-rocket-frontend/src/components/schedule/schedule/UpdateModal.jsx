@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import del from "../../../assets/delete.png";
+import { updateScheduleItem } from "../../../api/schedule/schedule";
+import { State_MAP } from "./const";
 
 const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
+	const id = data.id;
 	const [title, setTitle] = useState(data.title);
 	const [date, setDate] = useState(data.dueDate);
 	const [memo, setMemo] = useState(data.memo);
-	const [state, setState] = useState(data.state);
+	const [state, setState] = useState(State_MAP[data.state]);
 
 	if (!isOpen) return null;
 
 	const onSave = () => {
-		// 저장 로직 (title, date, memo, state 사용)
-		console.log("제목:", title);
-		console.log("마감일:", date);
-		console.log("메모:", memo);
-		console.log("상태:", state);
+		updateScheduleItem({
+			id: data.id,
+			title: title,
+			memo: memo,
+			dueDate: date,
+			state: state,
+		});
 		onCancel();
 	};
 
@@ -67,9 +72,9 @@ const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
 					value={state}
 					onChange={(e) => setState(e.target.value)}
 				>
-					<option value="진행중">진행중</option>
-					<option value="탈락">탈락</option>
-					<option value="최종합격">최종합격</option>
+					<option value="Ongoing">진행중</option>
+					<option value="Fail">탈락</option>
+					<option value="Passed">최종합격</option>
 				</select>
 
 				<div className="flex justify-around mt-2 w-full">
