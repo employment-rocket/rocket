@@ -5,10 +5,16 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const CreateModal = ({ isOpen, onClose, onCancel }) => {
 	const queryClient = useQueryClient();
+
 	const [title, setTitle] = useState("");
 	const [date, setDate] = useState("");
 	const [memo, setMemo] = useState("");
 	const [state, setState] = useState("Ongoing");
+
+	const [error, setError] = useState({
+		title: "",
+		date: "",
+	});
 
 	if (!isOpen) return null;
 
@@ -16,17 +22,36 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 		setTitle("");
 		setDate("");
 		setMemo("");
-		setState("Ongoing"); // 초기값을 진행중으로
+		setState("Ongoing");
+		setError({ title: "", date: "" });
 	};
 
 	const onSave = async () => {
-		// 저장 로직 (title, date, memo, state 사용)
+		let hasError = false;
+		const newError = { title: "", date: "" };
+
+		if (!title.trim()) {
+			newError.title = "제목은 필수입니다.";
+			hasError = true;
+		}
+		if (!date) {
+			newError.date = "마감일은 필수입니다.";
+			hasError = true;
+		}
+		setError(newError);
+
+		if (hasError) {
+			return;
+		}
+
 		console.log("제목:", title);
 		console.log("마감일:", date);
 		console.log("메모:", memo);
 		console.log("상태:", state);
+
 		await createScheduleItem({ title, dueDate: date, memo, state });
 		queryClient.invalidateQueries(["schedule"]);
+
 		resetForm();
 		onCancel();
 	};
@@ -56,6 +81,10 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 					onChange={(e) => setTitle(e.target.value)}
 				/>
 
+				{error.title && (
+					<div className="text-red-500 text-sm">{error.title}</div>
+				)}
+
 				<div>마감일</div>
 				<input
 					type="date"
@@ -64,6 +93,10 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 					value={date}
 					onChange={(e) => setDate(e.target.value)}
 				/>
+
+				{error.date && (
+					<div className="text-red-500 text-sm">{error.date}</div>
+				)}
 
 				<div>메모</div>
 				<textarea

@@ -12,9 +12,31 @@ const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
 	const [memo, setMemo] = useState(data.memo);
 	const [state, setState] = useState(State_MAP[data.state]);
 
+	const [error, setError] = useState({
+		title: "",
+		date: "",
+	});
+
 	if (!isOpen) return null;
 
 	const onSave = async () => {
+		let hasError = false;
+		const newError = { title: "", date: "" };
+
+		if (!title.trim()) {
+			newError.title = "제목은 필수입니다.";
+			hasError = true;
+		}
+		if (!date) {
+			newError.date = "마감일은 필수입니다.";
+			hasError = true;
+		}
+		setError(newError);
+
+		if (hasError) {
+			return;
+		}
+
 		await updateScheduleItem({
 			id: data.id,
 			title: title,
@@ -50,6 +72,9 @@ const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
 				/>
+				{error.title && (
+					<div className="text-red-500 text-sm">{error.title}</div>
+				)}
 
 				<div>마감일</div>
 				<input
@@ -59,6 +84,10 @@ const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
 					value={date}
 					onChange={(e) => setDate(e.target.value)}
 				/>
+
+				{error.date && (
+					<div className="text-red-500 text-sm">{error.date}</div>
+				)}
 
 				<div>메모</div>
 				<textarea

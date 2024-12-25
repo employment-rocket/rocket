@@ -10,8 +10,11 @@ const ScheduleItem = ({ item, droppableId, handleDelete }) => {
 	return (
 		<>
 			<div className="flex flex-col w-full py-2 space-y-3">
-				<div className="flex justify-between items-center">
-					<div onClick={() => setUpdateModalOpen(true)}>
+				<div className="flex justify-between items-center ">
+					<div
+						className="overflow-hidden text-ellipsis whitespace-nowrap "
+						onClick={() => setUpdateModalOpen(true)}
+					>
 						{item.title}
 					</div>
 
