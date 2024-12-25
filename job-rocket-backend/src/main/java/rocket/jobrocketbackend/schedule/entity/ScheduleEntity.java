@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class ScheduleEntity {
     private String memo;
     /*
     @ManyToOne(fetch = FetchType.Lazy)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
     */
     private Long userId;

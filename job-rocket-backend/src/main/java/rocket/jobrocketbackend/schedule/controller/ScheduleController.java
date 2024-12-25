@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyRequest;
@@ -39,11 +40,10 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponse> scheduleTypeModify(@RequestBody ScheduleModifyTypeRequest request){
         ScheduleDTO dto = scheduleService.modifyType(request.toTypeModifyDto());
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.OK);
-
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponse> scheduleCreate(@RequestBody ScheduleCreateRequest request){
+    public ResponseEntity<ScheduleResponse> scheduleCreate(@Validated @RequestBody ScheduleCreateRequest request){
         //TODO 로그인 기능관련 병합후 추후 처리
         ScheduleDTO dto = scheduleService.create(request.toCreateDTO());
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
@@ -56,11 +56,10 @@ public class ScheduleController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{scheduleId}")
+    @PatchMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponse> scheduleModify(@PathVariable("scheduleId") Long scheduleId,@RequestBody ScheduleModifyRequest request){
-        log.info("request = {}",request);
         scheduleService.modify(request.toModifyDto(scheduleId));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

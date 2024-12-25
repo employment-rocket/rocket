@@ -22,7 +22,7 @@ const createScheduleItem = async ({ title, dueDate, memo, state }) => {
 		if (response.status === 201) {
 			return response.data;
 		} else {
-			console.error("/schedule api post error");
+			console.error("/schedule api post error", response);
 		}
 	} catch (error) {
 		console.error("/schedule api post error", error);
@@ -66,8 +66,8 @@ const updateScheduleItem = async ({ id, title, memo, dueDate, state }) => {
 		state: state,
 	};
 	try {
-		const response = await api.put(`/schedule/${id}`, body);
-		if (response.status !== 201) {
+		const response = await api.patch(`/schedule/${id}`, body);
+		if (response.status !== 200) {
 			console.log("/schedule api update error");
 		}
 	} catch (error) {

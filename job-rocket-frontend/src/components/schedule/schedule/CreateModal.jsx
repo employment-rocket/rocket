@@ -16,7 +16,7 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 		setTitle("");
 		setDate("");
 		setMemo("");
-		setState("진행중"); // 초기값을 진행중으로
+		setState("Ongoing"); // 초기값을 진행중으로
 	};
 
 	const onSave = async () => {
