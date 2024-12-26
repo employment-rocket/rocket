@@ -1,31 +1,95 @@
 import React, { useState } from "react";
+import { createAnswer, updateAnswer, toggleAnswerIsIn } from "../../../api/question/QuestionApi";
 
 const PersonalQuestion = ({
+    qid,
     question,
+    answerId,
+    answer,
+    isIn,
     onAddCheckedQuestion,
     onRemoveCheckedQuestion,
+    checkedQuestions,
 }) => {
+    const [isEditing, setIsEditing] = useState(!answer);
     const [isAnswering, setIsAnswering] = useState(false);
-    const [isSelected, setIsSelected] = useState(false);
-    const [answer, setAnswer] = useState("");
-
-    const toggleAnswerInput = (e) => {
-        e.stopPropagation();
-        setIsAnswering((prev) => !prev);
-    };
+    const [currentAnswer, setCurrentAnswer] = useState(answer || "");
+    const [newAnswerId, setNewAnswerId] = useState(answerId || null);
+    const isSelected = checkedQuestions?.personalAnswerList?.some((q) => q.qid === qid);
 
     const handleInputChange = (e) => {
-        setAnswer(e.target.value);
+        setCurrentAnswer(e.target.value);
     };
 
-    const handleToggleCheckedQuestion = (e) => {
+    const handleToggleCheckedQuestion = async (e) => {
         e.stopPropagation();
-        if (isSelected) {
-            onRemoveCheckedQuestion(question);
-            setIsSelected(false);
-        } else {
-            onAddCheckedQuestion(question);
-            setIsSelected(true);
+        try {
+            if (isSelected) {
+                const confirm = window.confirm("선택을 해제하시겠습니까?");
+                if (confirm) {
+                    await toggleAnswerIsIn({ answerId: newAnswerId });
+                    onRemoveCheckedQuestion({ qid, question, category: "personal", answerId: newAnswerId });
+                }
+            } else {
+                if (!newAnswerId) {
+                    const createdAnswerId = await createAnswer({
+                        memberId: 1,
+                        category: "personal",
+                        qid,
+                        content: currentAnswer,
+                        isIn: true,
+                    });
+                    onAddCheckedQuestion({
+                        qid,
+                        question,
+                        answerId: createdAnswerId,
+                        content: currentAnswer,
+                    });
+                    setNewAnswerId(createdAnswerId);
+                } else {
+                    await toggleAnswerIsIn({ answerId: newAnswerId });
+                    onAddCheckedQuestion({
+                        qid,
+                        question,
+                        answerId: newAnswerId,
+                        content: currentAnswer,
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling question:", error);
+        }
+    };
+
+    const handleSave = async () => {
+        try {
+            if (!newAnswerId) {
+                const createdAnswerId = await createAnswer({
+                    memberId: 1,
+                    category: "personal",
+                    qid,
+                    content: currentAnswer,
+                    isIn: false,
+                });
+                onAddCheckedQuestion({
+                    qid,
+                    question,
+                    answerId: createdAnswerId,
+                    content: currentAnswer,
+                });
+                setNewAnswerId(createdAnswerId);
+                alert("답변이 작성되었습니다.");
+            } else {
+                await updateAnswer({
+                    answerId: newAnswerId,
+                    content: currentAnswer,
+                });
+                alert("답변이 수정되었습니다.");
+            }
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Error saving answer:", error);
+            alert("답변 저장 중 오류가 발생했습니다.");
         }
     };
 
@@ -33,9 +97,9 @@ const PersonalQuestion = ({
         <div className="border rounded-lg shadow-md p-4 bg-white hover:bg-gray-50 transition">
             <div
                 className="flex justify-between items-center cursor-pointer"
-                onClick={toggleAnswerInput}
+                onClick={() => setIsAnswering(!isAnswering)}
             >
-                <span className="text-sm text-gray-700">{question}</span>
+                <span className="text-sm text-gray-700 font-semibold">{question}</span>
                 <button
                     className={`px-3 py-1 text-sm rounded-md border-2 transition ${isSelected
                         ? "bg-blue-500 text-white border-blue-500"
@@ -52,7 +116,7 @@ const PersonalQuestion = ({
             {isAnswering && (
                 <div>
                     <textarea
-                        value={answer}
+                        value={currentAnswer}
                         onChange={handleInputChange}
                         placeholder="답변을 입력하세요..."
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -60,10 +124,13 @@ const PersonalQuestion = ({
                     ></textarea>
                     <div className="flex justify-end mt-2">
                         <button
-                            className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                            onClick={() => setIsAnswering(false)}
+                            className={`px-4 py-2 rounded-lg transition ${isEditing
+                                ? "bg-green-500 text-white hover:bg-green-600"
+                                : "bg-yellow-500 text-white hover:bg-yellow-600"
+                                }`}
+                            onClick={handleSave}
                         >
-                            저장
+                            {isEditing ? "저장" : "수정"}
                         </button>
                     </div>
                 </div>
