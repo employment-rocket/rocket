@@ -9,8 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CsResDto {
     private Long qid;
+    private Long answerId;
     private String question;
     private String subcategory;
     private String suggested;
     private String answer;
+    private boolean isIn;
 }
