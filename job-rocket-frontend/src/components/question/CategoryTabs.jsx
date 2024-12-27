@@ -1,12 +1,12 @@
 import React from "react";
 
 const categories = [
-    { name: "CS 리스트", value: "cs" },
-    { name: "이력서 예상 질문", value: "introduce" },
-    { name: "기업별 질문", value: "company" },
     { name: "인성 질문", value: "personal" },
+    { name: "CS 질문", value: "cs" },
+    { name: "기업별 질문", value: "company" },
+    { name: "자소서 기반 질문", value: "introduce" },
     { name: "면접 복기", value: "review" },
-    { name: "질문 모음", value: "script" },
+    { name: "나의 스크립트", value: "script" },
 ];
 
 const CategoryTabs = ({ category, setCategory }) => (

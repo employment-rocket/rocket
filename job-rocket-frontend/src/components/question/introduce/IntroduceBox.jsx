@@ -17,8 +17,8 @@ const IntroduceBox = ({ onSelectIntroduce }) => {
 
     return (
         <div
-            className="p-4 bg-white border-2 border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
-            style={{ fontFamily: "CookieBold" }}
+            className="p-4 bg-white border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
+            style={{ fontFamily: "CookieBold", borderWidth: "3px" }}
         >
             <div className="flex flex-col mb-4">
                 <h3 className="text-lg font-bold text-center mb-2">자소서 목록</h3>

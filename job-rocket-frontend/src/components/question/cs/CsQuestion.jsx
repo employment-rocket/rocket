@@ -1,40 +1,91 @@
 import React, { useState } from "react";
+import { toggleAnswerIsIn, createAnswer, updateAnswer } from "../../../api/question/QuestionApi";
 
 const CsQuestion = ({
+    qid,
+    answerId,
     question,
     category,
+    answer,
     recommendedAnswer,
+    isIn,
     onAddCheckedQuestion,
     onRemoveCheckedQuestion,
+    checkedQuestions,
 }) => {
+    const [isEditing, setIsEditing] = useState(!answer);
     const [isAnswering, setIsAnswering] = useState(false);
-    const [isSelected, setIsSelected] = useState(false);
-    const [answer, setAnswer] = useState("");
+    const [currentAnswer, setCurrentAnswer] = useState(answer || "");
     const [showRecommendedAnswer, setShowRecommendedAnswer] = useState(false);
-
-    const toggleAnswerInput = (e) => {
-        e.stopPropagation();
-        setIsAnswering((prev) => !prev);
-    };
+    const [newAnswerId, setNewAnswerId] = useState(answerId || null)
+    const isSelected = checkedQuestions.csAnswerList?.some((q) => q.qid === qid);
 
     const handleInputChange = (e) => {
-        setAnswer(e.target.value);
+        setCurrentAnswer(e.target.value);
     };
 
-    const handleToggleCheckedQuestion = (e) => {
+    const handleToggleCheckedQuestion = async (e) => {
         e.stopPropagation();
-        if (isSelected) {
-            onRemoveCheckedQuestion(question);
-            setIsSelected(false);
-        } else {
-            onAddCheckedQuestion(question);
-            setIsSelected(true);
+        try {
+            if (isSelected) {
+                const confirm = window.confirm("선택을 해제하시겠습니까?");
+                if (confirm) {
+                    await toggleAnswerIsIn({ answerId: newAnswerId });
+                    onRemoveCheckedQuestion({ qid, question, category: "cs", answerId: newAnswerId });
+                }
+            } else {
+                if (!answerId) {
+                    const newAnswerId = await createAnswer({
+                        memberId: 1,
+                        category: "cs",
+                        qid,
+                        content: currentAnswer,
+                        isIn: true,
+                    });
+                    onAddCheckedQuestion({ qid, question, category: "cs", answerId: newAnswerId, content: currentAnswer });
+                } else {
+                    await toggleAnswerIsIn({ answerId: newAnswerId });
+                    onAddCheckedQuestion({ qid, question, category: "cs", answerId, content: currentAnswer });
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling checked question:", error);
         }
     };
 
-    const toggleRecommendedAnswer = (e) => {
-        e.stopPropagation();
+    const toggleAnswerInput = () => {
+        setIsAnswering((prev) => !prev);
+    };
+
+    const toggleRecommendedAnswer = () => {
         setShowRecommendedAnswer((prev) => !prev);
+    };
+
+    const handleSave = async () => {
+        try {
+            if (!newAnswerId) {
+                const createdAnswerId = await createAnswer({
+                    memberId: 1,
+                    category: "cs",
+                    qid,
+                    content: currentAnswer,
+                    isIn: false,
+                });
+                onAddCheckedQuestion({ qid, question, category: "cs", answerId: createdAnswerId, content: currentAnswer });
+                setNewAnswerId(createdAnswerId);
+                alert("답변이 작성되었습니다.");
+            } else {
+                await updateAnswer({
+                    answerId: newAnswerId,
+                    content: currentAnswer,
+                });
+                alert("답변이 수정되었습니다.");
+            }
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Error saving answer:", error);
+            alert("답변 저장 중 오류가 발생했습니다.");
+        }
     };
 
     return (
@@ -62,11 +113,12 @@ const CsQuestion = ({
             {isAnswering && (
                 <div>
                     <textarea
-                        value={answer}
+                        value={currentAnswer}
                         onChange={handleInputChange}
                         placeholder="답변을 입력하세요..."
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                         rows="3"
+                        disabled={!isEditing && answer}
                     ></textarea>
                     <div className="flex justify-between mt-2">
                         <button
@@ -76,10 +128,13 @@ const CsQuestion = ({
                             {showRecommendedAnswer ? "추천 답변 숨기기" : "추천 답변 보기"}
                         </button>
                         <button
-                            className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                            onClick={() => setIsAnswering(false)}
+                            className={`px-3 py-1 rounded-lg transition ${isEditing
+                                ? "bg-green-500 text-white hover:bg-green-600"
+                                : "bg-yellow-500 text-white hover:bg-yellow-600"
+                                }`}
+                            onClick={isEditing ? handleSave : () => setIsEditing(true)}
                         >
-                            저장
+                            {isEditing ? "저장" : "수정"}
                         </button>
                     </div>
                     {showRecommendedAnswer && (

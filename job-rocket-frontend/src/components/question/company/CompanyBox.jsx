@@ -17,8 +17,8 @@ const CompanyBox = ({ onSelectCompany }) => {
 
     return (
         <div
-            className="p-4 bg-gray-50 rounded-lg shadow-md h-[75vh] flex flex-col"
-            style={{ fontFamily: "CookieBold" }}
+            className="p-4 bg-white border-blue-400 rounded-lg shadow-md h-[75vh] flex flex-col"
+            style={{ fontFamily: "CookieBold", borderWidth: "3px" }}
         >
             <h3 className="text-lg font-bold mb-4 text-center">기업 선택하기</h3>
             <div className="mb-4">

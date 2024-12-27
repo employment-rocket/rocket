@@ -10,33 +10,34 @@ import rocket.jobrocketbackend.question.cs.dto.response.CsResDto;
 import rocket.jobrocketbackend.question.cs.entity.CsEntity;
 import rocket.jobrocketbackend.question.cs.repository.CsRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CsService {
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 4;
     private final CsRepository csRepository;
     private final AnswerJpaRepository answerJpaRepository;
 
-    public Page<CsResDto> findCsList(int page, Long memberId) {
+    public Page<CsResDto> findCsListBySubcategories(int page, Long memberId, List<String> subcategories) {
         PageRequest pageable = PageRequest.of(page, PAGE_SIZE);
-        Page<CsEntity> csEntities = csRepository.findAll(pageable);
-
-        return csEntities.map(entity -> convertToDto(entity, memberId));
+        return csRepository.findBySubcategoryIn(subcategories, pageable)
+                .map(entity -> convertToDto(entity, memberId));
     }
 
     private CsResDto convertToDto(CsEntity entity, Long memberId) {
-        Optional<AnswerEntity> answerEntity = Optional.ofNullable(
-                answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, "cs", entity.getQid())
-        );
+        AnswerEntity answerEntity = answerJpaRepository
+                .findByMemberIdAndCategoryAndQid(memberId, "cs", entity.getQid())
+                .orElse(null);
 
-        return new CsResDto(
-                entity.getQid(),
-                entity.getQuestion(),
-                entity.getSubcategory(),
-                entity.getSuggested(),
-                answerEntity.map(AnswerEntity::getContent).orElse("")
-        );
+        return CsResDto.builder()
+                .qid(entity.getQid())
+                .answerId(answerEntity != null ? answerEntity.getAnswerId() : null)
+                .question(entity.getQuestion())
+                .subcategory(entity.getSubcategory())
+                .suggested(entity.getSuggested())
+                .answer(answerEntity != null ? answerEntity.getContent() : "")
+                .isIn(answerEntity != null && answerEntity.isIn())
+                .build();
     }
 }
