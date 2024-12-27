@@ -6,7 +6,6 @@ const CheckedQuestions = ({ className, checkedQuestions, setCheckedQuestions, lo
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleDelete = async (question) => {
-        console.log(question);
         const confirm = window.confirm("선택을 해제하시겠습니까?");
         if (confirm) {
             await toggleAnswerIsIn({ answerId: question.answerId });

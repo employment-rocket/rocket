@@ -9,6 +9,7 @@ import CompanyBox from "../components/question/company/CompanyBox";
 import CompanyQuestionBox from "../components/question/company/CompanyQuestionBox";
 import CsContainer from "../components/question/cs/CsContainer";
 import PersonalContainer from "../components/question/personal/PersonalContainer";
+import ScriptContainer from "../components/question/script/ScriptContainer";
 import { getCheckedAnswers } from "../api/question/QuestionApi";
 
 const Question = () => {
@@ -70,14 +71,18 @@ const Question = () => {
 	return (
 		<div className="flex flex-col w-full h-full">
 			<CategoryTabs category={category} setCategory={setCategory} />
+
 			<div className="flex w-full h-full mt-4 px-6 space-x-4">
-				<CheckedQuestions
-					className="w-1/6"
-					checkedQuestions={checkedQuestions}
-					setCheckedQuestions={setCheckedQuestions}
-					loading={loading}
-					error={error}
-				/>
+				{category !== 'script' && (
+					<CheckedQuestions
+						className="w-1/6"
+						checkedQuestions={checkedQuestions}
+						setCheckedQuestions={setCheckedQuestions}
+						loading={loading}
+						error={error}
+					/>
+
+				)}
 				<div className="flex-1">
 					{category === "personal" && (
 						<PersonalContainer
@@ -156,6 +161,9 @@ const Question = () => {
 								/>
 							</div>
 						</div>
+					)}
+					{category === "script" && (
+						<ScriptContainer checkedQuestions={checkedQuestions} />
 					)}
 				</div>
 			</div>

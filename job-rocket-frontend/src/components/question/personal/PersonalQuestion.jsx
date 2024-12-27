@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createAnswer, updateAnswer, toggleAnswerIsIn } from "../../../api/question/QuestionApi";
 
 const PersonalQuestion = ({
@@ -15,7 +15,12 @@ const PersonalQuestion = ({
     const [isAnswering, setIsAnswering] = useState(false);
     const [currentAnswer, setCurrentAnswer] = useState(answer || "");
     const [newAnswerId, setNewAnswerId] = useState(answerId || null);
-    const isSelected = checkedQuestions?.personalAnswerList?.some((q) => q.qid === qid);
+    const [isSelected, setIsSelected] = useState(false);
+
+    useEffect(() => {
+        const selected = checkedQuestions?.personalAnswerList?.some((q) => q.qid === qid);
+        setIsSelected(selected);
+    }, [checkedQuestions, qid]);
 
     const handleInputChange = (e) => {
         setCurrentAnswer(e.target.value);
@@ -42,6 +47,7 @@ const PersonalQuestion = ({
                     onAddCheckedQuestion({
                         qid,
                         question,
+                        category: "personal",
                         answerId: createdAnswerId,
                         content: currentAnswer,
                     });
@@ -51,6 +57,7 @@ const PersonalQuestion = ({
                     onAddCheckedQuestion({
                         qid,
                         question,
+                        category: "personal",
                         answerId: newAnswerId,
                         content: currentAnswer,
                     });
@@ -74,6 +81,7 @@ const PersonalQuestion = ({
                 onAddCheckedQuestion({
                     qid,
                     question,
+                    category: "personal",
                     answerId: createdAnswerId,
                     content: currentAnswer,
                 });
@@ -93,11 +101,15 @@ const PersonalQuestion = ({
         }
     };
 
+    const toggleAnswerInput = () => {
+        setIsAnswering((prev) => !prev);
+    };
+
     return (
         <div className="border rounded-lg shadow-md p-4 bg-white hover:bg-gray-50 transition">
             <div
                 className="flex justify-between items-center cursor-pointer"
-                onClick={() => setIsAnswering(!isAnswering)}
+                onClick={toggleAnswerInput}
             >
                 <span className="text-sm text-gray-700 font-semibold">{question}</span>
                 <button
@@ -128,7 +140,7 @@ const PersonalQuestion = ({
                                 ? "bg-green-500 text-white hover:bg-green-600"
                                 : "bg-yellow-500 text-white hover:bg-yellow-600"
                                 }`}
-                            onClick={handleSave}
+                            onClick={isEditing ? handleSave : () => setIsEditing(true)}
                         >
                             {isEditing ? "저장" : "수정"}
                         </button>

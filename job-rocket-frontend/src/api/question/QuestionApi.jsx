@@ -13,7 +13,6 @@ export const getCheckedAnswers = async (memberId) => {
 };
 
 export const createAnswer = async ({ memberId, category, qid, content = "", isIn = true }) => {
-    console.log("생성ㅅㅇㅇ성서");
     try {
         const response = await api.post("/answers", null, {
             params: { memberId, category, qid, content, isIn },
@@ -26,7 +25,6 @@ export const createAnswer = async ({ memberId, category, qid, content = "", isIn
 };
 
 export const updateAnswer = async ({ answerId, content }) => {
-    console.log("수수수수퍼노바");
     try {
         const response = await api.patch("/answers/content", null, {
             params: { answerId, content },

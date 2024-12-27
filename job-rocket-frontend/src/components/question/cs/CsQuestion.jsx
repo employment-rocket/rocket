@@ -62,7 +62,6 @@ const CsQuestion = ({
     };
 
     const handleSave = async () => {
-        console.log("asdfdadsffdasfdas:", newAnswerId)
         try {
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
@@ -73,7 +72,6 @@ const CsQuestion = ({
                     isIn: false,
                 });
                 onAddCheckedQuestion({ qid, question, category: "cs", answerId: createdAnswerId, content: currentAnswer });
-                console.log(createdAnswerId)
                 setNewAnswerId(createdAnswerId);
                 alert("답변이 작성되었습니다.");
             } else {
