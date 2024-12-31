@@ -26,7 +26,7 @@ public class ScheduleEntity {
     private String memo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private UserEntity user;
 
     @Enumerated(EnumType.STRING)

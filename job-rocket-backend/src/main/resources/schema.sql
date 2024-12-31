@@ -31,7 +31,7 @@ CREATE TABLE personal (
                           question VARCHAR(500) NOT NULL
 );
 
-/*CREATE TABLE schedule (
+CREATE TABLE schedule (
 	schedule_id	BIGINT	AUTO_INCREMENT PRIMARY KEY,
 	member_id BIGINT NOT NULL,
 	title	varchar(50)	,
@@ -40,4 +40,4 @@ CREATE TABLE personal (
 	type	varchar(20),
 	state	varchar(20),
     FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
-);*/
+);
