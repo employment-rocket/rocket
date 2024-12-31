@@ -8,6 +8,7 @@ import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleStateException;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleTypeException;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +27,7 @@ class ScheduleDTOTest {
                 .dueDate(LocalDate.of(2024, 12, 23))
                 .build();
         //when
-        ScheduleEntity newScheduleEntity = dto.toCreateEntity();
+        ScheduleEntity newScheduleEntity = dto.toCreateEntity(new UserEntity());
         //then
         assertThat(newScheduleEntity.getTitle()).isEqualTo("제목입니다");
         assertThat(newScheduleEntity.getMemo()).isEqualTo("메모입니다");
@@ -45,7 +46,7 @@ class ScheduleDTOTest {
                 .build();
         //when
         //then
-        assertThatThrownBy(dto::toCreateEntity)
+        assertThatThrownBy(() -> dto.toCreateEntity(new UserEntity()))
                 .isInstanceOf(IllegalScheduleStateException.class)
                 .hasMessage("잘못된 상태 값입니다.");
     }

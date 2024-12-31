@@ -11,6 +11,10 @@ import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 import rocket.jobrocketbackend.schedule.exception.ScheduleNotFoundException;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.exception.UserNotFoundException;
+import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +27,23 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ScheduleDTO create(ScheduleCreateDTO dto){
-        ScheduleEntity schedule = scheduleRepository.save(dto.toCreateEntity());
+        UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+        ScheduleEntity schedule = scheduleRepository.save(dto.toCreateEntity(user));
         return ScheduleDTO.from(schedule);
     }
 
     public Map<String, List<ScheduleDTO>> getScheduleList(Long userId){
-        //TODO 이것도 UserId -> UserEntity사용으로 바꾸기
-        Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUserId(userId)
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+        Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUser(user)
                 .stream().map(ScheduleDTO::from).collect(Collectors.groupingBy(dto -> dto.getType().name()));
 
         for (ScheduleType type : ScheduleType.values()) {
             String key = type.name();
-            result.putIfAbsent(key, new ArrayList<ScheduleDTO>());
+            result.putIfAbsent(key, new ArrayList<>());
         }
         return result;
     }
