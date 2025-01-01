@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from "react";
 import CategoryTabs from "../components/question/CategoryTabs";
 import CheckedQuestions from "../components/question/CheckedQuestions";
-import IntroduceBox from "../components/question/introduce/IntroduceBox";
-import IntroduceQuestionBox from "../components/question/introduce/IntroduceQuestionBox";
-import ReviewQuestionBox from "../components/question/review/ReviewQuestionBox";
-import ReviewBox from "../components/question/review/ReviewBox";
-import CompanyBox from "../components/question/company/CompanyBox";
-import CompanyQuestionBox from "../components/question/company/CompanyQuestionBox";
 import CsContainer from "../components/question/cs/CsContainer";
 import PersonalContainer from "../components/question/personal/PersonalContainer";
 import ScriptContainer from "../components/question/script/ScriptContainer";
+import IntroduceContainer from "../components/question/introduce/IntroduceContainer";
+import ReviewContainer from "../components/question/review/ReviewContainer";
+import CompanyContainer from "../components/question/company/CompanyContainer";
 import { getCheckedAnswers } from "../api/question/QuestionApi";
 
 const Question = () => {
-	const [category, setCategory] = useState("cs");
-	const [selectedIntroduce, setSelectedIntroduce] = useState(null);
-	const [selectedReview, setSelectedReview] = useState(null);
-	const [selectedCompany, setSelectedCompany] = useState(null);
+	const [category, setCategory] = useState("PERSONAL");
 	const [checkedQuestions, setCheckedQuestions] = useState({
 		csAnswerList: [],
 		personalAnswerList: [],
@@ -49,31 +43,12 @@ const Question = () => {
 		fetchCheckedAnswers();
 	}, []);
 
-	const handleAddCheckedQuestion = (categoryKey, question) => {
-		setCheckedQuestions((prev) => ({
-			...prev,
-			[`${categoryKey}AnswerList`]: [
-				...prev[`${categoryKey}AnswerList`],
-				question,
-			],
-		}));
-	};
-
-	const handleRemoveCheckedQuestion = (categoryKey, question) => {
-		setCheckedQuestions((prev) => ({
-			...prev,
-			[`${categoryKey}AnswerList`]: prev[`${categoryKey}AnswerList`].filter(
-				(q) => q.qid !== question.qid
-			),
-		}));
-	};
-
 	return (
 		<div className="flex flex-col w-full h-full">
 			<CategoryTabs category={category} setCategory={setCategory} />
 
 			<div className="flex w-full h-full mt-4 px-6 space-x-4">
-				{category !== 'script' && (
+				{category !== "SCRIPT" && (
 					<CheckedQuestions
 						className="w-1/6"
 						checkedQuestions={checkedQuestions}
@@ -81,89 +56,43 @@ const Question = () => {
 						loading={loading}
 						error={error}
 					/>
-
 				)}
 				<div className="flex-1">
-					{category === "personal" && (
+					{category === "PERSONAL" && (
 						<PersonalContainer
 							checkedQuestions={checkedQuestions}
 							setCheckedQuestions={setCheckedQuestions}
 						/>
 					)}
-					{category === "cs" && (
+					{category === "CS" && (
 						<CsContainer
 							checkedQuestions={checkedQuestions}
 							setCheckedQuestions={setCheckedQuestions}
 						/>
 					)}
-					{category === "introduce" && (
-						<div className="flex w-full h-full space-x-4">
-							<div className="w-1/4">
-								<IntroduceBox
-									onSelectIntroduce={(item) =>
-										setSelectedIntroduce(item)
-									}
-								/>
-							</div>
-							<div className="w-3/4">
-								<IntroduceQuestionBox
-									selectedIntroduce={selectedIntroduce}
-									onAddCheckedQuestion={(question) =>
-										handleAddCheckedQuestion("introduce", question)
-									}
-									onRemoveCheckedQuestion={(question) =>
-										handleRemoveCheckedQuestion("introduce", question)
-									}
-								/>
-							</div>
-						</div>
+					{category === "INTRODUCE" && (
+						<IntroduceContainer
+							checkedQuestions={checkedQuestions}
+							setCheckedQuestions={setCheckedQuestions}
+						/>
 					)}
-					{category === "review" && (
-						<div className="flex w-full h-full space-x-4">
-							<div className="w-1/4">
-								<ReviewBox
-									onSelectReview={(item) =>
-										setSelectedReview(item)
-									}
-								/>
-							</div>
-							<div className="w-3/4">
-								<ReviewQuestionBox
-									selectedReview={selectedReview}
-									onAddCheckedQuestion={(question) =>
-										handleAddCheckedQuestion("review", question)
-									}
-									onRemoveCheckedQuestion={(question) =>
-										handleRemoveCheckedQuestion("review", question)
-									}
-								/>
-							</div>
-						</div>
+					{category === "REVIEW" && (
+						<ReviewContainer
+							checkedQuestions={checkedQuestions}
+							setCheckedQuestions={setCheckedQuestions}
+						/>
 					)}
-					{category === "company" && (
-						<div className="flex w-full h-full space-x-4">
-							<div className="w-1/4">
-								<CompanyBox
-									onSelectCompany={(company) =>
-										setSelectedCompany(company)
-									}
-								/>
-							</div>
-							<div className="w-3/4">
-								<CompanyQuestionBox
-									selectedCompany={selectedCompany}
-									onAddCheckedQuestion={(question) =>
-										handleAddCheckedQuestion("company", question)
-									}
-									onRemoveCheckedQuestion={(question) =>
-										handleRemoveCheckedQuestion("company", question)
-									}
-								/>
-							</div>
-						</div>
+					{category === "COMPANY" && (
+						<CompanyContainer
+							checkedQuestions={checkedQuestions}
+							setCheckedQuestions={setCheckedQuestions}
+						/>
 					)}
-					{category === "script" && (
-						<ScriptContainer checkedQuestions={checkedQuestions} />
+					{category === "SCRIPT" && (
+						<ScriptContainer
+							checkedQuestions={checkedQuestions}
+							setCheckedQuestions={setCheckedQuestions}
+						/>
 					)}
 				</div>
 			</div>

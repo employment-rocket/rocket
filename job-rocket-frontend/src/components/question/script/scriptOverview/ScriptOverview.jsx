@@ -1,25 +1,90 @@
-import React, { useState } from "react";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import React, { useState, useEffect } from "react";
+import jsPDF from "jspdf";
 import ScriptCheckBox from "./ScriptCheckBox";
-import Script from "./Script";
+import { addFontToPdf } from "../../../../assets/fonts/fontHelper";
 
-const ScriptOverview = ({ checkedQuestions }) => {
-    const categories = [
-        { label: "인성", value: "personal" },
-        { label: "CS", value: "cs" },
-        { label: "기업", value: "company" },
-        { label: "자소서", value: "introduce" },
-        { label: "복기", value: "review" }
-    ];
+const ScriptOverview = ({ checkedQuestions, categories }) => {
+    const [selectedCategories, setSelectedCategories] = useState(categories.map((c) => c.value));
+    const [fontSize, setFontSize] = useState(12);
+    const [lineHeight, setLineHeight] = useState(0.8);
+    const [title, setTitle] = useState("스크립트 제목");
+    const [pdfUrl, setPdfUrl] = useState(null);
 
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [fontSize, setFontSize] = useState(16);
-    const [lineHeight, setLineHeight] = useState(1.5);
-    const [title, setTitle] = useState("");
+    const generatePDF = () => {
+        const pdf = new jsPDF("p", "mm", "a4");
+        addFontToPdf(pdf);
+        pdf.setFont("CookieRunBold", "normal");
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const margin = 10;
+        const contentWidth = pageWidth - margin * 2;
+        let cursorY = margin;
+
+        pdf.setFontSize(fontSize);
+        pdf.text(title, pageWidth / 2, cursorY, { align: "center" });
+        cursorY += fontSize + 5;
+
+        selectedCategories.forEach((value) => {
+            const category = categories.find((c) => c.value === value);
+            const questions = Object.values(checkedQuestions).flat().filter((q) => q.category === value);
+            if (questions.length === 0) return;
+
+            pdf.setFontSize(fontSize + 2);
+            pdf.text(category.label, margin, cursorY);
+            cursorY += fontSize + 4;
+
+            pdf.setFontSize(fontSize);
+            questions.forEach((question, index) => {
+                const questionText = `${index + 1}. ${question.question}`;
+                const contentText = question.content;
+                const questionLines = pdf.splitTextToSize(questionText, contentWidth);
+                const contentLines = pdf.splitTextToSize(contentText, contentWidth);
+
+                const lineHeightAdjustment = lineHeight * 0.8;
+
+                if (
+                    cursorY +
+                    (questionLines.length + contentLines.length) * fontSize * lineHeightAdjustment >
+                    pdf.internal.pageSize.getHeight() - margin
+                ) {
+                    pdf.addPage();
+                    cursorY = margin;
+                }
+
+                pdf.text(questionLines, margin, cursorY);
+                cursorY += questionLines.length * fontSize * lineHeightAdjustment;
+
+                pdf.text(contentLines, margin, cursorY);
+                cursorY += contentLines.length * fontSize * lineHeightAdjustment + 5;
+            });
+        });
+
+        return pdf;
+    };
+
+    useEffect(() => {
+        const pdf = generatePDF();
+        const pdfBlob = pdf.output("blob");
+        const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+        setPdfUrl(pdfBlobUrl);
+        return () => URL.revokeObjectURL(pdfBlobUrl);
+    }, [selectedCategories, fontSize, lineHeight, title, checkedQuestions]);
 
     return (
-        <div className="flex w-full font-CookieBold">
-            <div className="w-1/3 p-6 border-r border-gray-300">
+        <div className="flex w-full h-full gap-4" style={{ fontFamily: "CookieBold" }}>
+            <div className="w-2/3 p-4 bg-white shadow-lg border-2 border-blue-400 rounded-lg overflow-hidden">
+                {pdfUrl ? (
+                    <iframe
+                        src={pdfUrl}
+                        title="PDF Preview"
+                        className="w-full h-full border-0"
+                    />
+                ) : (
+                    <p className="text-center text-gray-500">PDF를 생성 중입니다...</p>
+                )}
+            </div>
+
+            <div className="w-1/3 bg-white shadow-lg border-2 border-blue-400 rounded-lg p-4">
                 <ScriptCheckBox
                     categories={categories}
                     selectedCategories={selectedCategories}
@@ -31,53 +96,6 @@ const ScriptOverview = ({ checkedQuestions }) => {
                     title={title}
                     setTitle={setTitle}
                 />
-
-                <div className="flex justify-end mt-6 w-full px-6">
-                    <PDFDownloadLink
-                        document={
-                            <Script
-                                selectedCategories={selectedCategories}
-                                fontSize={fontSize}
-                                lineHeight={lineHeight}
-                                title={title}
-                                checkedQuestions={checkedQuestions}
-                            />
-                        }
-                        fileName="script.pdf"
-                    >
-                        {({ loading }) =>
-                            loading ? (
-                                <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                                    PDF 생성 중...
-                                </button>
-                            ) : (
-                                <button className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                                    출력하기
-                                </button>
-                            )
-                        }
-                    </PDFDownloadLink>
-                </div>
-            </div>
-
-            <div className="w-2/3 p-6">
-                <div
-                    className="relative"
-                    style={{
-                        width: "100%",
-                        height: 0,
-                        paddingBottom: "141.4%",
-                        border: "1px solid #000",
-                    }}
-                >
-                    <Script
-                        selectedCategories={selectedCategories}
-                        fontSize={fontSize}
-                        lineHeight={lineHeight}
-                        title={title}
-                        checkedQuestions={checkedQuestions}
-                    />
-                </div>
             </div>
         </div>
     );

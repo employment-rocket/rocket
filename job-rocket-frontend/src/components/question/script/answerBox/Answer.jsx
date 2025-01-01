@@ -1,24 +1,28 @@
-import React, { useState } from "react";
-import { toggleAnswerIsIn, createAnswer, updateAnswer } from "../../../api/question/QuestionApi";
+import React, { useState, useEffect } from "react";
+import { createAnswer, updateAnswer, toggleAnswerIsIn } from "../../../../api/question/QuestionApi";
 
-const CsQuestion = ({
+const Answer = ({
     qid,
-    answerId,
     question,
+    answerId,
+    content,
     category,
-    answer,
-    recommendedAnswer,
     isIn,
     onAddCheckedQuestion,
     onRemoveCheckedQuestion,
     checkedQuestions,
 }) => {
-    const [isEditing, setIsEditing] = useState(!answer);
+    const [isEditing, setIsEditing] = useState(!content);
     const [isAnswering, setIsAnswering] = useState(false);
-    const [currentAnswer, setCurrentAnswer] = useState(answer || "");
-    const [showRecommendedAnswer, setShowRecommendedAnswer] = useState(false);
-    const [newAnswerId, setNewAnswerId] = useState(answerId || null)
-    const isSelected = checkedQuestions.csAnswerList?.some((q) => q.qid === qid);
+    const [currentAnswer, setCurrentAnswer] = useState(content || "");
+    const [newAnswerId, setNewAnswerId] = useState(answerId || null);
+    const [isSelected, setIsSelected] = useState(false);
+    useEffect(() => {
+        const selected = checkedQuestions?.[`${category.toLowerCase()}AnswerList`]?.some(
+            (q) => q.qid === qid
+        );
+        setIsSelected(selected);
+    }, [checkedQuestions, qid, category]);
 
     const handleInputChange = (e) => {
         setCurrentAnswer(e.target.value);
@@ -27,38 +31,45 @@ const CsQuestion = ({
     const handleToggleCheckedQuestion = async (e) => {
         e.stopPropagation();
         try {
+            console.log("Before toggle:", { isSelected, checkedQuestions });
             if (isSelected) {
                 const confirm = window.confirm("선택을 해제하시겠습니까?");
                 if (confirm) {
                     await toggleAnswerIsIn({ answerId: newAnswerId });
-                    onRemoveCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId });
+                    onRemoveCheckedQuestion({ qid, question, category, answerId: newAnswerId });
                 }
             } else {
-                if (!answerId) {
-                    const newAnswerId = await createAnswer({
+                if (!newAnswerId) {
+                    const createdAnswerId = await createAnswer({
                         memberId: 1,
-                        category: "CS",
+                        category,
                         qid,
                         content: currentAnswer,
                         isIn: true,
                     });
-                    onAddCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId, content: currentAnswer });
+                    onAddCheckedQuestion({
+                        qid,
+                        question,
+                        category,
+                        answerId: createdAnswerId,
+                        content: currentAnswer,
+                    });
+                    setNewAnswerId(createdAnswerId);
                 } else {
                     await toggleAnswerIsIn({ answerId: newAnswerId });
-                    onAddCheckedQuestion({ qid, question, category: "CS", answerId, content: currentAnswer });
+                    onAddCheckedQuestion({
+                        qid,
+                        question,
+                        category,
+                        answerId: newAnswerId,
+                        content: currentAnswer,
+                    });
                 }
             }
+            console.log("After toggle:", { isSelected, checkedQuestions });
         } catch (error) {
-            console.error("Error toggling checked question:", error);
+            console.error("Error toggling question:", error);
         }
-    };
-
-    const toggleAnswerInput = () => {
-        setIsAnswering((prev) => !prev);
-    };
-
-    const toggleRecommendedAnswer = () => {
-        setShowRecommendedAnswer((prev) => !prev);
     };
 
     const handleSave = async () => {
@@ -66,16 +77,29 @@ const CsQuestion = ({
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
                     memberId: 1,
-                    category: "CS",
+                    category,
                     qid,
                     content: currentAnswer,
                     isIn: false,
                 });
-                onAddCheckedQuestion({ qid, question, category: "CS", answerId: createdAnswerId, content: currentAnswer });
+                onAddCheckedQuestion({
+                    qid,
+                    question,
+                    category,
+                    answerId: createdAnswerId,
+                    content: currentAnswer,
+                });
                 setNewAnswerId(createdAnswerId);
                 alert("답변이 작성되었습니다.");
             } else {
                 await updateAnswer({
+                    answerId: newAnswerId,
+                    content: currentAnswer,
+                });
+                onAddCheckedQuestion({
+                    qid,
+                    question,
+                    category,
                     answerId: newAnswerId,
                     content: currentAnswer,
                 });
@@ -88,15 +112,18 @@ const CsQuestion = ({
         }
     };
 
+
+    const toggleAnswerInput = () => {
+        setIsAnswering((prev) => !prev);
+    };
+
     return (
         <div className="border rounded-lg shadow-md p-4 bg-white hover:bg-gray-50 transition">
-            <div className="flex justify-between items-center cursor-pointer" onClick={toggleAnswerInput}>
-                <div>
-                    <span className="text-sm text-gray-700 font-semibold">{question}</span>
-                    <span className="ml-2 px-2 py-1 text-xs rounded-full bg-gray-200 text-gray-600">
-                        {category}
-                    </span>
-                </div>
+            <div
+                className="flex justify-between items-center cursor-pointer"
+                onClick={toggleAnswerInput}
+            >
+                <span className="text-sm text-gray-700 font-semibold">{question}</span>
                 <button
                     className={`px-3 py-1 text-sm rounded-md border-2 transition ${isSelected
                         ? "bg-blue-500 text-white border-blue-500"
@@ -118,17 +145,10 @@ const CsQuestion = ({
                         placeholder="답변을 입력하세요..."
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                         rows="3"
-                        disabled={!isEditing && answer}
                     ></textarea>
-                    <div className="flex justify-between mt-2">
+                    <div className="flex justify-end mt-2">
                         <button
-                            className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                            onClick={toggleRecommendedAnswer}
-                        >
-                            {showRecommendedAnswer ? "추천 답변 숨기기" : "추천 답변 보기"}
-                        </button>
-                        <button
-                            className={`px-3 py-1 rounded-lg transition ${isEditing
+                            className={`px-4 py-2 rounded-lg transition ${isEditing
                                 ? "bg-green-500 text-white hover:bg-green-600"
                                 : "bg-yellow-500 text-white hover:bg-yellow-600"
                                 }`}
@@ -137,15 +157,10 @@ const CsQuestion = ({
                             {isEditing ? "저장" : "수정"}
                         </button>
                     </div>
-                    {showRecommendedAnswer && (
-                        <div className="mt-3 p-2 bg-gray-100 rounded-lg text-sm text-gray-700">
-                            <strong>추천 답변:</strong> {recommendedAnswer}
-                        </div>
-                    )}
                 </div>
             )}
         </div>
     );
 };
 
-export default CsQuestion;
+export default Answer;
