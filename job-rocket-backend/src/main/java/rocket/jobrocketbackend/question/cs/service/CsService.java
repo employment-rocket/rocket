@@ -5,7 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
-import rocket.jobrocketbackend.answer.repository.AnswerJpaRepository;
+import rocket.jobrocketbackend.answer.service.AnswerService;
+import rocket.jobrocketbackend.common.entity.Category;
 import rocket.jobrocketbackend.question.cs.dto.response.CsResDto;
 import rocket.jobrocketbackend.question.cs.entity.CsEntity;
 import rocket.jobrocketbackend.question.cs.repository.CsRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 public class CsService {
     private static final int PAGE_SIZE = 4;
     private final CsRepository csRepository;
-    private final AnswerJpaRepository answerJpaRepository;
+    private final AnswerService answerService;
 
     public Page<CsResDto> findCsListBySubcategories(int page, Long memberId, List<String> subcategories) {
         PageRequest pageable = PageRequest.of(page, PAGE_SIZE);
@@ -26,18 +27,16 @@ public class CsService {
     }
 
     private CsResDto convertToDto(CsEntity entity, Long memberId) {
-        AnswerEntity answerEntity = answerJpaRepository
-                .findByMemberIdAndCategoryAndQid(memberId, "cs", entity.getQid())
-                .orElse(null);
+        AnswerEntity answerEntity = answerService.findAnswerByMemberAndQid(memberId, Category.CS, entity.getQid());
 
         return CsResDto.builder()
                 .qid(entity.getQid())
-                .answerId(answerEntity != null ? answerEntity.getAnswerId() : null)
+                .answerId(answerEntity.getAnswerId())
                 .question(entity.getQuestion())
                 .subcategory(entity.getSubcategory())
                 .suggested(entity.getSuggested())
-                .answer(answerEntity != null ? answerEntity.getContent() : "")
-                .isIn(answerEntity != null && answerEntity.isIn())
+                .answer(answerEntity.getContent())
+                .isIn(answerEntity.isIn())
                 .build();
     }
 }
