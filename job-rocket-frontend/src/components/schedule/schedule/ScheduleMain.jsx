@@ -53,8 +53,6 @@ export default function ScheduleMain() {
 		try {
 			const serverType = TYPE_MAP[destination.droppableId];
 			await modifyScheduleItem({ id: movedItem.id, type: serverType });
-
-			console.log("수정 성공");
 		} catch (error) {
 			console.error("수정 실패", error);
 		}

@@ -33,18 +33,21 @@ class ScheduleRepositoryTest {
     @Autowired
     private EntityManager em;
 
+    private Long userId;
+
     @BeforeEach
     void init(){
         LocalDate date = LocalDate.of(2024, 12, 23);
         UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
+        userId = user.getId();
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
         ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
         ScheduleEntity entity3 = ScheduleEntity.builder().title("제목3").memo("메모3").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
         ScheduleEntity entity4 = ScheduleEntity.builder().title("제목4").memo("메모4").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.First).user(user).build();
         ScheduleEntity entity5 = ScheduleEntity.builder().title("제목5").memo("메모5").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.First).user(user).build();
-        ScheduleEntity entity6 = ScheduleEntity.builder().title("제목6").memo("메모6").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Second).user(user).build();
-        ScheduleEntity entity7 = ScheduleEntity.builder().title("제목7").memo("메모7").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity6 = ScheduleEntity.builder().title("제목6").memo("메모6").dueDate(date).state(ScheduleState.Passed).type(ScheduleType.Second).user(user).build();
+        ScheduleEntity entity7 = ScheduleEntity.builder().title("제목7").memo("메모7").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Final).user(user).build();
 
         scheduleRepository.save(entity1);
         scheduleRepository.save(entity2);
@@ -113,4 +116,16 @@ class ScheduleRepositoryTest {
         // then
         assertThat(list).hasSize(count - 1);
     }
+
+    @Test
+    @DisplayName("해당 유저에 진행중 상태인 Schedule를 가져온다.")
+    void findByUserAndIsNotFail() {
+        // given
+        UserEntity user = userRepository.findById(userId).get();
+        // when
+        List<ScheduleEntity> result = scheduleRepository.findByUserAndIsNotFail(user);
+        // then
+        assertThat(result).hasSize(5);
+    }
+
 }
