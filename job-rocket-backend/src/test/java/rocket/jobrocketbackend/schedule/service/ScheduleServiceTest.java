@@ -95,9 +95,8 @@ class ScheduleServiceTest {
                 .state("Ongoing")
                 .dueDate(LocalDate.of(2024, 03, 21))
                 .build();
-        dto.setUserId(user.getId());
         //when
-        ScheduleDTO result = scheduleService.create(dto);
+        ScheduleDTO result = scheduleService.create(dto,user.getId());
         //then
         assertThat(result.getState()).isEqualTo(ScheduleState.from(dto.getState()));
         assertThat(result.getType()).isEqualTo(ScheduleType.Document);
@@ -117,10 +116,10 @@ class ScheduleServiceTest {
                 .state("ongoing")
                 .dueDate(LocalDate.of(2024, 03, 21))
                 .build();
-        dto.setUserId(user.getId());
+
         //when
         //then
-        assertThatThrownBy(() -> scheduleService.create(dto))
+        assertThatThrownBy(() -> scheduleService.create(dto,user.getId()))
                 .isInstanceOf(IllegalScheduleStateException.class)
                 .hasMessage("잘못된 상태 값입니다.");
     }

@@ -14,7 +14,6 @@ import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
-import rocket.jobrocketbackend.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,13 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ScheduleDTO create(ScheduleCreateDTO dto){
-        UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
-        ScheduleEntity schedule = scheduleRepository.save(dto.toCreateEntity(user));
+    public ScheduleDTO create(final ScheduleCreateDTO dto,final Long userId){
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+        ScheduleEntity schedule = scheduleRepository.save(ScheduleEntity.create(dto, user));
         return ScheduleDTO.from(schedule);
     }
 
-    public Map<String, List<ScheduleDTO>> getScheduleList(Long userId){
+    public Map<String, List<ScheduleDTO>> getScheduleList(final Long userId){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
         Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUser(user)
                 .stream().map(ScheduleDTO::from).collect(Collectors.groupingBy(dto -> dto.getType().name()));
@@ -48,17 +47,17 @@ public class ScheduleService {
         return result;
     }
     @Transactional
-    public ScheduleDTO modifyType(ScheduleTypeModifyDTO dto){
+    public ScheduleDTO modifyType(final ScheduleTypeModifyDTO dto){
         ScheduleEntity schedule = scheduleRepository.findById(dto.getScheduleId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
         schedule.modifyType(dto.getType());
         return ScheduleDTO.from(schedule);
     }
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         scheduleRepository.deleteById(id);
     }
     @Transactional
-    public void modify(ScheduleModifyDTO dto){
+    public void modify(final ScheduleModifyDTO dto){
         ScheduleEntity schedule = scheduleRepository.findById(dto.getId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
         schedule.modify(dto);
     }

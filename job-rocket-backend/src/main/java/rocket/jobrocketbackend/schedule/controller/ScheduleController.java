@@ -46,10 +46,9 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<ScheduleResponse> scheduleCreate(@Validated @RequestBody ScheduleCreateRequest request){
         //TODO 로그인 기능관련 병합후 추후 처리
-
+        Long userId = 1L;
         ScheduleCreateDTO createDTO = request.toCreateDTO();
-        createDTO.setUserId(1L);
-        ScheduleDTO dto = scheduleService.create(createDTO);
+        ScheduleDTO dto = scheduleService.create(createDTO, userId);
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
     }
 

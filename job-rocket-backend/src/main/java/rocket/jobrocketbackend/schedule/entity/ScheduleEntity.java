@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
@@ -43,5 +44,16 @@ public class ScheduleEntity {
         this.dueDate = dto.getDueDate();
         this.memo = dto.getMemo();
         this.state = dto.getState();
+    }
+
+    public static ScheduleEntity create(ScheduleCreateDTO dto, UserEntity user) {
+        return ScheduleEntity.builder()
+                .title(dto.getTitle())
+                .user(user)
+                .type(ScheduleType.Document)
+                .dueDate(dto.getDueDate())
+                .memo(dto.getMemo())
+                .state(ScheduleState.from(dto.getState()))
+                .build();
     }
 }
