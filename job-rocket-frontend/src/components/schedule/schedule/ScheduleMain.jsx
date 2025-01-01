@@ -76,6 +76,7 @@ export default function ScheduleMain() {
 	}
 
 	function updateListState(droppableId, newList) {
+		newList.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 		switch (droppableId) {
 			case "서류전형":
 				setDocumentItems(newList);
