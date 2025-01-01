@@ -5,57 +5,35 @@ const Category = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
+	const categories = [
+		{ name: "일정 관리", path: "/schedule" },
+		{ name: "캘린더", path: "/schedule/calendar" },
+		{ name: "통계", path: "/schedule/statistics" },
+	];
+
 	const isActive = (path) => location.pathname === path;
 
 	return (
-		<div className="flex space-x-14 w-full mt-3 ">
-			<div
-				onClick={() => navigate("/schedule")}
-				style={{
-					backgroundColor: isActive("/schedule")
-						? "#3F83F8"
-						: "transparent",
-					color: isActive("/schedule") ? "#FFFFFF" : "#000000",
-					border: isActive("/schedule") ? "" : "1px solid #3F83F8",
-				}}
-				className="p-4 cursor-pointer w-[12%] rounded-2xl flex justify-center"
-			>
-				<div>{"일정 관리"}</div>
-			</div>
-			<div
-				onClick={() => navigate("/schedule/calendar")}
-				style={{
-					backgroundColor: isActive("/schedule/calendar")
-						? "#3F83F8"
-						: "transparent",
-					color: isActive("/schedule/calendar")
-						? "#FFFFFF"
-						: "#000000",
-					border: isActive("/schedule/calendar")
-						? ""
-						: "1px solid #3F83F8",
-				}}
-				className="p-4 cursor-pointer w-[12%] rounded-2xl flex justify-center"
-			>
-				<div>캘린더</div>
-			</div>
-			<div
-				onClick={() => navigate("/schedule/statistics")}
-				style={{
-					backgroundColor: isActive("/schedule/statistics")
-						? "#3F83F8"
-						: "transparent",
-					color: isActive("/schedule/statistics")
-						? "#FFFFFF"
-						: "#000000",
-					border: isActive("/schedule/statistics")
-						? ""
-						: "1px solid #3F83F8",
-				}}
-				className="p-4 cursor-pointer  w-[12%] rounded-2xl flex justify-center"
-			>
-				<div>통계</div>
-			</div>
+		<div
+			className="flex space-x-4 bg-white py-4 px-6 shadow-md"
+			style={{ fontFamily: "CookieBold" }}
+		>
+			{categories.map(({ name, path }) => {
+				const active = isActive(path);
+				return (
+					<button
+						key={path}
+						onClick={() => navigate(path)}
+						className={`w-40 px-6 py-3 text-sm font-medium rounded-lg ${
+							active
+								? "bg-blue-500 text-white"
+								: "bg-gray-100 text-gray-600"
+						} hover:bg-blue-100`}
+					>
+						{name}
+					</button>
+				);
+			})}
 		</div>
 	);
 };

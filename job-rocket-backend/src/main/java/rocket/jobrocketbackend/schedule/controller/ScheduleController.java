@@ -10,6 +10,7 @@ import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyRequest;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyTypeRequest;
 import rocket.jobrocketbackend.schedule.controller.response.ScheduleResponse;
+import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.service.ScheduleService;
 
@@ -45,7 +46,9 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<ScheduleResponse> scheduleCreate(@Validated @RequestBody ScheduleCreateRequest request){
         //TODO 로그인 기능관련 병합후 추후 처리
-        ScheduleDTO dto = scheduleService.create(request.toCreateDTO());
+        Long userId = 1L;
+        ScheduleCreateDTO createDTO = request.toCreateDTO();
+        ScheduleDTO dto = scheduleService.create(createDTO, userId);
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
     }
 
