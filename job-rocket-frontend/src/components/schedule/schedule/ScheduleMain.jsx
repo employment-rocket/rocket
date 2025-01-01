@@ -129,7 +129,7 @@ export default function ScheduleMain() {
 	// ----------------------------------------------------------------
 	return (
 		<>
-			<div className="flex flex-col space-y-4 h-screen w-full">
+			<div className="flex flex-col space-y-4 h-screen w-full p-4">
 				<div
 					className="w-full h-[70%] rounded-[20px] p-3"
 					style={{ backgroundColor: "#3F83F8" }}
