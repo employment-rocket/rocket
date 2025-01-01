@@ -138,7 +138,7 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 
 	return (
 		<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl border-2 border-blue-500">
-			<div className="pt-6 px-3 capitalize flex w-full">
+			<div className="pt-6 px-3 capitalize flex w-full  border-b-2 pb-2">
 				<div className="w-[20px] h-[20px]" />
 
 				<div className="grow flex justify-center items-center">
