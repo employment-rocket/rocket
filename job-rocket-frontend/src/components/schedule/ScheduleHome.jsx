@@ -4,7 +4,7 @@ import Calendar from "./calendar/Calendar";
 
 const ScheduleHome = () => {
 	return (
-		<div className="flex w-full h-full">
+		<div className="flex w-full h-full justify-center space-2">
 			<div className="w-full">
 				<ScheduleMain />
 			</div>
