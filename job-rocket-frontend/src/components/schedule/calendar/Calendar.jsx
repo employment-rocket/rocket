@@ -4,6 +4,7 @@ import React from "react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useQuery } from "@tanstack/react-query";
 import { getCalendarSchedule } from "../../../api/schedule/schedule";
+import Swal from "sweetalert2";
 
 const Calendar = () => {
 	const { data, isLoading } = useQuery({
@@ -27,9 +28,17 @@ const Calendar = () => {
 	const handleEventClick = (info) => {
 		const clickEvent = info.event;
 
-		alert(
-			`제목:${clickEvent.title}\n\n날짜 : ${clickEvent.startStr}\n\n메모 : ${clickEvent.extendedProps.memo}\n\n타입 : ${clickEvent.extendedProps.description}`
-		);
+		Swal.fire({
+			title: clickEvent.title,
+			html: `
+				<div>${clickEvent.extendedProps.description}</div>
+				<br/>
+				<div>${clickEvent.extendedProps.memo}</div>				
+				`,
+			icon: "info",
+			footer: `~ ${clickEvent.startStr}`,
+			draggable: true,
+		});
 	};
 
 	return (
