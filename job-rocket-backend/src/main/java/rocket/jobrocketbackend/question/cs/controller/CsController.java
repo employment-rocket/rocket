@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rocket.jobrocketbackend.common.dto.PageDto;
 import rocket.jobrocketbackend.question.cs.dto.response.CsResDto;
 import rocket.jobrocketbackend.question.cs.service.CsService;
 
@@ -16,12 +17,14 @@ public class CsController {
     private final CsService csService;
 
     @GetMapping("/{page}")
-    public ResponseEntity<Page<CsResDto>> csList(
+    public ResponseEntity<PageDto<CsResDto>> csList(
             @PathVariable int page,
             @RequestParam Long memberId,
-            @RequestParam List<String> subcategories // 배열 형식으로 처리
+            @RequestParam List<String> subcategories
     ) {
         Page<CsResDto> csList = csService.findCsListBySubcategories(page, memberId, subcategories);
-        return ResponseEntity.ok(csList);
+        PageDto<CsResDto> pageDto = PageDto.of(csList);
+        return ResponseEntity.ok(pageDto);
     }
+
 }

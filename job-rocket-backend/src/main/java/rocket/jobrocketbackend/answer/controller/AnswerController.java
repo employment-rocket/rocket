@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.service.AnswerService;
+import rocket.jobrocketbackend.common.entity.Category;
+
 @Slf4j
 @RequestMapping("/answers")
 @RestController
@@ -16,18 +18,19 @@ public class AnswerController {
 
     @GetMapping
     public ResponseEntity<AnswerListResDto> getCheckedAnswerList(@RequestParam Long memberId) {
-        try {
-            AnswerListResDto response = answerService.findCheckedAnswerList(memberId);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("Error fetching checked answers for memberId {}: {}", memberId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        AnswerListResDto response = answerService.findCheckedAnswerList(memberId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/unchecked")
+    public ResponseEntity<AnswerListResDto> getUncheckedAnswerList(@RequestParam Long memberId) {
+        AnswerListResDto response = answerService.findUncheckedAnswerList(memberId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<Long> createAnswer(@RequestParam Long memberId,
-                                             @RequestParam String category,
+                                             @RequestParam Category category,
                                              @RequestParam Long qid,
                                              @RequestParam(required = false, defaultValue = "") String content,
                                              @RequestParam(required = false, defaultValue = "false") boolean isIn) {
@@ -37,7 +40,7 @@ public class AnswerController {
 
     @PatchMapping("/content")
     public ResponseEntity<String> updateAnswerContent(@RequestParam Long answerId,
-                                               @RequestParam(required = false) String content) {
+                                                      @RequestParam(required = false) String content) {
         answerService.modifyAnswerContent(answerId, content);
         return ResponseEntity.ok("Answer updated successfully");
     }
@@ -50,7 +53,7 @@ public class AnswerController {
 
     @DeleteMapping
     public ResponseEntity<String> deleteAnswer(@RequestParam Long memberId,
-                                               @RequestParam String category,
+                                               @RequestParam Category category,
                                                @RequestParam Long qid) {
         answerService.removeAnswer(memberId, category, qid);
         return ResponseEntity.ok("Answer deleted successfully");

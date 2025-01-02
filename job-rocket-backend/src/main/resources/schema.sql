@@ -21,10 +21,12 @@ CREATE TABLE answer (
                         answer_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                         qid BIGINT NOT NULL,
                         member_id BIGINT NOT NULL,
-                        content VARCHAR(500),
-                        category VARCHAR(100),
+                        content TEXT,
+                        category VARCHAR(50) NOT NULL,
                         is_in BOOLEAN,
-                        FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
+                        FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE,
+                        FOREIGN KEY (qid) REFERENCES cs(qid) ON DELETE CASCADE,
+                        CHECK (category IN ('CS', 'PERSONAL', 'COMPANY', 'INTRODUCE', 'REVIEW'))
 );
 CREATE TABLE personal (
                           qid BIGINT AUTO_INCREMENT PRIMARY KEY,

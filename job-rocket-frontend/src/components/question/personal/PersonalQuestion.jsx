@@ -33,13 +33,13 @@ const PersonalQuestion = ({
                 const confirm = window.confirm("선택을 해제하시겠습니까?");
                 if (confirm) {
                     await toggleAnswerIsIn({ answerId: newAnswerId });
-                    onRemoveCheckedQuestion({ qid, question, category: "personal", answerId: newAnswerId });
+                    onRemoveCheckedQuestion({ qid, question, category: "PERSONAL", answerId: newAnswerId });
                 }
             } else {
                 if (!newAnswerId) {
                     const createdAnswerId = await createAnswer({
                         memberId: 1,
-                        category: "personal",
+                        category: "PERSONAL",
                         qid,
                         content: currentAnswer,
                         isIn: true,
@@ -47,7 +47,7 @@ const PersonalQuestion = ({
                     onAddCheckedQuestion({
                         qid,
                         question,
-                        category: "personal",
+                        category: "PERSONAL",
                         answerId: createdAnswerId,
                         content: currentAnswer,
                     });
@@ -57,7 +57,7 @@ const PersonalQuestion = ({
                     onAddCheckedQuestion({
                         qid,
                         question,
-                        category: "personal",
+                        category: "PERSONAL",
                         answerId: newAnswerId,
                         content: currentAnswer,
                     });
@@ -73,7 +73,7 @@ const PersonalQuestion = ({
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
                     memberId: 1,
-                    category: "personal",
+                    category: "PERSONAL",
                     qid,
                     content: currentAnswer,
                     isIn: false,
@@ -81,7 +81,7 @@ const PersonalQuestion = ({
                 onAddCheckedQuestion({
                     qid,
                     question,
-                    category: "personal",
+                    category: "PERSONAL",
                     answerId: createdAnswerId,
                     content: currentAnswer,
                 });

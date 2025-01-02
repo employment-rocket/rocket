@@ -1,6 +1,8 @@
+-- member 테이블 INSERT
 INSERT INTO member (email, role, nickname, profile, allow_email, refresh_token)
 VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, 'sample-refresh-token');
 
+-- cs 테이블 INSERT
 INSERT INTO cs (qid, question, subcategory, suggested) VALUES
                                                            (1, '네트워크란 무엇인가요?', '네트워크', '네트워크는 장치 간 연결을 통해 데이터가 전달되는 시스템입니다.'),
                                                            (2, 'OSI 7계층에 대해 설명해주세요.', '네트워크', 'OSI 모델은 물리, 데이터 링크, 네트워크, 전송, 세션, 표현, 응용 계층으로 구성됩니다.'),
@@ -12,14 +14,17 @@ INSERT INTO cs (qid, question, subcategory, suggested) VALUES
                                                            (8, '이진 탐색(Binary Search)에 대해 설명해주세요.', '자료구조', '이진 탐색은 정렬된 데이터에서 특정 값을 효율적으로 찾는 알고리즘입니다.'),
                                                            (9, '트리(Tree)와 그래프(Graph)의 차이점은 무엇인가요?', '자료구조', '트리는 계층적 구조를 가지며, 그래프는 순환이 가능한 연결 구조를 가질 수 있습니다.'),
                                                            (10, 'SQL과 NoSQL의 차이점은 무엇인가요?', '데이터베이스', 'SQL은 관계형 데이터베이스에서 사용되고, NoSQL은 비관계형 데이터베이스에서 사용됩니다.');
+
+-- answer 테이블 INSERT
 INSERT INTO answer (qid, member_id, content, category, is_in)
 VALUES
-    (1, 1, '네트워크 질문에 대한 답변 예시', 'cs', true),
-    (2, 1, '데이터베이스 질문에 대한 답변 예시', 'cs', true),
-    (3, 1, '운영체제 질문에 대한 답변 예시', 'cs', false),
-    (4, 1, '자료구조 질문에 대한 답변 예시', 'cs', true),
-    (5, 1, '추가적인 네트워크 질문 답변 예시', 'cs', false);
+    (1, 1, '네트워크 질문에 대한 답변 예시', 'CS', true),
+    (2, 1, '데이터베이스 질문에 대한 답변 예시', 'CS', true),
+    (3, 1, '운영체제 질문에 대한 답변 예시', 'CS', false),
+    (4, 1, '자료구조 질문에 대한 답변 예시', 'CS', true),
+    (5, 1, '추가적인 네트워크 질문 답변 예시', 'CS', false);
 
+-- personal 테이블 INSERT
 INSERT INTO personal (question) VALUES
                                     ('1분 자기소개를 해주세요.'),
                                     ('본인의 가장 큰 강점은 무엇인가요?'),
@@ -31,3 +36,16 @@ INSERT INTO personal (question) VALUES
                                     ('10년 후 본인의 모습을 상상해보세요.'),
                                     ('회사에서 가장 중요한 가치는 무엇이라고 생각하나요?'),
                                     ('본인이 이 직무에 적합하다고 생각하는 이유는 무엇인가요?');
+
+-- schedule 테이블 INSERT
+INSERT INTO schedule (title, due_date, memo, member_id, type, state) VALUES
+                                                                         ('서류 전형 제출', '2024-01-15', '서류 전형 마감일까지 제출해야 합니다.', 1, 'Document', 'Ongoing'),
+                                                                         ('1차 면접 준비', '2024-01-20', '1차 면접 예상 질문 준비 및 복습.', 1, 'First', 'Ongoing'),
+                                                                         ('2차 면접', '2024-01-25', '2차 면접에서 프로젝트 경험 강조.', 1, 'Second', 'Ongoing'),
+                                                                         ('최종 면접 일정 확인', '2024-01-30', '최종 면접 장소 및 시간 확인.', 1, 'Final', 'Ongoing'),
+                                                                         ('서류 전형 결과 발표', '2024-01-18', '서류 탈락.', 1, 'Document', 'Fail'),
+                                                                         ('1차 면접 결과 발표', '2024-01-22', '1차 면접 통과.', 1, 'First', 'Passed'),
+                                                                         ('2차 면접 준비', '2024-01-28', '2차 면접 예상 질문 준비.', 1, 'Second', 'Ongoing'),
+                                                                         ('최종 합격 발표', '2024-02-01', '최종 합격 축하합니다!', 1, 'Final', 'Passed'),
+                                                                         ('서류 전형 지원', '2024-01-10', '서류 전형 지원 완료.', 1, 'Document', 'Passed'),
+                                                                         ('1차 면접 일정 확인', '2024-01-17', '1차 면접 일정 확인 완료.', 1, 'First', 'Ongoing');

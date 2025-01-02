@@ -5,8 +5,8 @@ const PersonalContainer = ({ checkedQuestions, setCheckedQuestions }) => {
     const handleAddCheckedQuestion = (question) => {
         setCheckedQuestions((prev) => ({
             ...prev,
-            [`${question.category}AnswerList`]: [
-                ...(prev[`${question.category}AnswerList`] || []),
+            [`${question.category.toLowerCase()}AnswerList`]: [
+                ...(prev[`${question.category.toLowerCase()}AnswerList`] || []),
                 question,
             ],
         }));
@@ -15,7 +15,7 @@ const PersonalContainer = ({ checkedQuestions, setCheckedQuestions }) => {
     const handleRemoveCheckedQuestion = (question) => {
         setCheckedQuestions((prev) => ({
             ...prev,
-            [`${question.category}AnswerList`]: prev[`${question.category}AnswerList`].filter(
+            [`${question.category.toLowerCase()}AnswerList`]: prev[`${question.category.toLowerCase()}AnswerList`].filter(
                 (q) => q.qid !== question.qid
             ),
         }));

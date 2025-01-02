@@ -12,10 +12,22 @@ export const getCheckedAnswers = async (memberId) => {
     }
 };
 
+export const getUncheckedAnswers = async (memberId) => {
+    try {
+        const response = await api.get("/answers/unchecked", {
+            params: { memberId },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching unchecked answers:", error);
+        throw error;
+    }
+};
+
 export const createAnswer = async ({ memberId, category, qid, content = "", isIn = true }) => {
     try {
         const response = await api.post("/answers", null, {
-            params: { memberId, category, qid, content, isIn },
+            params: { memberId, category: category, qid, content, isIn },
         });
         return response.data;
     } catch (error) {
