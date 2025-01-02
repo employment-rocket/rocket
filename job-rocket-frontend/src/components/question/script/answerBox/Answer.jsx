@@ -12,6 +12,11 @@ const Answer = ({
     onRemoveCheckedQuestion,
     checkedQuestions,
 }) => {
+    console.log(qid,
+        question,
+        answerId,
+        content,
+        category);
     const [isEditing, setIsEditing] = useState(!content);
     const [isAnswering, setIsAnswering] = useState(false);
     const [currentAnswer, setCurrentAnswer] = useState(content || "");

@@ -19,7 +19,7 @@ const AnswerBox = ({ categories, checkedQuestions = {}, onAddCheckedQuestion, on
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const QUESTIONS_PER_PAGE = 7;
-
+    console.log(checkedQuestions);
     useEffect(() => {
         const fetchUncheckedAnswers = async () => {
             setLoading(true);
@@ -111,7 +111,7 @@ const AnswerBox = ({ categories, checkedQuestions = {}, onAddCheckedQuestion, on
                             qid={q.qid}
                             answerId={q.answerId}
                             question={q.question}
-                            content={q.answer}
+                            content={q.content}
                             category={q.category}
                             isIn={false}
                             onAddCheckedQuestion={(question) => {
