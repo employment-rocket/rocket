@@ -30,8 +30,9 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
       >
         회고
       </button>
+      <div className="w-full border-t border-[#dad0d0] "></div>
       <button
-        className="w-full h-6 mt-2 text-center text-black text-xl"
+        className="w-full h-6 mt-2 text-center text-red-500 text-xl"
         onClick={() => onNavigate("logout")}
       >
         로그아웃

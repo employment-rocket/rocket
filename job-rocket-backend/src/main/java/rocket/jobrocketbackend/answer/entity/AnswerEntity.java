@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "answer")
 public class AnswerEntity {
     @Id
-    @GeneratedValue
     @Column(name = "answer_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
 
     private Long qid;
