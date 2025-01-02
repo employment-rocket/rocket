@@ -7,7 +7,6 @@ const Category = () => {
 
 	const categories = [
 		{ name: "일정 관리", path: "/schedule" },
-		{ name: "캘린더", path: "/schedule/calendar" },
 		{ name: "통계", path: "/schedule/statistics" },
 	];
 

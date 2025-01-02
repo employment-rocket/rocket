@@ -29,7 +29,6 @@ createRoot(document.getElementById("root")).render(
 					<Route path="/board" element={<Board />} />
 					<Route path="/schedule" element={<Schedule />}>
 						<Route index element={<ScheduleHome />} />
-						<Route path="calendar" element={<Calendar />} />
 						<Route path="statistics" element={<Statistics />} />
 					</Route>
 					<Route path="/question" element={<Question />} />
