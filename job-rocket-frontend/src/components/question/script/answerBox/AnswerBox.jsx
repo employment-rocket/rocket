@@ -19,7 +19,7 @@ const AnswerBox = ({ categories, checkedQuestions = {}, onAddCheckedQuestion, on
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const QUESTIONS_PER_PAGE = 7;
-    console.log(checkedQuestions);
+
     useEffect(() => {
         const fetchUncheckedAnswers = async () => {
             setLoading(true);
@@ -58,8 +58,14 @@ const AnswerBox = ({ categories, checkedQuestions = {}, onAddCheckedQuestion, on
     }, [selectedTab, selectedCategories, checkedQuestions, unCheckedQuestions, searchTerm]);
 
     const updateUncheckedQuestions = (category, question, action) => {
+        const normalizeCategory = (cat) =>
+            cat === "CS" || cat === "PERSONAL"
+                ? `${cat.toLowerCase()}AnswerList`
+                : `${cat.toLowerCase().replace("_qa", "")}AnswerList`;
+
+        const listName = normalizeCategory(category);
+
         setUncheckedQuestions((prev) => {
-            const listName = `${category.toLowerCase()}AnswerList`;
             if (action === "add") {
                 return {
                     ...prev,

@@ -2,31 +2,27 @@ import React from "react";
 import IntroduceQuestion from "./IntroduceQuestion";
 
 const IntroduceQuestionBox = ({
+    questions,
     selectedIntroduce,
     onAddCheckedQuestion,
     onRemoveCheckedQuestion,
+    checkedQuestions
 }) => {
-    const questions = [
-        `${selectedIntroduce || "AI 예상 질문"} 관련 예상 질문 1`,
-        `${selectedIntroduce || "AI 예상 질문"} 관련 예상 질문 2`,
-        `${selectedIntroduce || "AI 예상 질문"} 관련 예상 질문 3`,
-    ];
-
     return (
-        <div
-            className="p-4 bg-white border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
-            style={{ fontFamily: "CookieBold", borderWidth: "3px" }}
-        >
-            <h3 className="text-lg font-bold mb-4">
-                {selectedIntroduce || "AI 예상 질문"}
-            </h3>
+        <div className="p-4 bg-white border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto">
+            <h3 className="text-lg font-bold mb-4">{selectedIntroduce || "AI 예상 질문"}</h3>
             <div className="space-y-4">
-                {questions.map((question, index) => (
+                {questions.map((q) => (
                     <IntroduceQuestion
-                        key={index}
-                        question={question}
+                        key={q.qid}
+                        qid={q.qid}
+                        answerId={q.answerId}
+                        question={q.question}
+                        answer={q.answer}
+                        isIn={checkedQuestions?.introduceAnswerList?.some((item) => item.qid === q.qid) || false}
                         onAddCheckedQuestion={onAddCheckedQuestion}
                         onRemoveCheckedQuestion={onRemoveCheckedQuestion}
+                        checkedQuestions={checkedQuestions}
                     />
                 ))}
             </div>

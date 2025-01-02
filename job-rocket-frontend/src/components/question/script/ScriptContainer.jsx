@@ -6,29 +6,48 @@ const ScriptContainer = ({ checkedQuestions, setCheckedQuestions }) => {
     const categories = [
         { label: "인성", value: "PERSONAL" },
         { label: "CS", value: "CS" },
-        { label: "기업", value: "COMPANY" },
-        { label: "자소서", value: "INTRODUCE" },
-        { label: "복기", value: "REVIEW" },
+        { label: "기업", value: "COMPANY_QA" },
+        { label: "자소서", value: "INTRODUCE_QA" },
+        { label: "복기", value: "REVIEW_QA" },
     ];
 
     const handleAddCheckedQuestion = (question) => {
+        const categoryKey =
+            question.category === "CS" || question.category === "PERSONAL"
+                ? `${question.category.toLowerCase()}AnswerList`
+                : `${question.category.toLowerCase().replace("_qa", "")}AnswerList`;
+
+        setCheckedQuestions((prev) => {
+            const existingList = prev[categoryKey] || [];
+            const updatedList = existingList.map((q) =>
+                q.qid === question.qid ? question : q
+            );
+
+            const isNewQuestion = !existingList.some((q) => q.qid === question.qid);
+            if (isNewQuestion) {
+                updatedList.push(question);
+            }
+
+            return {
+                ...prev,
+                [categoryKey]: updatedList,
+            };
+        });
+    };
+
+
+    const handleRemoveCheckedQuestion = (question) => {
+        const categoryKey =
+            question.category === "CS" || question.category === "PERSONAL"
+                ? `${question.category.toLowerCase()}AnswerList`
+                : `${question.category.toLowerCase().replace("_qa", "")}AnswerList`;
+
         setCheckedQuestions((prev) => ({
             ...prev,
-            [`${question.category.toLowerCase()}AnswerList`]: [
-                ...(prev[`${question.category.toLowerCase()}AnswerList`] || []),
-                question,
-            ],
+            [categoryKey]: prev[categoryKey]?.filter((q) => q.qid !== question.qid),
         }));
     };
 
-    const handleRemoveCheckedQuestion = (question) => {
-        setCheckedQuestions((prev) => ({
-            ...prev,
-            [`${question.category.toLowerCase()}AnswerList`]: prev[`${question.category.toLowerCase()}AnswerList`].filter(
-                (q) => q.qid !== question.qid
-            ),
-        }));
-    };
 
     return (
         <div className="flex flex-col mt-1 lg:flex-row w-full h-full" style={{ fontFamily: "CookieBold" }}>
