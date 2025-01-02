@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import api from "../../api/api";
 
 const KakaoLogin = () => {
   const navigate = useNavigate();
-  const [isLogin, setLogin] = useState(false);
+
 
   // 인가 코드 추출
   const code = new URL(window.location.href).searchParams.get("code");
@@ -24,7 +24,6 @@ const KakaoLogin = () => {
             
             // 로그인 성공 후, 메인 페이지로 이동
            if (response.status === 200){
-            setLogin(true);
             navigate("/career");
             console.log("setLogin:", isLogin);
           }
@@ -37,7 +36,7 @@ const KakaoLogin = () => {
         if (code) {
           kakaoLogin();
         }
-      }, [code]);
+      }, [code, navigate]);
       
   return (
     <div className="LoginHandler">
