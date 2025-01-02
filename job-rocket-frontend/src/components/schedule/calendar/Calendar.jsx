@@ -43,7 +43,7 @@ const Calendar = () => {
 
 	return (
 		<div className="p-3 w-full h-full flex flex-col justify-center">
-			<div className="">
+			<div className="h-full">
 				<FullCalendar
 					plugins={[dayGridPlugin]}
 					locale={"Ko"}
