@@ -1,6 +1,5 @@
 package rocket.jobrocketbackend.question.cs.entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

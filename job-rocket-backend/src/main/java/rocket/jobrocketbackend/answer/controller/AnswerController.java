@@ -18,24 +18,14 @@ public class AnswerController {
 
     @GetMapping
     public ResponseEntity<AnswerListResDto> getCheckedAnswerList(@RequestParam Long memberId) {
-        try {
-            AnswerListResDto response = answerService.findCheckedAnswerList(memberId);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("Error fetching checked answers for memberId {}: {}", memberId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        AnswerListResDto response = answerService.findCheckedAnswerList(memberId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/unchecked")
     public ResponseEntity<AnswerListResDto> getUncheckedAnswerList(@RequestParam Long memberId) {
-        try {
-            AnswerListResDto response = answerService.findUncheckedAnswerList(memberId);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            log.error("Error fetching unchecked answers for memberId {}: {}", memberId, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        AnswerListResDto response = answerService.findUncheckedAnswerList(memberId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
