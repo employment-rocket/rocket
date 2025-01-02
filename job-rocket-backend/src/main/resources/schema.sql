@@ -26,7 +26,7 @@ CREATE TABLE answer (
                         is_in BOOLEAN,
                         FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE,
                         FOREIGN KEY (qid) REFERENCES cs(qid) ON DELETE CASCADE,
-                        CHECK (category IN ('CS', 'PERSONAL', 'COMPANY', 'INTRODUCE', 'REVIEW'))
+                        CHECK (category IN ('CS', 'PERSONAL', 'COMPANY_QA', 'INTRODUCE_QA', 'REVIEW_QA'))
 );
 CREATE TABLE personal (
                           qid BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -42,4 +42,20 @@ CREATE TABLE schedule (
 	type	varchar(20),
 	state	varchar(20),
     FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
+);
+
+CREATE TABLE introduce (
+                           introduce_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                           name VARCHAR(500) NOT NULL,
+                           file_data LONGBLOB NOT NULL,
+                           member_id BIGINT NOT NULL,
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                           FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
+);
+
+CREATE TABLE introduce_qa (
+                              qid BIGINT AUTO_INCREMENT PRIMARY KEY,
+                              question TEXT NOT NULL,
+                              introduce_id BIGINT NOT NULL,
+                              FOREIGN KEY (introduce_id) REFERENCES introduce(introduce_id) ON DELETE CASCADE
 );
