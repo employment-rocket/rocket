@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import addIcon from "../../../assets/icon-add.png";
 import {
 	deleteScheduleItem,
@@ -14,6 +14,7 @@ import { TYPE_MAP } from "./const";
 const typeList = Object.keys(TYPE_MAP);
 
 export default function ScheduleMain() {
+	const queryClient = useQueryClient();
 	const { data, isLoading } = useQuery({
 		queryKey: ["schedule"],
 		queryFn: getSchedules,
@@ -93,12 +94,13 @@ export default function ScheduleMain() {
 		}
 	}
 
-	function handleDelete(id, droppableId) {
-		deleteScheduleItem({ id });
+	const handleDelete = async (id, droppableId) => {
+		await deleteScheduleItem({ id });
 		const list = getListByDroppableId(droppableId);
 		const updatedList = list.filter((item) => item.id !== id);
 		updateListState(droppableId, updatedList);
-	}
+		queryClient.invalidateQueries(["schedule"]);
+	};
 
 	return (
 		<>
