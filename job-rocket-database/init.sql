@@ -1,6 +1,6 @@
 -- 데이터베이스 생성
 CREATE DATABASE IF NOT EXISTS erocket;
-
+ALTER DATABASE erocket DEFAULT CHARACTER SET UTF8;
 -- erocket DB 사용
 USE erocket;
 
@@ -74,8 +74,8 @@ CREATE TABLE introduce_qa (
 
 
 -- member 테이블 INSERT
-INSERT INTO member (email, role, nickname, profile, allow_email, refresh_token)
-VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, 'sample-refresh-token');
+INSERT INTO member (member_id,email, role, nickname, profile, allow_email, refresh_token)
+VALUES (1,'testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, 'sample-refresh-token');
 
 -- cs 테이블 INSERT
 INSERT INTO cs (qid, question, subcategory, suggested) VALUES
