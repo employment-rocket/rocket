@@ -1,29 +1,36 @@
-import { React, useState } from "react";
-import del from "../../../assets/delete.png";
-import DeleteModal from "./DeleteModal";
+import { React, useEffect, useState } from "react";
+import menu from "../../../assets/menu.png";
+import KebabMenu from "./KebabMenu";
 import UpdateModal from "./UpdateModal";
+import DeleteModal from "./DeleteModal";
 
 const ScheduleItem = ({ item, droppableId, handleDelete }) => {
-	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
-
+	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 	return (
 		<>
 			<div className="flex flex-col w-full py-2 space-y-3">
 				<div className="flex justify-between items-center ">
-					<div
-						className="overflow-hidden text-ellipsis whitespace-nowrap "
-						onClick={() => setUpdateModalOpen(true)}
-					>
+					<div className="overflow-hidden text-ellipsis whitespace-nowrap ">
 						{item.title}
 					</div>
-
-					<img
-						src={del}
-						alt="삭제"
-						onClick={() => setDeleteModalOpen(true)}
-						className="cursor-pointer w-[20px] h-[20px]"
-					/>
+					<div className="relative">
+						<img
+							src={menu}
+							alt="메뉴"
+							onClick={() => setIsOpen(true)}
+							className="cursor-pointer w-[20px] h-[20px]"
+						/>
+						{isOpen && (
+							<KebabMenu
+								isOpen={isOpen}
+								onClose={() => setIsOpen(false)}
+								setUpdateModalOpen={setUpdateModalOpen}
+								setDeleteModalOpen={setDeleteModalOpen}
+							/>
+						)}
+					</div>
 				</div>
 				<div
 					className="flex justify-between"
@@ -33,17 +40,17 @@ const ScheduleItem = ({ item, droppableId, handleDelete }) => {
 					<div>~{item.dueDate}</div>
 				</div>
 			</div>
+			<UpdateModal
+				data={item}
+				isOpen={isUpdateModalOpen}
+				onCancel={() => setUpdateModalOpen(false)}
+			/>
 			<DeleteModal
 				isOpen={isDeleteModalOpen}
 				handleDelete={handleDelete}
 				id={item.id}
 				droppableId={droppableId}
 				onCancel={() => setDeleteModalOpen(false)}
-			/>
-			<UpdateModal
-				data={item}
-				isOpen={isUpdateModalOpen}
-				onCancel={() => setUpdateModalOpen(false)}
 			/>
 		</>
 	);
