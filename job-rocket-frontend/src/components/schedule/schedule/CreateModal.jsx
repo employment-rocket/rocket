@@ -44,11 +44,6 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 			return;
 		}
 
-		console.log("제목:", title);
-		console.log("마감일:", date);
-		console.log("메모:", memo);
-		console.log("상태:", state);
-
 		await createScheduleItem({ title, dueDate: date, memo, state });
 		queryClient.invalidateQueries(["schedule"]);
 

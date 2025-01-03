@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/schedule")
+@RequestMapping("/schedules")
 @Slf4j
 @RequiredArgsConstructor
 public class ScheduleController {
@@ -29,6 +29,7 @@ public class ScheduleController {
 
     @GetMapping
     public ResponseEntity<Map<String ,List<ScheduleResponse>>> scheduleList(){
+        //TODO 추후에 하드코딩 수정
         HashMap<String, List<ScheduleResponse>> response = new HashMap<>();
         Map<String, List<ScheduleDTO>> map = scheduleService.getScheduleList(1L);
         for(String key : map.keySet()){
@@ -45,7 +46,7 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ScheduleResponse> scheduleCreate(@Validated @RequestBody ScheduleCreateRequest request){
-        //TODO 로그인 기능관련 병합후 추후 처리
+        //TODO 추후에 하드코딩 수정
         Long userId = 1L;
         ScheduleCreateDTO createDTO = request.toCreateDTO();
         ScheduleDTO dto = scheduleService.create(createDTO, userId);

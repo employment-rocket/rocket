@@ -12,6 +12,7 @@ import Calendar from "./components/schedule/calendar/Calendar.jsx";
 import ScheduleMain from "./components/schedule/schedule/ScheduleMain.jsx";
 import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ScheduleHome from "./components/schedule/ScheduleHome.JSX";
 
 const queryClient = new QueryClient();
 
@@ -27,8 +28,7 @@ createRoot(document.getElementById("root")).render(
 					/>
 					<Route path="/board" element={<Board />} />
 					<Route path="/schedule" element={<Schedule />}>
-						<Route index element={<ScheduleMain />} />
-						<Route path="calendar" element={<Calendar />} />
+						<Route index element={<ScheduleHome />} />
 						<Route path="statistics" element={<Statistics />} />
 					</Route>
 					<Route path="/question" element={<Question />} />
