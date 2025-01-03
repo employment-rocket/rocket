@@ -12,20 +12,19 @@ const Answer = ({
     onRemoveCheckedQuestion,
     checkedQuestions,
 }) => {
-    console.log(qid,
-        question,
-        answerId,
-        content,
-        category);
     const [isEditing, setIsEditing] = useState(!content);
     const [isAnswering, setIsAnswering] = useState(false);
     const [currentAnswer, setCurrentAnswer] = useState(content || "");
     const [newAnswerId, setNewAnswerId] = useState(answerId || null);
     const [isSelected, setIsSelected] = useState(false);
+
     useEffect(() => {
-        const selected = checkedQuestions?.[`${category.toLowerCase()}AnswerList`]?.some(
-            (q) => q.qid === qid
-        );
+        const normalizedCategory =
+            category === "CS" || category === "PERSONAL"
+                ? category.toLowerCase()
+                : category.toLowerCase().replace("_qa", "");
+        const listKey = `${normalizedCategory}AnswerList`;
+        const selected = checkedQuestions?.[listKey]?.some((q) => q.qid === qid);
         setIsSelected(selected);
     }, [checkedQuestions, qid, category]);
 
@@ -36,7 +35,12 @@ const Answer = ({
     const handleToggleCheckedQuestion = async (e) => {
         e.stopPropagation();
         try {
-            console.log("Before toggle:", { isSelected, checkedQuestions });
+            const normalizedCategory =
+                category === "CS" || category === "PERSONAL"
+                    ? category.toLowerCase()
+                    : category.toLowerCase().replace("_qa", "");
+            const listKey = `${normalizedCategory}AnswerList`;
+
             if (isSelected) {
                 const confirm = window.confirm("선택을 해제하시겠습니까?");
                 if (confirm) {
@@ -71,7 +75,7 @@ const Answer = ({
                     });
                 }
             }
-            console.log("After toggle:", { isSelected, checkedQuestions });
+            setIsSelected((prev) => !prev);
         } catch (error) {
             console.error("Error toggling question:", error);
         }
@@ -116,7 +120,6 @@ const Answer = ({
             alert("답변 저장 중 오류가 발생했습니다.");
         }
     };
-
 
     const toggleAnswerInput = () => {
         setIsAnswering((prev) => !prev);

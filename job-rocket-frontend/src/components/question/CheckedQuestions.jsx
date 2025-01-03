@@ -5,20 +5,31 @@ import { toggleAnswerIsIn } from "../../api/question/QuestionApi.jsx";
 const CheckedQuestions = ({ className, checkedQuestions, setCheckedQuestions, loading, error }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const QUESTIONS_PER_PAGE = 5;
+    const QUESTIONS_PER_PAGE = 8;
 
     const handleDelete = async (question) => {
         const confirm = window.confirm("선택을 해제하시겠습니까?");
         if (confirm) {
-            await toggleAnswerIsIn({ answerId: question.answerId });
-            setCheckedQuestions((prev) => ({
-                ...prev,
-                [`${question.category.toLowerCase()}AnswerList`]: prev[`${question.category.toLowerCase()}AnswerList`].filter(
-                    (q) => q.qid !== question.qid
-                ),
-            }));
+            try {
+                await toggleAnswerIsIn({ answerId: question.answerId });
+
+                const categoryKey =
+                    question.category === "CS" || question.category === "PERSONAL"
+                        ? `${question.category.toLowerCase()}AnswerList`
+                        : `${question.category.toLowerCase().replace("_qa", "")}AnswerList`;
+
+                setCheckedQuestions((prev) => ({
+                    ...prev,
+                    [categoryKey]: prev[categoryKey]?.filter((q) => q.qid !== question.qid),
+                }));
+            } catch (error) {
+                console.error("선택 해제 중 오류 발생:", error);
+                alert("선택 해제 중 문제가 발생했습니다.");
+            }
         }
     };
+
+
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);

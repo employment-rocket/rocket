@@ -6,6 +6,9 @@ import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.dto.response.AnswerResDto;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.answer.exception.AnswerNotFoundException;
+import rocket.jobrocketbackend.question.introduce_qa.dto.response.IntroduceQAResDto;
+import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
+import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRepository;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.answer.repository.AnswerJpaRepository;
 import rocket.jobrocketbackend.common.entity.Category;
@@ -29,6 +32,7 @@ public class AnswerService {
     private final UserRepository userRepository;
     private final CsRepository csRepository;
     private final PersonalRepository personalRepository;
+    private final IntroduceQAJpaRepository introduceQARepository;
 
     public AnswerListResDto findCheckedAnswerList(Long memberId) {
         if (!userRepository.existsById(memberId)) {
@@ -44,13 +48,11 @@ public class AnswerService {
         return AnswerListResDto.builder()
                 .csAnswerList(answersByCategory.get(Category.CS))
                 .personalAnswerList(answersByCategory.get(Category.PERSONAL))
-                .companyAnswerList(answersByCategory.get(Category.COMPANY))
-                .introduceAnswerList(answersByCategory.get(Category.INTRODUCE))
-                .reviewAnswerList(answersByCategory.get(Category.REVIEW))
+                .companyAnswerList(answersByCategory.get(Category.COMPANY_QA))
+                .introduceAnswerList(answersByCategory.get(Category.INTRODUCE_QA))
+                .reviewAnswerList(answersByCategory.get(Category.REVIEW_QA))
                 .build();
     }
-
-
 
     private List<AnswerResDto> mapToDto(List<AnswerEntity> entities, Category category) {
         return entities.stream()
@@ -77,6 +79,9 @@ public class AnswerService {
                     .orElse("질문명을 찾을 수 없습니다.");
             case PERSONAL -> personalRepository.findById(qid)
                     .map(PersonalEntity::getQuestion)
+                    .orElse("질문명을 찾을 수 없습니다.");
+            case INTRODUCE_QA -> introduceQARepository.findById(qid)
+                    .map(IntroduceQAEntity::getQuestion)
                     .orElse("질문명을 찾을 수 없습니다.");
             default -> "알 수 없는 카테고리입니다.";
         };
@@ -140,9 +145,9 @@ public class AnswerService {
         return AnswerListResDto.builder()
                 .csAnswerList(answersByCategory.get(Category.CS))
                 .personalAnswerList(answersByCategory.get(Category.PERSONAL))
-                .companyAnswerList(answersByCategory.get(Category.COMPANY))
-                .introduceAnswerList(answersByCategory.get(Category.INTRODUCE))
-                .reviewAnswerList(answersByCategory.get(Category.REVIEW))
+                .companyAnswerList(answersByCategory.get(Category.COMPANY_QA))
+                .introduceAnswerList(answersByCategory.get(Category.INTRODUCE_QA))
+                .reviewAnswerList(answersByCategory.get(Category.REVIEW_QA))
                 .build();
     }
 
