@@ -21,8 +21,9 @@ public class OAuthController {
 
 
     @GetMapping("/oauth2/kakao")
-    public ResponseEntity<String> getKakao(@RequestParam("code") String code) throws JsonProcessingException {
-        String token = kakaoOAuthService.getAccessToken(code);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<Map<String, String>> getKakao(@RequestParam("code") String code) throws JsonProcessingException {
+     //   String token = kakaoOAuthService.getAccessToken(code);
+        Map<String, String> tokens = kakaoOAuthService.getAccessTokenAndrefreshToken(code);
+        return ResponseEntity.ok(tokens);
     }
 }

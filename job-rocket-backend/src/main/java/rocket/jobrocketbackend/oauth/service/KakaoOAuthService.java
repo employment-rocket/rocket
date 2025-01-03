@@ -49,14 +49,26 @@ public class KakaoOAuthService {
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String USER_INFO_URI;
 
-    public String getAccessToken(String token) throws JsonProcessingException {
+    public Map<String, String> getAccessTokenAndrefreshToken(String token) throws JsonProcessingException {
+
         String accessToken = getKakaoAccessToken(token);
         OAuth2UserInfo kakaouserInfo = getKakaoUserInfo(accessToken);
         UserEntity userEntity = saveOrUpdateUser(kakaouserInfo);
-        String createToken = jwtUtil.createAccessToken(userEntity.getEmail());
-        return createToken;
-    }
 
+        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
+        String jwtRefreshToken = jwtUtil.createRefreshToken();
+
+        userEntity.updateRefreshToken(jwtRefreshToken);
+        userRepository.save(userEntity);
+
+        //클라이언트에 반환할 토큰
+        Map<String, String> tokens = Map.of(
+                "accessToken", jwtAccessToken,
+                "refreshToken", jwtRefreshToken
+        );
+
+        return tokens;
+    }
 
 
     public String getKakaoAccessToken(String code) throws JsonProcessingException {

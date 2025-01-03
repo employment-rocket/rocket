@@ -17,15 +17,17 @@ const KakaoLogin = () => {
               withCredentials: true, // 쿠키 저장을 위해 필요
             });
             
-            // 서버로부터 받은 데이터를 확인
-            console.log("Access Token: ",response.data);
+          // 서버로부터 받은 데이터를 확인
+          const {accessToken, refreshToken} = response.data;
+            console.log("Access Token: ",accessToken);
+            console.log("Refresh Token: ", refreshToken);
 
-            localStorage.setItem("Authorization", response.data);
+            localStorage.setItem("AccessToken", accessToken);
+            localStorage.setItem("RefreshToken", refreshToken);
             
-            // 로그인 성공 후, 메인 페이지로 이동
+          // 로그인 성공 후, 메인 페이지로 이동
            if (response.status === 200){
             navigate("/career");
-            console.log("setLogin:", isLogin);
           }
             
           } catch (error) {

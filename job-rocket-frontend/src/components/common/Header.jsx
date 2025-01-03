@@ -14,12 +14,13 @@ const Header = () => {
 	const [isLogin, setLogin] = useState(false);
 
 	useEffect(()=>{
-		const token = localStorage.getItem("Authorization");
+		const token = localStorage.getItem("AccessToken");
 		setLogin(!!token);
 	},[location]);
 
 	const handleLogout = () => {
-		localStorage.removeItem("Authorization");
+		localStorage.removeItem("AccessToken");
+		localStorage.removeItem("RefreshToken");
 		setLogin(false);
 		setDropdownOpen(false);
 		navigate("/");

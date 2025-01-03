@@ -37,9 +37,9 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String email) {
+    public String createRefreshToken() {
         return Jwts.builder()
-                .setSubject(email)
+                //.setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + (expiration * 2)))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();

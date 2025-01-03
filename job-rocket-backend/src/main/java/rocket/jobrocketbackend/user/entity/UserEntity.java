@@ -33,8 +33,10 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean allowEmail=false;
 
+    private String refreshToken;
+
     @Builder
-    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail) {
+    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail,String refreshToken) {
         this.id=id;
         this.email = email;
         this.nickname = nickname;
@@ -42,6 +44,7 @@ public class UserEntity {
         this.socialType=socialType;
         this.allowEmail=allowEmail;
         this.role = role;
+        this.refreshToken=refreshToken;
     }
 
 
@@ -53,6 +56,11 @@ public class UserEntity {
         if (!this.profile.equals(profile)) {
             this.profile = profile;
         }
+        return this;
+    }
+
+    public UserEntity updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
         return this;
     }
 
