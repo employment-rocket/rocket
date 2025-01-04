@@ -1,10 +1,7 @@
 
 package rocket.jobrocketbackend.oauth.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +56,10 @@ public class JWTUtil {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
             return claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
+        }catch (ExpiredJwtException e){
+            log.info("토큰 기간 만료");
+            return true;
+        }catch (Exception e) {
             return false;
         }
     }

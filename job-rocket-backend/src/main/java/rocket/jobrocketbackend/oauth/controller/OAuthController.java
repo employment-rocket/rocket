@@ -35,7 +35,7 @@ public class OAuthController {
             log.info("newAccessToken: {}",newAccessToken);
             //새로운 AccessToken을 헤더에 담아 반환
             return ResponseEntity.ok()
-                    .header("Authorization","Bearer "+ newAccessToken)
+                    .header("Authorization",newAccessToken)
                     .build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(Map.of("error", "Refresh token invalid or expired"));
