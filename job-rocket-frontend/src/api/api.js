@@ -1,5 +1,6 @@
 import axios from "axios";
 console.log(import.meta.env.VITE_API_BASE_URL);
+
 const api = axios.create({
 	baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
 	timeout: 2000,
@@ -47,14 +48,12 @@ api.interceptors.response.use(
 						null,
 						{
 							headers: {
-								"Authorization-refresh": `Bearer ${refreshToken}`,
+								"Authorization-refresh": `${refreshToken}`,
 							},
 						}
 					);
 
-					const newAccessToken = response.headers[
-						"authorization"
-					].replace("Bearer ", "");
+					const newAccessToken = response.headers["authorization"];
 					// 새로운 AccessToken 저장
 					console.log("newAccessToke: ", newAccessToken);
 					localStorage.setItem("AccessToken", newAccessToken);
@@ -62,7 +61,7 @@ api.interceptors.response.use(
 					// 헤더 업데이트 후 재요청
 					originalRequest.headers[
 						"Authorization"
-					] = `Bearer ${newAccessToken}`;
+					] = `${newAccessToken}`;
 					return api(originalRequest); // 재요청
 				} catch (refreshError) {
 					console.error("리프레시토큰 세션 만료!:", refreshError);

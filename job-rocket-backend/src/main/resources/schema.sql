@@ -5,6 +5,7 @@ CREATE TABLE member (
                         role VARCHAR(50) NOT NULL,
                         nickname VARCHAR(100),
                         profile VARCHAR(255),
+                        social_type varchar(255),
                         allow_email BOOLEAN,
                         refresh_token VARCHAR(255)
 );
