@@ -22,6 +22,7 @@ import rocket.jobrocketbackend.schedule.service.ScheduleService;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -66,7 +67,7 @@ class ScheduleControllerTest {
         when(scheduleService.modifyType(any(ScheduleTypeModifyDTO.class))).thenReturn(result);
         //when
         mockMvc.perform(
-                        patch("/schedule")
+                        patch("/schedules")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
@@ -95,11 +96,11 @@ class ScheduleControllerTest {
                 .title("제목")
                 .state(ScheduleState.Ongoing)
                 .build();
-        when(scheduleService.create(any(ScheduleCreateDTO.class))).thenReturn(result);
+        when(scheduleService.create(any(ScheduleCreateDTO.class),anyLong())).thenReturn(result);
         //when
         //then
         mockMvc.perform(
-                        post("/schedule")
+                        post("/schedules")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
@@ -115,7 +116,7 @@ class ScheduleControllerTest {
         // when
         // then
         mockMvc.perform(
-                        delete("/schedule/1")
+                        delete("/schedules/1")
                                 .with(csrf())
                 ).andDo(print())
                 .andExpect(status().isNoContent());

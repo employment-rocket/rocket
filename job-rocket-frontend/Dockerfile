@@ -1,4 +1,4 @@
-# 1. Build 단계: Node.js를 사용하여 React 애플리케이션 빌드
+# Build 단계: Node.js를 사용하여 React 애플리케이션 빌드 
 FROM node:16 as build
 
 # 작업 디렉토리 설정

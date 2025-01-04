@@ -31,21 +31,21 @@ const CsQuestion = ({
                 const confirm = window.confirm("선택을 해제하시겠습니까?");
                 if (confirm) {
                     await toggleAnswerIsIn({ answerId: newAnswerId });
-                    onRemoveCheckedQuestion({ qid, question, category: "cs", answerId: newAnswerId });
+                    onRemoveCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId });
                 }
             } else {
                 if (!answerId) {
                     const newAnswerId = await createAnswer({
                         memberId: 1,
-                        category: "cs",
+                        category: "CS",
                         qid,
                         content: currentAnswer,
                         isIn: true,
                     });
-                    onAddCheckedQuestion({ qid, question, category: "cs", answerId: newAnswerId, content: currentAnswer });
+                    onAddCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId, content: currentAnswer });
                 } else {
                     await toggleAnswerIsIn({ answerId: newAnswerId });
-                    onAddCheckedQuestion({ qid, question, category: "cs", answerId, content: currentAnswer });
+                    onAddCheckedQuestion({ qid, question, category: "CS", answerId, content: currentAnswer });
                 }
             }
         } catch (error) {
@@ -66,12 +66,12 @@ const CsQuestion = ({
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
                     memberId: 1,
-                    category: "cs",
+                    category: "CS",
                     qid,
                     content: currentAnswer,
                     isIn: false,
                 });
-                onAddCheckedQuestion({ qid, question, category: "cs", answerId: createdAnswerId, content: currentAnswer });
+                onAddCheckedQuestion({ qid, question, category: "CS", answerId: createdAnswerId, content: currentAnswer });
                 setNewAnswerId(createdAnswerId);
                 alert("답변이 작성되었습니다.");
             } else {

@@ -6,16 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.common.entity.Role;
+import rocket.jobrocketbackend.introduce.entity.IntroduceEntity;
 import rocket.jobrocketbackend.common.entity.SocialType;
 
 import java.util.Optional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "member")
+@Table(name="member")
 public class UserEntity {
 
     @Id
@@ -39,7 +41,10 @@ public class UserEntity {
     private String refreshToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AnswerEntity> answers;
+    private List<AnswerEntity> answers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IntroduceEntity> introduces = new ArrayList<>();
 
     @Builder
     public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail,String refreshToken) {
@@ -69,5 +74,4 @@ public class UserEntity {
         this.refreshToken = refreshToken;
         return this;
     }
-
 }

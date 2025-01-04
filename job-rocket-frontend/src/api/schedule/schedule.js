@@ -2,10 +2,19 @@ import api from "../api";
 
 const getSchedules = async () => {
 	try {
-		const response = await api.get("/schedule");
+		const response = await api.get("/schedules");
 		return response.data;
 	} catch (error) {
-		console.error("/schedule api get error", error);
+		console.error("/schedules api get error", error);
+		throw error;
+	}
+};
+const getCalendarSchedule = async () => {
+	try {
+		const response = await api.get("/schedules/calendars");
+		return response.data;
+	} catch (error) {
+		console.error("/schedules/calendars api get error", error);
 		throw error;
 	}
 };
@@ -18,14 +27,14 @@ const createScheduleItem = async ({ title, dueDate, memo, state }) => {
 		state: state,
 	};
 	try {
-		const response = await api.post("/schedule", body);
+		const response = await api.post("/schedules", body);
 		if (response.status === 201) {
 			return response.data;
 		} else {
-			console.error("/schedule api post error", response);
+			console.error("/schedules api post error", response);
 		}
 	} catch (error) {
-		console.error("/schedule api post error", error);
+		console.error("/schedules api post error", error);
 	}
 };
 
@@ -35,26 +44,26 @@ const modifyScheduleItem = async ({ id, type }) => {
 		type: type,
 	};
 	try {
-		const response = await api.patch("/schedule", body);
+		const response = await api.patch("/schedules", body);
 		if (response.status === 200) {
 			return response.data;
 		} else {
-			console.log("/schedule api patch error");
+			console.log("/schedules api patch error");
 		}
 	} catch (error) {
-		console.log("/schedule api patch error", error);
+		console.log("/schedules api patch error", error);
 	}
 };
 
 const deleteScheduleItem = async ({ id }) => {
 	console.log(id);
 	try {
-		const response = await api.delete(`/schedule/${id}`);
+		const response = await api.delete(`/schedules/${id}`);
 		if (response.status !== 204) {
-			console.log("/schedule api delete error");
+			console.log("/schedules api delete error");
 		}
 	} catch (error) {
-		console.log("/schedule api delete error", error);
+		console.log("/schedules api delete error", error);
 	}
 };
 
@@ -66,12 +75,12 @@ const updateScheduleItem = async ({ id, title, memo, dueDate, state }) => {
 		state: state,
 	};
 	try {
-		const response = await api.patch(`/schedule/${id}`, body);
+		const response = await api.patch(`/schedules/${id}`, body);
 		if (response.status !== 200) {
-			console.log("/schedule api update error");
+			console.log("/schedules api update error");
 		}
 	} catch (error) {
-		console.log("/schedule api update error", error);
+		console.log("/schedules api update error", error);
 	}
 };
 export {
@@ -80,4 +89,5 @@ export {
 	modifyScheduleItem,
 	deleteScheduleItem,
 	updateScheduleItem,
+	getCalendarSchedule,
 };
