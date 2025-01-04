@@ -1,26 +1,20 @@
-import { StrictMode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Header from "./components/common/Header.jsx";
+import PrivateRoute from "./components/common/PrivateRoute";
+import KakaoLogin from "./components/oauth/KakaoLogin";
+import ScheduleHome from "./components/schedule/ScheduleHome.jsx";
+import Statistics from "./components/schedule/statistics/Statistics.jsx";
+import "./index.css";
 import Board from "./pages/Board.jsx";
 import Career from "./pages/Career.jsx";
-import Schedule from "./pages/Schedule.jsx";
-import Question from "./pages/Question.jsx";
-import Site from "./pages/Site.jsx";
-import LoginPage from "./pages/Login.jsx";
-import KakaoLogin from "./components/oauth/KakaoLogin";
-import Calendar from "./components/schedule/calendar/Calendar.jsx";
-import ScheduleMain from "./components/schedule/schedule/ScheduleMain.jsx";
-import Statistics from "./components/schedule/statistics/Statistics.jsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import PrivateRoute from "./components/common/PrivateRoute";
-import Retrospect from "./pages/Retrospect";
 import MyPage from "./pages/MyPage";
 import Note from "./pages/Note";
-import Statistics from "./components/schedule/statistics/Statistics.jsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ScheduleHome from "./components/schedule/ScheduleHome.jsx";
+import Question from "./pages/Question.jsx";
+import Retrospect from "./pages/Retrospect";
+import Schedule from "./pages/Schedule.jsx";
+import Site from "./pages/Site.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
