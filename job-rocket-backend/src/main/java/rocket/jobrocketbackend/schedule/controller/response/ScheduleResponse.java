@@ -1,5 +1,6 @@
 package rocket.jobrocketbackend.schedule.controller.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,7 +14,7 @@ public class ScheduleResponse {
     private long id;
     private String title;
     private String memo;
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
     private String type;
     private String state; // 진행중, 탈락, 최종합격
