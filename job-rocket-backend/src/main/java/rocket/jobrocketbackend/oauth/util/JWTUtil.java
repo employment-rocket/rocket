@@ -45,6 +45,16 @@ public class JWTUtil {
                 .compact();
     }
 
+    //refreshToken으로 AccessToken 재발급
+    public String newAccessToken(String refreshToken){
+        if(isExpired(refreshToken)){
+            throw new RuntimeException("Refresh token has expired");
+        }
+        String email = getMemberEmail(refreshToken, secretKey);
+        return createAccessToken(email);
+    }
+
+
     public boolean isExpired(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);

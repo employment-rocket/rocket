@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("Authorization");
+  const accessToken = localStorage.getItem("AccessToken");
 
   useEffect(() => {
     if (!accessToken) {
