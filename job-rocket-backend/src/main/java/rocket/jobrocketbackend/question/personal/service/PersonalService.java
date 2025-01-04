@@ -10,8 +10,6 @@ import rocket.jobrocketbackend.question.personal.dto.response.PersonalResDto;
 import rocket.jobrocketbackend.question.personal.entity.PersonalEntity;
 import rocket.jobrocketbackend.question.personal.repository.PersonalRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class PersonalService {
@@ -21,20 +19,21 @@ public class PersonalService {
 
     public Page<PersonalResDto> findPersonalList(int page, Long memberId) {
         PageRequest pageable = PageRequest.of(page, PAGE_SIZE);
-        Page<PersonalEntity> personalEntities = personalRepository.findAll(pageable);
-
-        return personalEntities.map(entity -> convertToDto(entity, memberId));
+        return personalRepository.findAll(pageable)
+                .map(entity -> convertToDto(entity, memberId));
     }
 
     private PersonalResDto convertToDto(PersonalEntity entity, Long memberId) {
-        Optional<AnswerEntity> answerEntity = Optional.ofNullable(
-                answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, "personal", entity.getQid())
-        );
+        AnswerEntity answerEntity = answerJpaRepository
+                .findByMemberIdAndCategoryAndQid(memberId, "personal", entity.getQid())
+                .orElse(null);
 
-        return new PersonalResDto(
-                entity.getQid(),
-                entity.getQuestion(),
-                answerEntity.map(AnswerEntity::getContent).orElse("")
-        );
+        return PersonalResDto.builder()
+                .qid(entity.getQid())
+                .question(entity.getQuestion())
+                .answer(answerEntity != null ? answerEntity.getContent() : "")
+                .answerId(answerEntity != null ? answerEntity.getAnswerId() : null)
+                .isIn(answerEntity != null && answerEntity.isIn())
+                .build();
     }
 }

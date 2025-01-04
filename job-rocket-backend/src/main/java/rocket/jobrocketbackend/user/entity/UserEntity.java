@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.common.entity.SocialType;
 
 import java.util.Optional;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +37,9 @@ public class UserEntity {
     private Boolean allowEmail=false;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AnswerEntity> answers;
 
     @Builder
     public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail,String refreshToken) {

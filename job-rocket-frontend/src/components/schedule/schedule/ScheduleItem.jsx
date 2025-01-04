@@ -1,37 +1,49 @@
 import { React, useState } from "react";
 import del from "../../../assets/delete.png";
 import DeleteModal from "./DeleteModal";
+import UpdateModal from "./UpdateModal";
 
 const ScheduleItem = ({ item, droppableId, handleDelete }) => {
-	const [isModalOpen, setModalOpen] = useState(false);
+	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
 
 	return (
 		<>
 			<div className="flex flex-col w-full py-2 space-y-3">
-				<div className="flex justify-between items-center">
-					<div>{item.title}</div>
+				<div className="flex justify-between items-center ">
+					<div
+						className="overflow-hidden text-ellipsis whitespace-nowrap "
+						onClick={() => setUpdateModalOpen(true)}
+					>
+						{item.title}
+					</div>
 
 					<img
 						src={del}
 						alt="삭제"
-						onClick={() => setModalOpen(true)}
-						className="cursor-pointer"
+						onClick={() => setDeleteModalOpen(true)}
+						className="cursor-pointer w-[20px] h-[20px]"
 					/>
 				</div>
 				<div
 					className="flex justify-between"
 					style={{ fontSize: "0.8rem" }}
 				>
-					<div>{item.type}</div>
+					<div>{item.state}</div>
 					<div>~{item.dueDate}</div>
 				</div>
 			</div>
 			<DeleteModal
-				isOpen={isModalOpen}
+				isOpen={isDeleteModalOpen}
 				handleDelete={handleDelete}
 				id={item.id}
 				droppableId={droppableId}
-				onCancel={() => setModalOpen(false)}
+				onCancel={() => setDeleteModalOpen(false)}
+			/>
+			<UpdateModal
+				data={item}
+				isOpen={isUpdateModalOpen}
+				onCancel={() => setUpdateModalOpen(false)}
 			/>
 		</>
 	);

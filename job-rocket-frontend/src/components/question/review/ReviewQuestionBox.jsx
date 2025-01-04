@@ -14,12 +14,12 @@ const ReviewQuestionBox = ({
 
     return (
         <div
-            className="p-4 bg-white border-2 border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
-            style={{ fontFamily: "CookieBold" }}
+            className="p-4 bg-white border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
+            style={{ fontFamily: "CookieBold", borderWidth: "3px" }}
         >
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold">
-                    {selectedReview || "AI 예상 질문"}
+                    {selectedReview || "복기 질문 목록"}
                 </h3>
                 <button className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
                     질문 생성

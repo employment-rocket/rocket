@@ -10,6 +10,7 @@ import lombok.Getter;
 public class AnswerResDto {
     private Long answerId;
     private Long qid;
+    private String question;
     private String content;
     private String category;
     private boolean isIn;

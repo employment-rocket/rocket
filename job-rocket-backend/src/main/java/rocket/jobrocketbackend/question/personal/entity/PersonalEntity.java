@@ -17,6 +17,5 @@ public class PersonalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long qid;
-
     private String question;
 }

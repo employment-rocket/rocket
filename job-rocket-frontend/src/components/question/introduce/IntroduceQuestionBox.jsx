@@ -14,8 +14,8 @@ const IntroduceQuestionBox = ({
 
     return (
         <div
-            className="p-4 bg-white border-2 border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
-            style={{ fontFamily: "CookieBold" }}
+            className="p-4 bg-white border-blue-400 rounded-lg shadow-lg h-[75vh] overflow-y-auto"
+            style={{ fontFamily: "CookieBold", borderWidth: "3px" }}
         >
             <h3 className="text-lg font-bold mb-4">
                 {selectedIntroduce || "AI 예상 질문"}
