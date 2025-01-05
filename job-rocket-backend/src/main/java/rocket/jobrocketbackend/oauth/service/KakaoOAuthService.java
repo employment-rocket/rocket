@@ -120,8 +120,6 @@ public class KakaoOAuthService {
         if (existingUser.isPresent()) {
             // 기존 유저 정보 업데이트
             UserEntity user = existingUser.get();
-       //     nickname = user.getNickname();
-        //    user.update(nickname, profileImage);
             return userRepository.save(user);
         } else {
             // 새로운 유저 저장

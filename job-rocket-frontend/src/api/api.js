@@ -9,12 +9,12 @@ const api = axios.create({
 	},
 });
 
-// 요청 인터셉터 (Request Interceptor)
+// 요청 인터셉터
 api.interceptors.request.use(
 	(config) => {
 		const accessToken = localStorage.getItem("AccessToken");
 		if (accessToken) {
-			config.headers["Authorization"] = `${accessToken}`; // AccessToken 추가
+			config.headers["Authorization"] = `${accessToken}`;
 		}
 		return config;
 	},
@@ -23,9 +23,9 @@ api.interceptors.request.use(
 	}
 );
 
-// 응답 인터셉터 (Response Interceptor)
+// 응답 인터셉터
 api.interceptors.response.use(
-	(response) => response, // 성공적인 응답은 그대로 전달
+	(response) => response, 
 	async (error) => {
 		const originalRequest = error.config;
 
@@ -35,16 +35,16 @@ api.interceptors.response.use(
 			error.response.status === 401 &&
 			!originalRequest._retry
 		) {
-			originalRequest._retry = true; // 무한 루프 방지
+			originalRequest._retry = true; 
 
 			const refreshToken = localStorage.getItem("RefreshToken");
 			if (refreshToken) {
 				try {
-					// RefreshToken으로 새로운 AccessToken 발급 요청
+					
 					const response = await axios.post(
 						`${
 							import.meta.env.VITE_API_BASE_URL
-						}/login/auth/refresh`, // RefreshToken 발급 API
+						}/login/auth/refresh`, 
 						null,
 						{
 							headers: {
@@ -54,27 +54,25 @@ api.interceptors.response.use(
 					);
 
 					const newAccessToken = response.headers["authorization"];
-					// 새로운 AccessToken 저장
-					console.log("newAccessToke: ", newAccessToken);
+
 					localStorage.setItem("AccessToken", newAccessToken);
 
-					// 헤더 업데이트 후 재요청
+
 					originalRequest.headers[
 						"Authorization"
 					] = `${newAccessToken}`;
-					return api(originalRequest); // 재요청
+					return api(originalRequest); 
 				} catch (refreshError) {
 					console.error("리프레시토큰 세션 만료!:", refreshError);
 					alert("세션이 만료되었습니다! 다시 로그인해주세요.");
 					localStorage.removeItem("AccessToken");
 					localStorage.removeItem("RefreshToken");
-					window.location.href = "/login"; // 로그인 페이지로 이동
+					window.location.href = "/board"; 
 					return Promise.reject(refreshError);
 				}
 			} else {
-				// RefreshToken이 없는 경우 로그아웃 처리
 				console.error("No RefreshToken found. Redirecting to login");
-				window.location.href = "/login";
+				window.location.href = "/board";
 			}
 		}
 
