@@ -27,6 +27,7 @@ public class JWTUtil {
     private Long expiration;
 
     public String createAccessToken(String email) {
+
         return Jwts.builder()
                 .setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -34,19 +35,21 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createRefreshToken() {
+    public String createRefreshToken(String email) {
         return Jwts.builder()
-                //.setSubject(email)
+                .setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + (expiration * 2)))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
     public String newAccessToken(String refreshToken){
+
         if(isExpired(refreshToken)){
             throw new RuntimeException("Refresh token has expired");
         }
         String email = getMemberEmail(refreshToken, secretKey);
+
         return createAccessToken(email);
     }
 
@@ -69,7 +72,7 @@ public class JWTUtil {
     }
 
     public static String getMemberEmail(String token, String secretKey) {
-        Claims body = Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+
         return Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token)
                 .getBody().get("sub", String.class);
     }

@@ -56,7 +56,7 @@ public class KakaoOAuthService {
         UserEntity userEntity = saveOrUpdateUser(kakaouserInfo);
 
         String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
-        String jwtRefreshToken = jwtUtil.createRefreshToken();
+        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail());
 
         userEntity.updateRefreshToken(jwtRefreshToken);
         userRepository.save(userEntity);
