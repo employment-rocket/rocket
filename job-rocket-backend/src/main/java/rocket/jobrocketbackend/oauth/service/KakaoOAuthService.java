@@ -109,7 +109,6 @@ public class KakaoOAuthService {
 
     private UserEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
         String email = kakaoUserInfo.getEmail();
-        String nickname = NicknameGenerator.generateNickname();
         String profileImage = kakaoUserInfo.getProfileImage();
 
         log.info("profileImage = {}", profileImage);
@@ -122,6 +121,7 @@ public class KakaoOAuthService {
             UserEntity user = existingUser.get();
             return userRepository.save(user);
         } else {
+            String nickname = NicknameGenerator.generateNickname();
             // 새로운 유저 저장
             UserEntity newUser = UserEntity.builder()
                     .email(email)
