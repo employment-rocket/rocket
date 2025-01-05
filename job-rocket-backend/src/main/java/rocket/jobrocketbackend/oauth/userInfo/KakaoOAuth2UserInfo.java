@@ -26,11 +26,11 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getNickname() {
-        String response = ((Map<String,String>)attributes.get("profile")).get("nickname");
-        if (response == null) {
-            return null;
-        }
-        return response;
+  //      String response = ((Map<String,String>)attributes.get("profile")).get("nickname");
+   //     if (response == null) {
+   //         return null;
+   //     }
+        return null;
     }
 
     @Override

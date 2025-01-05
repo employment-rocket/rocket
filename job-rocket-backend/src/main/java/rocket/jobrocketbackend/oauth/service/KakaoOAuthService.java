@@ -20,6 +20,7 @@ import rocket.jobrocketbackend.oauth.util.JWTUtil;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import rocket.jobrocketbackend.user.util.NicknameGenerator;
 
 import java.util.Map;
 import java.util.Optional;
@@ -108,7 +109,7 @@ public class KakaoOAuthService {
 
     private UserEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
         String email = kakaoUserInfo.getEmail();
-        String nickname = kakaoUserInfo.getNickname();
+        String nickname = NicknameGenerator.generateNickname();
         String profileImage = kakaoUserInfo.getProfileImage();
 
         log.info("profileImage = {}", profileImage);
@@ -119,7 +120,8 @@ public class KakaoOAuthService {
         if (existingUser.isPresent()) {
             // 기존 유저 정보 업데이트
             UserEntity user = existingUser.get();
-            user.update(nickname, profileImage);
+       //     nickname = user.getNickname();
+        //    user.update(nickname, profileImage);
             return userRepository.save(user);
         } else {
             // 새로운 유저 저장
