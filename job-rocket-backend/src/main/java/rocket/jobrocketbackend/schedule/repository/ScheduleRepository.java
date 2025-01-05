@@ -1,5 +1,6 @@
 package rocket.jobrocketbackend.schedule.repository;
 
+import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,9 +18,11 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
             "and s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.Ongoing")
     List<ScheduleEntity> findByUserAndIsNotFail(@Param("user") UserEntity user);
 
-
-    @Query("select s.type, count(s) " +
+    @Query("select new rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO(s.type,count(s)) " +
             "from SCHEDULE s where s.user = :user group by s.type")
-    List<ScheduleGroupDTO> findStatisticsByUserId(@Param("user") UserEntity user);
+    List<ScheduleGroupDTO> findByUserAndGroupByType(@Param("user") UserEntity user);
 
+    @Query("select new rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO(s.state,count(s)) " +
+            "from SCHEDULE s where s.user = :user group by s.state")
+    List<ScheduleGroupDTO> findByUserAndGroupByState(@Param("user") UserEntity user);
 }

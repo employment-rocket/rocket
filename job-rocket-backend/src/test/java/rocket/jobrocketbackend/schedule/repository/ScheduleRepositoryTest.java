@@ -1,6 +1,8 @@
 package rocket.jobrocketbackend.schedule.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TupleElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -131,12 +134,36 @@ class ScheduleRepositoryTest {
     }
 
     @Test
-    @DisplayName("")
-    void findStatisticsByUserId() {
+    @DisplayName("해당 유저가 가지고있는 일정관리를 ScheduleType 당 몇개가있는지 반환")
+    void findByUserAndGroupByType() {
         // given
         UserEntity user = userRepository.findById(userId).get();
         // when
-        List<ScheduleGroupDTO> reulst = scheduleRepository.findStatisticsByUserId(user);
+        List<ScheduleGroupDTO> result = scheduleRepository.findByUserAndGroupByType(user);
         // then
+        assertThat(result).hasSize(4)
+                .extracting("key","count")
+                .containsExactlyInAnyOrder(
+                        tuple(ScheduleType.Document.getText(),3L),
+                        tuple(ScheduleType.First.getText(),2L),
+                        tuple(ScheduleType.Second.getText(),1L),
+                        tuple(ScheduleType.Final.getText(),1L)
+                );
+    }
+    @Test
+    @DisplayName("해당 유저가 가지고있는 일정관리를 ScheduleState 당 몇개가있는지 반환")
+    void findByUserAndGroupByState() {
+        // given
+        UserEntity user = userRepository.findById(userId).get();
+        // when
+        List<ScheduleGroupDTO> result = scheduleRepository.findByUserAndGroupByState(user);
+        // then
+        assertThat(result).hasSize(3)
+                .extracting("key","count")
+                .containsExactlyInAnyOrder(
+                        tuple(ScheduleState.Ongoing.getText(),5L),
+                        tuple(ScheduleState.Fail.getText(),1L),
+                        tuple(ScheduleState.Passed.getText(),1L)
+                );
     }
 }
