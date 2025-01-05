@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.common.entity.Role;
+import rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
@@ -17,6 +18,7 @@ import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +40,7 @@ class ScheduleRepositoryTest {
     @BeforeEach
     void init(){
         LocalDate date = LocalDate.of(2024, 12, 23);
-        UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
         userId = user.getId();
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
@@ -62,7 +64,7 @@ class ScheduleRepositoryTest {
     @Test
     void createScheduleEntity(){
         //given
-        UserEntity user = UserEntity.builder().nickname("test").build();
+        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
         userRepository.save(user);
         ScheduleEntity newSchedule = ScheduleEntity.builder()
                 .title("삼성전자")
@@ -103,7 +105,7 @@ class ScheduleRepositoryTest {
     @DisplayName("scheduleId에 해당하는 schdeule를 삭제한다.")
     void deleteById() {
         // given
-        UserEntity user = UserEntity.builder().nickname("test").build();
+        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
         userRepository.save(user);
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
         scheduleRepository.save(entity);
@@ -128,4 +130,13 @@ class ScheduleRepositoryTest {
         assertThat(result).hasSize(5);
     }
 
+    @Test
+    @DisplayName("")
+    void findStatisticsByUserId() {
+        // given
+        UserEntity user = userRepository.findById(userId).get();
+        // when
+        List<ScheduleGroupDTO> reulst = scheduleRepository.findStatisticsByUserId(user);
+        // then
+    }
 }
