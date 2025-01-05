@@ -32,8 +32,6 @@ public class OAuthController {
     public ResponseEntity<Map<String,String>> refreshAccessToken(@RequestHeader("Authorization-refresh") String refreshToken){
         try {
             String newAccessToken = jwtUtil.newAccessToken(refreshToken);
-            log.info("newAccessToken: {}",newAccessToken);
-            //새로운 AccessToken을 헤더에 담아 반환
             return ResponseEntity.ok()
                     .header("Authorization",newAccessToken)
                     .build();

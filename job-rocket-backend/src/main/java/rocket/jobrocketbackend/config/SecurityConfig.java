@@ -16,14 +16,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import rocket.jobrocketbackend.oauth.util.JWTFilter;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//    private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
 
 
@@ -61,8 +59,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
         configuration.setMaxAge(3600L);
-        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

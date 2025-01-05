@@ -28,7 +28,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return userDTO.getNickname(); // 닉네임을 name으로 반환
+        return userDTO.getNickname();
     }
     public String getEmail() {
         return userDTO.getEmail();

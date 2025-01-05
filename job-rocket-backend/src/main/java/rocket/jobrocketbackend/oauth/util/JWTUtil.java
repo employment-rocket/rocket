@@ -42,7 +42,6 @@ public class JWTUtil {
                 .compact();
     }
 
-    //refreshToken으로 AccessToken 재발급
     public String newAccessToken(String refreshToken){
         if(isExpired(refreshToken)){
             throw new RuntimeException("Refresh token has expired");
@@ -57,7 +56,6 @@ public class JWTUtil {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(jwtToken);
             return claims.getBody().getExpiration().before(new Date());
         }catch (ExpiredJwtException e){
-            log.info("토큰 기간 만료");
             return true;
         }catch (Exception e) {
             return false;
@@ -66,7 +64,6 @@ public class JWTUtil {
 
     public UserDTO getUserDto(String jwtToken){
         String email = getMemberEmail(jwtToken,secretKey);
-        log.info("email = {}", email);
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException());
         return UserDTO.from(userEntity);
     }

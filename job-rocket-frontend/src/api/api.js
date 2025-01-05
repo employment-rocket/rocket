@@ -65,7 +65,7 @@ api.interceptors.response.use(
 					return api(originalRequest); // 재요청
 				} catch (refreshError) {
 					console.error("리프레시토큰 세션 만료!:", refreshError);
-
+					alert("세션이 만료되었습니다! 다시 로그인해주세요.");
 					localStorage.removeItem("AccessToken");
 					localStorage.removeItem("RefreshToken");
 					window.location.href = "/login"; // 로그인 페이지로 이동
