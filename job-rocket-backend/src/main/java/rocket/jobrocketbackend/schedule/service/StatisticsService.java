@@ -10,6 +10,8 @@ import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,11 +21,11 @@ public class StatisticsService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
 
-    public List<ScheduleGroupDTO> getStatisticsByStateAndType(Long userId){
+    public Map<String, Long> getStatisticsByStateAndType(Long userId){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보가 없습니다."));
         List<ScheduleGroupDTO> list = scheduleRepository.findByUserAndGroupByState(user);
         list.addAll(scheduleRepository.findByUserAndGroupByType(user));
-        return list;
+        return list.stream().collect(Collectors.toMap(ScheduleGroupDTO::getKey, ScheduleGroupDTO::getCount));
     }
 
 }

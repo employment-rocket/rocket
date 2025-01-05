@@ -19,11 +19,11 @@ public class ScheduleGroupDTO {
     Long count;
 
     public ScheduleGroupDTO(ScheduleType type, Long count) {
-        this.key = type.getText();
+        this.key = type.name();
         this.count = count;
     }
     public ScheduleGroupDTO(ScheduleState state, Long count) {
-        this.key = state.getText();
+        this.key = state.name();
         this.count = count;
     }
 }
