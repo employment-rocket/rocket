@@ -38,7 +38,7 @@ INSERT INTO personal (question) VALUES
                                     ('본인이 이 직무에 적합하다고 생각하는 이유는 무엇인가요?');
 
 -- schedule 테이블 INSERT
-/*
+
 INSERT INTO schedule (title, due_date, memo, member_id, type, state) VALUES
                                                                          ('서류 전형 제출', '2025-01-15', '서류 전형 마감일까지 제출해야 합니다.', 1, 'Document', 'Ongoing'),
                                                                          ('1차 면접 준비', '2025-01-20', '1차 면접 예상 질문 준비 및 복습.', 1, 'First', 'Ongoing'),
@@ -50,7 +50,6 @@ INSERT INTO schedule (title, due_date, memo, member_id, type, state) VALUES
                                                                          ('최종 합격 발표', '2025-02-01', '최종 합격 축하합니다!', 1, 'Final', 'Passed'),
                                                                          ('서류 전형 지원', '2025-01-10', '서류 전형 지원 완료.', 1, 'Document', 'Passed'),
                                                                          ('1차 면접 일정 확인', '2025-01-17', '1차 면접 일정 확인 완료.', 1, 'First', 'Ongoing');
-*/
 INSERT INTO introduce (name, file_data, member_id, created_at)
 VALUES
     ('자소서1', X'4444554D4D595F44415441', 1, '2023-01-01 10:00:00'),
