@@ -18,10 +18,12 @@ import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
@@ -39,7 +41,7 @@ class StatisticsServiceTest {
     private Long userId;
 
     @BeforeEach
-    void init(){
+    void init() {
         LocalDate date = LocalDate.of(2024, 12, 23);
         UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
@@ -61,23 +63,20 @@ class StatisticsServiceTest {
         scheduleRepository.save(entity7);
     }
 
-    @DisplayName("유저정보에 해당하는 일정관리를 타입과 상태별 개수를 담은 list 반환")
+    @DisplayName("유저정보에 해당하는 일정관리를 타입과 상태별 개수를 담은 map 반환")
     @Test
     void getStatisticsByStateAndType() {
         //given
         //when
-        List<ScheduleGroupDTO> result = statisticsService.getStatisticsByStateAndType(userId);
+        Map<String, Long> result = statisticsService.getStatisticsByStateAndType(userId);
         //then
-        assertThat(result).hasSize(7)
-                .extracting("key","count")
-                .containsExactlyInAnyOrder(
-                        tuple(ScheduleType.Document.getText(),3L),
-                        tuple(ScheduleType.First.getText(),2L),
-                        tuple(ScheduleType.Second.getText(),1L),
-                        tuple(ScheduleType.Final.getText(),1L),
-                        tuple(ScheduleState.Passed.getText(),1L),
-                        tuple(ScheduleState.Fail.getText(),1L),
-                        tuple(ScheduleState.Ongoing.getText(),5L)
-                );
+        assertThat(result).hasSize(7).
+                containsEntry(ScheduleType.Document.name(), 3L).
+                containsEntry(ScheduleType.First.name(), 2L).
+                containsEntry(ScheduleType.Second.name(), 1L).
+                containsEntry(ScheduleType.Final.name(), 1L).
+                containsEntry(ScheduleState.Passed.name(), 1L).
+                containsEntry(ScheduleState.Fail.name(), 1L)
+                .containsEntry(ScheduleState.Ongoing.name(), 5L);
     }
 }

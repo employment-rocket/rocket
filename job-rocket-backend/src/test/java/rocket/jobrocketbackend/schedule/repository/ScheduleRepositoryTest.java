@@ -144,10 +144,10 @@ class ScheduleRepositoryTest {
         assertThat(result).hasSize(4)
                 .extracting("key","count")
                 .containsExactlyInAnyOrder(
-                        tuple(ScheduleType.Document.getText(),3L),
-                        tuple(ScheduleType.First.getText(),2L),
-                        tuple(ScheduleType.Second.getText(),1L),
-                        tuple(ScheduleType.Final.getText(),1L)
+                        tuple(ScheduleType.Document.name(),3L),
+                        tuple(ScheduleType.First.name(),2L),
+                        tuple(ScheduleType.Second.name(),1L),
+                        tuple(ScheduleType.Final.name(),1L)
                 );
     }
     @Test
@@ -161,9 +161,24 @@ class ScheduleRepositoryTest {
         assertThat(result).hasSize(3)
                 .extracting("key","count")
                 .containsExactlyInAnyOrder(
-                        tuple(ScheduleState.Ongoing.getText(),5L),
-                        tuple(ScheduleState.Fail.getText(),1L),
-                        tuple(ScheduleState.Passed.getText(),1L)
+                        tuple(ScheduleState.Ongoing.name(),5L),
+                        tuple(ScheduleState.Fail.name(),1L),
+                        tuple(ScheduleState.Passed.name(),1L)
                 );
+    }
+
+    @Test
+    @DisplayName("해당 유저의 타입이 서류이고 상태가 탈락인 개수를 가져온다.")
+    void findByUserAndTypeDocumentAndStateFailCount() {
+        // given
+        UserEntity user = userRepository.findById(userId).get();
+        LocalDate date = LocalDate.of(2025, 01, 05);
+        ScheduleEntity entity = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Document).user(user).build();
+        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Document).user(user).build();
+        scheduleRepository.save(entity);
+        // when
+        Long result = scheduleRepository.findByUserAndTypeDocumentAndStateFailCount(user);
+        // then
+        assertThat(result).isEqualTo(1);
     }
 }

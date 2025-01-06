@@ -20,7 +20,8 @@ public class StatisticsController {
     @GetMapping("/statictics")
     public Map<String,Long> statisticsByStateAndTypeList(){
         Long userId = 1L;
-        return statisticsService.getStatisticsByStateAndType(userId);
-
+        Map<String, Long> result = statisticsService.getStatisticsByStateAndType(userId);
+        result.put("DocumentFail",statisticsService.getDocumentFailCount(userId));
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
@@ -14,12 +14,13 @@ const Statistics = () => {
 	const [ongoing, setOngoing] = useState(0);
 	const [fail, setFail] = useState(0);
 	const [passed, setPassed] = useState(0);
+	const [documentFail, setDocumentFail] = useState(0);
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["statistics"],
 		queryFn: getStatisticsSchedule,
 	});
-
+	console.log(data);
 	useEffect(() => {
 		if (data) {
 			setDocument(data.Document || 0);
@@ -29,9 +30,17 @@ const Statistics = () => {
 			setOngoing(data.Ongoing || 0);
 			setFail(data.Fail || 0);
 			setPassed(data.Passed || 0);
+			setDocumentFail(data.DocumentFail || 0);
 		}
 	}, [data]);
 
+	const documentPassed = useMemo(
+		() => first + second + final,
+		[first, second, final]
+	);
+
+	console.log("서류 탈락", documentFail);
+	console.log("서류 통과", documentPassed);
 	if (isLoading) {
 		return <div>로딩중..</div>;
 	}
@@ -59,12 +68,11 @@ const Statistics = () => {
 			},
 		],
 	};
-
 	const data2 = {
 		labels: ["서류탈락", "서류통과"],
 		datasets: [
 			{
-				data: [fail, passed], // 추후 수정
+				data: [documentFail, documentPassed], // 추후 수정
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.2)",
 					"rgba(54, 162, 235, 0.2)",

@@ -28,4 +28,9 @@ public class StatisticsService {
         return list.stream().collect(Collectors.toMap(ScheduleGroupDTO::getKey, ScheduleGroupDTO::getCount));
     }
 
+    public Long getDocumentFailCount(Long userId){
+        //TODO 나중에 개선하기
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보가 없습니다."));
+        return scheduleRepository.findByUserAndTypeDocumentAndStateFailCount(user);
+    }
 }
