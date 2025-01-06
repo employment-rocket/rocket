@@ -48,7 +48,7 @@ const Statistics = () => {
 		total > 0 ? ((value / total) * 100).toFixed(1) : "0";
 
 	// Pie 차트 데이터
-	const data1 = {
+	const scheduleStatis = {
 		labels: [
 			`서류전형 (${getPercentage(document, totalApplications)}%)`,
 			`1차면접 (${getPercentage(first, totalApplications)}%)`,
@@ -61,22 +61,22 @@ const Statistics = () => {
 				data: [document, first, second, final],
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
 					"rgba(255, 206, 86, 0.2)",
 					"rgba(75, 192, 192, 0.2)",
+					"rgba(54, 162, 235, 0.2)",
 				],
 				borderColor: [
 					"rgba(255, 99, 132, 1)",
-					"rgba(54, 162, 235, 1)",
 					"rgba(255, 206, 86, 1)",
 					"rgba(75, 192, 192, 1)",
+					"rgba(54, 162, 235, 1)",
 				],
 				borderWidth: 1,
 			},
 		],
 	};
 
-	const data2 = {
+	const documentStatis = {
 		labels: [
 			`서류탈락 (${getPercentage(
 				documentFail,
@@ -100,6 +100,24 @@ const Statistics = () => {
 		],
 	};
 
+	const options = {
+		plugins: {
+			legend: {
+				display: true,
+				labels: {
+					boxWidth: 10, // 아이콘 크기 조정
+					padding: 20, // 아이템 간격 조정
+				},
+			},
+		},
+		layout: {
+			padding: {
+				top: 10,
+				bottom: 10,
+			},
+		},
+	};
+
 	if (isLoading) {
 		return <div>로딩중..</div>;
 	}
@@ -109,8 +127,7 @@ const Statistics = () => {
 			className="flex flex-col w-full h-screen items-center p-3 space-y-5"
 			style={{ fontFamily: "CookieRegular" }}
 		>
-			<div>통계화면입니다.</div>
-			<div className="flex flex-col bg-blue-300 w-1/2 items-center rounded-lg space-x-5 p-3">
+			<div className="flex flex-col bg-blue-300 w-2/3 items-center rounded-lg space-x-5 p-3">
 				<div className="flex justify-around w-full">
 					<div className="flex flex-col items-center space-y-4">
 						<div>지원횟수</div>
@@ -133,7 +150,24 @@ const Statistics = () => {
 						<div>{final}</div>
 					</div>
 				</div>
+			</div>
 
+			<div className="flex space-x-5">
+				<div className="flex flex-col items-center">
+					<div>전형별 통계</div>
+					<div>
+						<Pie data={scheduleStatis} options={options} />
+					</div>
+				</div>
+				<div className="flex flex-col items-center">
+					<div>서류 통과율</div>
+					<div>
+						<Pie data={documentStatis} options={options} />
+					</div>
+				</div>
+			</div>
+
+			<div className="flex flex-col bg-blue-300 w-2/3 items-center rounded-lg space-x-5 p-3">
 				<div className="flex justify-around w-full">
 					<div className="flex flex-col items-center space-y-4">
 						<div>진행중</div>
@@ -146,20 +180,6 @@ const Statistics = () => {
 					<div className="flex flex-col items-center space-y-4">
 						<div>탈락</div>
 						<div>{fail}</div>
-					</div>
-				</div>
-			</div>
-			<div className="flex space-x-5">
-				<div className="flex flex-col items-center">
-					<div>전형별 통계</div>
-					<div>
-						<Pie data={data1} />
-					</div>
-				</div>
-				<div className="flex flex-col items-center">
-					<div>서류 통과율</div>
-					<div>
-						<Pie data={data2} />
 					</div>
 				</div>
 			</div>
