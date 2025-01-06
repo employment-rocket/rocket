@@ -20,7 +20,7 @@ const Statistics = () => {
 		queryKey: ["statistics"],
 		queryFn: getStatisticsSchedule,
 	});
-	console.log(data);
+
 	useEffect(() => {
 		if (data) {
 			setDocument(data.Document || 0);
@@ -38,16 +38,23 @@ const Statistics = () => {
 		() => first + second + final,
 		[first, second, final]
 	);
+	const totalApplications = useMemo(
+		() => document + first + second + final,
+		[document, first, second, final]
+	);
 
-	console.log("서류 탈락", documentFail);
-	console.log("서류 통과", documentPassed);
-	if (isLoading) {
-		return <div>로딩중..</div>;
-	}
+	// 퍼센트 계산
+	const getPercentage = (value, total) =>
+		total > 0 ? ((value / total) * 100).toFixed(1) : "0";
 
 	// Pie 차트 데이터
 	const data1 = {
-		labels: ["서류전형", "1차면접", "2차면접", "최종"],
+		labels: [
+			`서류전형 (${getPercentage(document, totalApplications)}%)`,
+			`1차면접 (${getPercentage(first, totalApplications)}%)`,
+			`2차면접 (${getPercentage(second, totalApplications)}%)`,
+			`최종 (${getPercentage(final, totalApplications)}%)`,
+		],
 		datasets: [
 			{
 				label: "전형별 통계",
@@ -68,11 +75,21 @@ const Statistics = () => {
 			},
 		],
 	};
+
 	const data2 = {
-		labels: ["서류탈락", "서류통과"],
+		labels: [
+			`서류탈락 (${getPercentage(
+				documentFail,
+				documentPassed + documentFail
+			)}%)`,
+			`서류통과 (${getPercentage(
+				documentPassed,
+				documentPassed + documentFail
+			)}%)`,
+		],
 		datasets: [
 			{
-				data: [documentFail, documentPassed], // 추후 수정
+				data: [documentFail, documentPassed],
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.2)",
 					"rgba(54, 162, 235, 0.2)",
@@ -82,6 +99,10 @@ const Statistics = () => {
 			},
 		],
 	};
+
+	if (isLoading) {
+		return <div>로딩중..</div>;
+	}
 
 	return (
 		<div
@@ -93,7 +114,7 @@ const Statistics = () => {
 				<div className="flex justify-around w-full">
 					<div className="flex flex-col items-center space-y-4">
 						<div>지원횟수</div>
-						<div>{document + first + second + final}</div>
+						<div>{totalApplications}</div>
 					</div>
 					<div className="flex flex-col items-center space-y-4">
 						<div>서류전형</div>
