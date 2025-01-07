@@ -35,5 +35,4 @@ public class IntroduceController {
         introduceService.deleteIntroduceById(introduceId);
         return ResponseEntity.noContent().build();
     }
-
 }
