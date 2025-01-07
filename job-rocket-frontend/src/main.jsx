@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import Header from "./components/common/Header.jsx";
 import PrivateRoute from "./components/common/PrivateRoute";
 import KakaoLogin from "./components/oauth/KakaoLogin";
+import NaverLogin from "./components/oauth/NaverLogin";
 import ScheduleHome from "./components/schedule/ScheduleHome.jsx";
 import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import "./index.css";
@@ -26,6 +27,8 @@ createRoot(document.getElementById("root")).render(
 					path="/login/oauth2/callback/kakao"
 					element={<KakaoLogin />}
 				/>
+				<Route path="/login/oauth2/code/naver" 
+					element={<NaverLogin />} />
 				<Route path="/" element={<Navigate to="/board" replace />} />
 				<Route path="/board" element={<Board />} />
 

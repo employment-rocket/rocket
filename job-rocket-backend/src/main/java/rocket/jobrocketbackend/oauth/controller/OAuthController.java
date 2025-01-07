@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.oauth.service.KakaoOAuthService;
+import rocket.jobrocketbackend.oauth.service.NaverOAuthService;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ public class OAuthController {
 
     private final KakaoOAuthService kakaoOAuthService;
     private final JWTUtil jwtUtil;
+    private final NaverOAuthService naverOAuthService;
 
     @GetMapping("/oauth2/kakao")
     public ResponseEntity<Map<String, String>> getKakao(@RequestParam("code") String code) throws JsonProcessingException {
@@ -37,5 +39,13 @@ public class OAuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(Map.of("error", "Refresh token invalid or expired"));
         }
+    }
+
+    @GetMapping("/oauth2/naver")
+    public ResponseEntity<Map<String, String>> getNaver(
+            @RequestParam("code") String code,
+            @RequestParam("state") String state) throws JsonProcessingException {
+        Map<String, String> tokens = naverOAuthService.getAccessTokenAndRefreshToken(code, state);
+        return ResponseEntity.ok(tokens);
     }
 }
