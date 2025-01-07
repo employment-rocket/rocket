@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import addIcon from "../../../assets/icon-add.png";
 import {
 	deleteScheduleItem,
@@ -14,6 +14,7 @@ import { TYPE_MAP } from "./const";
 const typeList = Object.keys(TYPE_MAP);
 
 export default function ScheduleMain() {
+	const queryClient = useQueryClient();
 	const { data, isLoading } = useQuery({
 		queryKey: ["schedule"],
 		queryFn: getSchedules,
@@ -53,8 +54,6 @@ export default function ScheduleMain() {
 		try {
 			const serverType = TYPE_MAP[destination.droppableId];
 			await modifyScheduleItem({ id: movedItem.id, type: serverType });
-
-			console.log("수정 성공");
 		} catch (error) {
 			console.error("수정 실패", error);
 		}
@@ -95,19 +94,20 @@ export default function ScheduleMain() {
 		}
 	}
 
-	function handleDelete(id, droppableId) {
-		deleteScheduleItem({ id });
+	const handleDelete = async (id, droppableId) => {
+		await deleteScheduleItem({ id });
 		const list = getListByDroppableId(droppableId);
 		const updatedList = list.filter((item) => item.id !== id);
 		updateListState(droppableId, updatedList);
-	}
+		queryClient.invalidateQueries(["schedule"]);
+	};
 
 	return (
 		<>
 			<div className="flex flex-col space-y-4 h-screen w-full p-4">
-				<div className="w-full h-[70%] rounded-[20px] p-3 border-2 border-blue-300 bg-gray-300">
+				<div className="w-full h-[85%] rounded-[20px] p-3 border-2 border-blue-300 bg-gray-300">
 					<DragDropContext onDragEnd={handleDragEnd}>
-						<div className="flex justify-around items-center h-full w-full">
+						<div className="grid grid-cols-2 grid-rows-2 gap-2 h-full w-full place-items-center">
 							{typeList.map((droppableId) => (
 								<DroppableArea
 									key={droppableId}
@@ -137,10 +137,9 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 	const showAddButton = droppableId === "서류전형";
 
 	return (
-		<div className="bg-white h-[90%] w-[20%] flex flex-col items-center space-y-2 rounded-2xl border-2 border-blue-500">
+		<div className="bg-white h-[90%] w-[80%] flex flex-col  items-center space-y-2 rounded-2xl border-2 border-blue-500">
 			<div className="pt-6 px-3 capitalize flex w-full  border-b-2 pb-2">
 				<div className="w-[20px] h-[20px]" />
-
 				<div className="grow flex justify-center items-center">
 					<div>{droppableId}</div>
 				</div>
