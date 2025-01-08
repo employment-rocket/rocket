@@ -7,15 +7,14 @@ import kakaoImage from "../assets/kakao.png";
 const LoginPage = ({ isOpen, onClose}) => {
 
    
-  const KAKAO_REST_API_KEY = '714bf4a422faf6cbe152f3e8b10c01e7';
-  const KAKAO_REDIRECT_URI = 'http://localhost:5173/login/oauth2/callback/kakao';
+  const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+  const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
   
-  const NAVER_CLIENT_ID = 'I7xTiihFFuXurRYknV5O';
-  const NAVER_REDIRECT_URI = 'http://localhost:5173/login/oauth2/code/naver';
+  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+  const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
 
   const state = encodeURIComponent(Math.random().toString(36).substring(2, 15));
-
-
+  
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
   const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${state}&redirect_uri=${NAVER_REDIRECT_URI}`;
 
