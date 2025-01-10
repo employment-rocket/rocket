@@ -54,7 +54,7 @@ const IntroduceContainer = ({ checkedQuestions, setCheckedQuestions, memberId })
 
     return (
         <div className="flex w-full h-full space-x-4" style={{ fontFamily: "CookieBold" }}>
-            <div className="w-1/4">
+            <div className="w-1/4 border-blue-400 rounded-lg shadow-lg" style={{ borderWidth: "3px" }}>
                 <IntroduceBox
                     introduces={introduces}
                     onSelectIntroduce={(introduce) => setSelectedIntroduce(introduce)}
@@ -62,7 +62,7 @@ const IntroduceContainer = ({ checkedQuestions, setCheckedQuestions, memberId })
                     checkedQuestions={checkedQuestions}
                 />
             </div>
-            <div className="w-3/4">
+            <div className="w-3/4 border-blue-400 rounded-lg shadow-lg" style={{ borderWidth: "3px" }}>
                 <IntroduceQuestionBox
                     questions={questions}
                     selectedIntroduce={selectedIntroduce?.name}

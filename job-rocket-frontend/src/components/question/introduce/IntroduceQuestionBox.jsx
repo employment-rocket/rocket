@@ -26,7 +26,7 @@ const IntroduceQuestionBox = ({
                     />
                 ))}
             </div>
-        </div>
+        </div >
     );
 };
 
