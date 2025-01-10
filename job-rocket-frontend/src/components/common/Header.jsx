@@ -1,15 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
 import profile from "../../assets/profile.png";
 import LoginPage from "../../pages/Login";
-
 import { useNavigate, useLocation } from "react-router";
+import DropdownMenu from "./DropdownMenu";
 
 const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [isModalOpen, setModalOpen] = useState(false);
+	const [isDropdownOpen, setDropdownOpen] = useState(false);
+	const [isLogin, setLogin] = useState(false);
+
+	useEffect(()=>{
+		const token = localStorage.getItem("AccessToken");
+		setLogin(!!token);
+	},[location]);
+
+	const handleLogout = () => {
+		localStorage.removeItem("AccessToken");
+		localStorage.removeItem("RefreshToken");
+		setLogin(false);
+		setDropdownOpen(false);
+		navigate("/");
+	  };
+	const handleProfileClick = () => {
+		if (isLogin) {
+		  setDropdownOpen(!isDropdownOpen);
+		} else {
+		  setModalOpen(true);
+		}
+	};
+
+	const handleLogin = () => {
+		setLogin(true);
+		setModalOpen(false);
+	  };
 
 	return (
 		<div
@@ -82,17 +109,27 @@ const Header = () => {
 					src={profile}
 					alt="프로필이미지"
 					className="h-6 w-6 cursor-pointer"
-					onClick={() => setModalOpen(true)}
+					onClick={handleProfileClick}
 				/>
-				<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" />
+				{isLogin &&(
+					<>
+					<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" />
+					<DropdownMenu
+              			isOpen={isDropdownOpen}
+              			onClose={() => setDropdownOpen(false)}
+              			onNavigate={(action) => {
+                		if (action === "logout") handleLogout();
+              }}
+            />
+			</>
+    		)}	
 			</div>
-
-			<LoginPage
-				isOpen={isModalOpen}
-				onClose={() => setModalOpen(false)}
-			/>
-		</div>
-	);
+      		<LoginPage
+        		isOpen={isModalOpen}
+        		onClose={() => setModalOpen(false)}
+        		onLogin={handleLogin}
+      		/>
+    </div>
+  );
 };
-
 export default Header;
