@@ -21,4 +21,9 @@ public class TestController {
     public String test() {
         return test;
     }
+
+    @GetMapping("/career")
+    public String test2(){
+        return "test2";
+    }
 }

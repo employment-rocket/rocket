@@ -1,21 +1,33 @@
 import React from "react";
 import logo from "../assets/logo.png";
 import naver from "../assets/naver.png";
-import kakao from "../assets/kakao.png";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import kakaoImage from "../assets/kakao.png";
 
 
+const LoginPage = ({ isOpen, onClose}) => {
 
-const LoginPage = ({ isOpen, onClose }) => {
+   
+  const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+  const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+  
+  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+  const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
 
-    const host = 'http://localhost:8080';
+  const state = encodeURIComponent(Math.random().toString(36).substring(2, 15));
+  
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${state}&redirect_uri=${NAVER_REDIRECT_URI}`;
 
-    const handleClickKakaoLogin = () =>{
-        window.kakao.Auth.authorize({
-            redirectUri: `${host}/login/oauth2/code/kakao`,
-        });
-    };
+  const handleClickKakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL;
+        console.log(window)
+      };
+    
+
+  const handleClickNaverLogin = () =>{
+    window.location.href = NAVER_AUTH_URL;
+    consolelog(window)
+  };
 
 	if (!isOpen) return null;
 
@@ -43,6 +55,7 @@ const LoginPage = ({ isOpen, onClose }) => {
 				
                 <button
                     class="w-full max-w-[416px] h-20 bg-white border border-blue-500 shadow rounded-xl flex items-center px-6 mt-12 ml-4"
+                    onClick={handleClickNaverLogin}
                 >
                     <img
                         class="w-20 h-18 rounded-lg"
@@ -61,7 +74,7 @@ const LoginPage = ({ isOpen, onClose }) => {
                  >
                     <img
                         class="ml-3 w-15 h-14 rounded-lg"
-                        src={kakao}
+                        src={kakaoImage}
                         alt="카카오 로고"
                     />
                 <p class="flex-grow text-center text-2xl font-bold text-black">
@@ -75,6 +88,5 @@ const LoginPage = ({ isOpen, onClose }) => {
 			</div>
 		</div>
 	);
-};
-
+}
 export default LoginPage;
