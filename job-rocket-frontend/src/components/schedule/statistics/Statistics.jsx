@@ -60,10 +60,10 @@ const Statistics = () => {
 				label: "전형별 통계",
 				data: [document, first, second, final],
 				backgroundColor: [
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(255, 206, 86, 0.2)",
-					"rgba(75, 192, 192, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
+					"rgba(255, 99, 132, 0.6)",
+					"rgba(255, 206, 86, 0.6)",
+					"rgba(75, 192, 192, 0.6)",
+					"rgba(54, 162, 235, 0.6)",
 				],
 				borderColor: [
 					"rgba(255, 99, 132, 1)",
@@ -91,8 +91,8 @@ const Statistics = () => {
 			{
 				data: [documentFail, documentPassed],
 				backgroundColor: [
-					"rgba(255, 99, 132, 0.2)",
-					"rgba(54, 162, 235, 0.2)",
+					"rgba(255, 99, 132, 0.6)",
+					"rgba(54, 162, 235, 0.6)",
 				],
 				borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
 				borderWidth: 1,
