@@ -4,9 +4,8 @@ import { updateScheduleItem } from "../../../api/schedule/schedule";
 import { State_MAP } from "./const";
 import { useQueryClient } from "@tanstack/react-query";
 
-const UpdateModal = ({ isOpen, onClose, onCancel, data }) => {
+const UpdateModal = ({ isOpen, onCancel, data }) => {
 	const queryClient = useQueryClient();
-	const id = data.id;
 	const [title, setTitle] = useState(data.title);
 	const [date, setDate] = useState(data.dueDate);
 	const [memo, setMemo] = useState(data.memo);
