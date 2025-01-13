@@ -105,8 +105,8 @@ export default function ScheduleMain() {
 
 	return (
 		<>
-			<div className="flex flex-col space-y-4 h-screen w-full p-4">
-				<div className="w-full h-[85%] rounded-[20px] p-3 border-2 border-blue-300 bg-gray-300">
+			<div className="flex flex-col space-y-4 h-full w-full">
+				<div className="w-full h-full rounded-[20px] p-3 border-2 border-blue-300 bg-gray-300">
 					<DragDropContext onDragEnd={handleDragEnd}>
 						<div className="grid grid-cols-2 grid-rows-2 gap-2 h-full w-full place-items-center">
 							{typeList.map((droppableId) => (

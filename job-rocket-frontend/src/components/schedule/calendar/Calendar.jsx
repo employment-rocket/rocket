@@ -34,8 +34,8 @@ const Calendar = () => {
 
 	return (
 		<>
-			<div className="p-4 w-full h-full flex flex-col justify-center">
-				<div className="h-full">
+			<div className="p-4 w-full h-full  flex flex-col justify-center">
+				<div className="p-3 h-full">
 					<FullCalendar
 						plugins={[dayGridPlugin]}
 						locale={"Ko"}
@@ -46,6 +46,7 @@ const Calendar = () => {
 						}}
 						events={events}
 						eventClick={handleEventClick}
+						height="100%"
 					/>
 				</div>
 			</div>
