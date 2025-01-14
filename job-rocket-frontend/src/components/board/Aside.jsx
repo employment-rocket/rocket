@@ -16,7 +16,7 @@ const Aside = () => {
 
 	return (
 		<div
-			className="flex flex-col items-center border rounded-lg h-2/3 shadow-sm shadow-gray-500 p-5 justify-center space-y-3"
+			className="flex flex-col items-center border rounded-lg h-[66vh] shadow-sm shadow-gray-500 p-5 justify-center space-y-3"
 			style={{ fontFamily: "CookieBold" }}
 		>
 			{categories.map(({ name, path }) => {

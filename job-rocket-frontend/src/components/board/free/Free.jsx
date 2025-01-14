@@ -4,7 +4,7 @@ import FreeBoardItem from "./FreeBoardItem";
 const Free = () => {
 	return (
 		<div
-			className="flex flex-col space-y-3 h-full"
+			className="flex flex-col space-y-3 h-[80vh]"
 			style={{ fontFamily: "CookieRegular" }}
 		>
 			<div className="flex justify-between">
