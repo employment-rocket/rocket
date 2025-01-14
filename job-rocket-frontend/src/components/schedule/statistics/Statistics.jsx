@@ -124,7 +124,7 @@ const Statistics = () => {
 
 	return (
 		<div
-			className="flex flex-col w-full h-screen items-center p-3 space-y-5"
+			className="flex flex-col w-full  items-center p-3 space-y-5"
 			style={{ fontFamily: "CookieRegular" }}
 		>
 			<div className="flex flex-col bg-blue-300 w-2/3 items-center rounded-lg space-x-5 p-3">
