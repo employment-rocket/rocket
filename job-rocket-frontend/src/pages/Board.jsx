@@ -4,9 +4,11 @@ import { Outlet } from "react-router";
 
 const Board = () => {
 	return (
-		<div className="flex p-10 space-x-10 ">
-			<Aside />
-			<div className="grow">
+		<div className="flex p-10 space-x-10 w-full ">
+			<div className="w-[10%]">
+				<Aside />
+			</div>
+			<div className="grow w-[85%]">
 				<Outlet />
 			</div>
 		</div>

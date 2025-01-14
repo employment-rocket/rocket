@@ -1,7 +1,19 @@
 import React from "react";
 import FreeBoardItem from "./FreeBoardItem";
+import { useQuery } from "@tanstack/react-query";
+import { getFreeBoard } from "../../../api/board/free-board";
 
 const Free = () => {
+	const { data, isLoading } = useQuery({
+		queryKey: ["free"],
+		queryFn: getFreeBoard,
+	});
+
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	console.log(data);
 	return (
 		<div
 			className="flex flex-col space-y-3 h-[80vh]"
@@ -21,15 +33,9 @@ const Free = () => {
 			</div>
 			<div className="h-full border bottom-3 rounded-lg p-3  overflow-y-auto scrollbar-hide">
 				<div className="grid grid-cols-2 gap-10">
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
-					<FreeBoardItem />
+					{data.map((item) => (
+						<FreeBoardItem key={item.id} item={item} />
+					))}
 				</div>
 			</div>
 		</div>
