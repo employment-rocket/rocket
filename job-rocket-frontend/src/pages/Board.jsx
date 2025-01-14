@@ -1,10 +1,14 @@
 import React from "react";
+import Aside from "../components/board/Aside";
+import { Outlet } from "react-router";
 
 const Board = () => {
 	return (
-		<div className="flex">
-			<div>측면</div>
-			<div>게시판 화면</div>
+		<div className="flex p-10 space-x-10 h-screen ">
+			<Aside />
+			<div className="grow">
+				<Outlet />
+			</div>
 		</div>
 	);
 };
