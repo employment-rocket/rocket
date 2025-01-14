@@ -20,6 +20,7 @@ import Notice from "./components/board/notice/Notice.jsx";
 import Free from "./components/board/free/Free.jsx";
 import Review from "./components/board/review/Review.jsx";
 import Qa from "./components/board/question/Qa.jsx";
+import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -39,6 +40,9 @@ createRoot(document.getElementById("root")).render(
 				<Route path="/board" element={<Board />}>
 					<Route index element={<Notice />} />
 					<Route path="free" element={<Free />} />
+					<Route element={<PrivateRoute />}>
+						<Route path="free/form" element={<FreeBoardForm />} />
+					</Route>
 					<Route path="qa" element={<Qa />} />
 					<Route path="review" element={<Review />} />
 				</Route>

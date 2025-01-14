@@ -1,6 +1,6 @@
 import api from "../api";
 
-const getFreeBoard = async () => {
+const getFreeBoardList = async () => {
 	try {
 		const response = await api.get("/board/free");
 		return response.data;
@@ -10,4 +10,4 @@ const getFreeBoard = async () => {
 	}
 };
 
-export { getFreeBoard };
+export { getFreeBoardList };
