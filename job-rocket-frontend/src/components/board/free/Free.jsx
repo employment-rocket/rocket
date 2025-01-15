@@ -1,12 +1,14 @@
 import React from "react";
 import FreeBoardItem from "./FreeBoardItem";
 import { useQuery } from "@tanstack/react-query";
-import { getFreeBoard } from "../../../api/board/free-board";
+import { getFreeBoardList } from "../../../api/board/free-board";
+import { useNavigate } from "react-router";
 
 const Free = () => {
+	const navigate = useNavigate();
 	const { data, isLoading } = useQuery({
 		queryKey: ["free"],
-		queryFn: getFreeBoard,
+		queryFn: getFreeBoardList,
 	});
 
 	if (isLoading) {
@@ -27,7 +29,10 @@ const Free = () => {
 						className="w-full p-2 px-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
 					/>
 				</div>
-				<button className="p-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+				<button
+					className="p-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+					onClick={() => navigate("/board/free/form")}
+				>
 					글쓰기
 				</button>
 			</div>

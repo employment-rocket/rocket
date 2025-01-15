@@ -14,19 +14,19 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     List<ScheduleEntity> findByUser(UserEntity user);
 
-    @Query("SELECT s FROM SCHEDULE s WHERE s.user = :user " +
+    @Query("SELECT s FROM schedule s WHERE s.user = :user " +
             "and s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.Ongoing")
     List<ScheduleEntity> findByUserAndIsNotFail(@Param("user") UserEntity user);
 
     @Query("select new rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO(s.type,count(s)) " +
-            "from SCHEDULE s where s.user = :user group by s.type")
+            "from schedule s where s.user = :user group by s.type")
     List<ScheduleGroupDTO> findByUserAndGroupByType(@Param("user") UserEntity user);
 
     @Query("select new rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO(s.state,count(s)) " +
-            "from SCHEDULE s where s.user = :user group by s.state")
+            "from schedule s where s.user = :user group by s.state")
     List<ScheduleGroupDTO> findByUserAndGroupByState(@Param("user") UserEntity user);
 
-    @Query("select count(s) from SCHEDULE s where s.user = :user and" +
+    @Query("select count(s) from schedule s where s.user = :user and" +
             " s.type = rocket.jobrocketbackend.schedule.entity.ScheduleType.Document and" +
             " s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.Fail")
     Long findByUserAndTypeDocumentAndStateFailCount(@Param("user") UserEntity user);

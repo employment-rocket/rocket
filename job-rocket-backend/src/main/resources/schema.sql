@@ -60,3 +60,12 @@ CREATE TABLE introduce_qa (
                               introduce_id BIGINT NOT NULL,
                               FOREIGN KEY (introduce_id) REFERENCES introduce(introduce_id) ON DELETE CASCADE
 );
+
+CREATE TABLE free_board (
+                                   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                   title VARCHAR(255) NOT NULL,
+                                   content TEXT,
+                                   post_date DATE,
+                                   member_id BIGINT NOT NULL,
+                                   FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
+);
