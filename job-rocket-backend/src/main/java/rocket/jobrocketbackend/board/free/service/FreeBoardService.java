@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
+import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.board.free.repository.FreeBoardRepository;
 import rocket.jobrocketbackend.user.entity.UserEntity;
@@ -20,10 +21,9 @@ public class FreeBoardService {
     private final FreeBoardRepository freeBoardRepository;
     private final UserRepository userRepository;
 
-    public void create(final FreeBoardCreateRequest request, final String email) {
+    public FreeBoardResponse create(final FreeBoardCreateRequest request, final String email,final LocalDate today) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저입니다."));
-        LocalDate today = LocalDate.now();
-        FreeBoardEntity board = request.toEntity(today, user);
-        freeBoardRepository.save(board);
+        FreeBoardEntity board = freeBoardRepository.save(request.toEntity(today, user));
+        return FreeBoardResponse.from(board);
     }
 }

@@ -8,6 +8,8 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class FreeBoardCreateRequest {
     private String title;
     private String content;

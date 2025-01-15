@@ -11,6 +11,7 @@ import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.service.FreeBoardService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -33,10 +34,10 @@ public class FreeBoardController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createFreeBoard(@RequestBody FreeBoardCreateRequest request, @AuthenticationPrincipal CustomOAuth2User user){
+    public ResponseEntity<FreeBoardResponse> createFreeBoard(@RequestBody FreeBoardCreateRequest request, @AuthenticationPrincipal CustomOAuth2User user){
         log.info("userEmail = {}",user.getEmail());
         log.info("request = {}", request);
-        freeBoardService.create(request, user.getEmail());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        FreeBoardResponse result = freeBoardService.create(request, user.getEmail(), LocalDate.now());
+        return new ResponseEntity<>(result,HttpStatus.CREATED);
     }
 }
