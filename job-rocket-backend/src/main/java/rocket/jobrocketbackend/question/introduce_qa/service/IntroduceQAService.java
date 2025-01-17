@@ -1,6 +1,7 @@
 package rocket.jobrocketbackend.question.introduce_qa.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.answer.service.AnswerService;
@@ -17,7 +18,8 @@ public class IntroduceQAService {
     private final IntroduceQAJpaRepository introduceQAJpaRepository;
     private final AnswerService answerService;
 
-    public List<IntroduceQAResDto> getQuestionsByIntroduceId(Long introduceId, Long memberId) {
+    public List<IntroduceQAResDto> getQuestionsByIntroduceId(Long introduceId, Authentication authentication) {
+        Long memberId = answerService.extractMemberIdFromAuthentication(authentication);
         List<IntroduceQAEntity> questions = introduceQAJpaRepository.findByIntroduce_IntroduceId(introduceId);
 
         return questions.stream()

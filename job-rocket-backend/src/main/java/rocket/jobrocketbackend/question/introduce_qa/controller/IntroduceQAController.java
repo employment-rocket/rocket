@@ -2,6 +2,7 @@ package rocket.jobrocketbackend.question.introduce_qa.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.question.introduce_qa.dto.response.IntroduceQAResDto;
 import rocket.jobrocketbackend.question.introduce_qa.service.IntroduceQAService;
@@ -17,8 +18,8 @@ public class IntroduceQAController {
     @GetMapping("/{introduceId}")
     public ResponseEntity<List<IntroduceQAResDto>> getIntroduceQAList(
             @PathVariable Long introduceId,
-            @RequestParam Long memberId) {
-        List<IntroduceQAResDto> response = introduceQAService.getQuestionsByIntroduceId(introduceId, memberId);
+            Authentication authentication) {
+        List<IntroduceQAResDto> response = introduceQAService.getQuestionsByIntroduceId(introduceId, authentication);
         return ResponseEntity.ok(response);
     }
 }

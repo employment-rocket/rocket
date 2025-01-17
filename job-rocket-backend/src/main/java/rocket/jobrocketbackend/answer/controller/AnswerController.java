@@ -3,6 +3,7 @@ package rocket.jobrocketbackend.answer.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.service.AnswerService;
@@ -13,27 +14,28 @@ import rocket.jobrocketbackend.common.entity.Category;
 @RestController
 @RequiredArgsConstructor
 public class AnswerController {
+
     private final AnswerService answerService;
 
     @GetMapping
-    public ResponseEntity<AnswerListResDto> getCheckedAnswerList(@RequestParam Long memberId) {
-        AnswerListResDto response = answerService.findCheckedAnswerList(memberId);
+    public ResponseEntity<AnswerListResDto> getCheckedAnswerList(Authentication authentication) {
+        AnswerListResDto response = answerService.findCheckedAnswerList(authentication);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/unchecked")
-    public ResponseEntity<AnswerListResDto> getUncheckedAnswerList(@RequestParam Long memberId) {
-        AnswerListResDto response = answerService.findUncheckedAnswerList(memberId);
+    public ResponseEntity<AnswerListResDto> getUncheckedAnswerList(Authentication authentication) {
+        AnswerListResDto response = answerService.findUncheckedAnswerList(authentication);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Long> createAnswer(@RequestParam Long memberId,
+    public ResponseEntity<Long> createAnswer(Authentication authentication,
                                              @RequestParam Category category,
                                              @RequestParam Long qid,
                                              @RequestParam(required = false, defaultValue = "") String content,
                                              @RequestParam(required = false, defaultValue = "false") boolean isIn) {
-        Long answerId = answerService.addAnswer(memberId, category, qid, content, isIn);
+        Long answerId = answerService.addAnswer(authentication, category, qid, content, isIn);
         return ResponseEntity.ok(answerId);
     }
 
@@ -51,10 +53,10 @@ public class AnswerController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAnswer(@RequestParam Long memberId,
+    public ResponseEntity<String> deleteAnswer(Authentication authentication,
                                                @RequestParam Category category,
                                                @RequestParam Long qid) {
-        answerService.removeAnswer(memberId, category, qid);
+        answerService.removeAnswer(authentication, category, qid);
         return ResponseEntity.ok("Answer deleted successfully");
     }
 }
