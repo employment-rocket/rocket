@@ -11,7 +11,7 @@ const IntroduceContainer = ({ checkedQuestions, setCheckedQuestions, memberId })
     useEffect(() => {
         const fetchIntroduces = async () => {
             try {
-                const data = await getIntroduces(memberId);
+                const data = await getIntroduces();
                 setIntroduces(data);
             } catch (error) {
                 console.error("Failed to fetch introduces:", error.message);

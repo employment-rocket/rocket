@@ -35,8 +35,7 @@ const IntroduceModal = ({ onClose, onAddIntroduce }) => {
 
         try {
             setIsLoading(true);
-            const newIntroduce = await uploadIntroduce(file, 1, name.trim());
-            console.log(newIntroduce);
+            const newIntroduce = await uploadIntroduce(file, name.trim());
             onAddIntroduce(newIntroduce);
             onClose();
         } catch (error) {
@@ -53,7 +52,7 @@ const IntroduceModal = ({ onClose, onAddIntroduce }) => {
                 <h3 className="text-lg font-bold mb-4">자소서 추가</h3>
                 <input
                     type="file"
-                    accept=".pdf,.txt,.doc,.docx"
+                    accept=".pdf"
                     onChange={handleFileChange}
                     className="mb-4 w-full p-2 border rounded-lg"
                 />

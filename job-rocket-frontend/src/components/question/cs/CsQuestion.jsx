@@ -17,8 +17,8 @@ const CsQuestion = ({
     const [isAnswering, setIsAnswering] = useState(false);
     const [currentAnswer, setCurrentAnswer] = useState(answer || "");
     const [showRecommendedAnswer, setShowRecommendedAnswer] = useState(false);
-    const [newAnswerId, setNewAnswerId] = useState(answerId || null)
-    const isSelected = checkedQuestions.csAnswerList?.some((q) => q.qid === qid);
+    const [newAnswerId, setNewAnswerId] = useState(answerId || null);
+    const isSelected = checkedQuestions?.csAnswerList?.some((q) => q.qid === qid);
 
     const handleInputChange = (e) => {
         setCurrentAnswer(e.target.value);
@@ -34,18 +34,18 @@ const CsQuestion = ({
                     onRemoveCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId });
                 }
             } else {
-                if (!answerId) {
-                    const newAnswerId = await createAnswer({
-                        memberId: 1,
+                if (!newAnswerId) {
+                    const createdAnswerId = await createAnswer({
                         category: "CS",
                         qid,
                         content: currentAnswer,
                         isIn: true,
                     });
-                    onAddCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId, content: currentAnswer });
+                    onAddCheckedQuestion({ qid, question, category: "CS", answerId: createdAnswerId, content: currentAnswer });
+                    setNewAnswerId(createdAnswerId);
                 } else {
                     await toggleAnswerIsIn({ answerId: newAnswerId });
-                    onAddCheckedQuestion({ qid, question, category: "CS", answerId, content: currentAnswer });
+                    onAddCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId, content: currentAnswer });
                 }
             }
         } catch (error) {
@@ -65,7 +65,6 @@ const CsQuestion = ({
         try {
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
-                    memberId: 1,
                     category: "CS",
                     qid,
                     content: currentAnswer,
@@ -118,7 +117,6 @@ const CsQuestion = ({
                         placeholder="답변을 입력하세요..."
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                         rows="3"
-                        disabled={!isEditing && answer}
                     ></textarea>
                     <div className="flex justify-between mt-2">
                         <button
