@@ -8,9 +8,12 @@ import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.introduce.entity.IntroduceEntity;
 import rocket.jobrocketbackend.common.entity.SocialType;
+import rocket.jobrocketbackend.member.request.MemberEditReq;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -61,16 +64,11 @@ public class MemberEntity {
         this.allowAlarm=allowAlarm;
     }
 
-
-
-    public MemberEntity update(String nickname, String profile) {
-        if (!this.nickname.equals(nickname)) {
-            this.nickname = nickname;
-        }
-        if (!this.profile.equals(profile)) {
-            this.profile = profile;
-        }
-        return this;
+    public void editInfo(MemberEditReq memberEditReq){
+        this.nickname = memberEditReq.getNickname();
+        this.profile= memberEditReq.getProfile();
+        this.allowEmail = memberEditReq.getAllowEmail();
+        this.allowAlarm=memberEditReq.getAllowAlarm();
     }
 
     public MemberEntity updateRefreshToken(String refreshToken) {

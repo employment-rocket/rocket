@@ -4,12 +4,13 @@ CREATE TABLE member (
                         email VARCHAR(255) NOT NULL,
                         role VARCHAR(50) NOT NULL,
                         nickname VARCHAR(100),
-                        profile VARCHAR(255),
+                        profile TEXT,
                         social_type varchar(255),
                         allow_email BOOLEAN,
                         allow_alarm BOOLEAN,
                         refresh_token VARCHAR(255)
 );
+ALTER TABLE member ALTER COLUMN profile SET DATA TYPE TEXT;
 
 -- cs 테이블 생성
 CREATE TABLE cs (

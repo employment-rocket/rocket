@@ -20,4 +20,13 @@ export const getUserNicknameAndId = async () => {
     }
   };
 
-  
+  export const updateUserProfile = async (userId, updatedProfile) => {
+    try {
+      const response = await api.post(`/member/mypage/${userId}`, updatedProfile);
+      console.log("업데이트 결과: ", response);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      throw error; // 에러를 호출한 쪽으로 전달
+    }
+  };

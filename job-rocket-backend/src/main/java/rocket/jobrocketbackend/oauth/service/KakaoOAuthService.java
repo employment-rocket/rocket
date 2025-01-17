@@ -59,7 +59,6 @@ public class KakaoOAuthService {
         memeberEntity.updateRefreshToken(jwtRefreshToken);
         memberRepository.save(memeberEntity);
 
-        //클라이언트에 반환할 토큰
         Map<String, String> tokens = Map.of(
                 "accessToken", jwtAccessToken,
                 "refreshToken", jwtRefreshToken
@@ -106,28 +105,25 @@ public class KakaoOAuthService {
 
     private MemberEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
         String email = kakaoUserInfo.getEmail();
-        String profileImage = kakaoUserInfo.getProfileImage();
 
-        log.info("profileImage = {}", profileImage);
 
-        // 이메일로 유저 조회
         Optional<MemberEntity> existingUser = memberRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
-            // 기존 유저 정보 업데이트
+
             MemberEntity user = existingUser.get();
             return memberRepository.save(user);
         } else {
             String nickname = NicknameGenerator.generateNickname();
-            // 새로운 유저 저장
+
             MemberEntity newUser = MemberEntity.builder()
                     .email(email)
                     .nickname(nickname)
-                    .profile(profileImage)
+                    .profile("default")
                     .socialType(SocialType.KAKAO)
-                    .role(Role.MEMBER) // 기본 역할 부여
-                    .allowEmail(false)
-                    .allowAlarm(false)// 동의항목에 따른 설정
+                    .role(Role.MEMBER)
+                    .allowEmail(true)
+                    .allowAlarm(false)
                     .build();
             return memberRepository.save(newUser);
         }

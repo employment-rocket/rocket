@@ -3,15 +3,24 @@ import { useState, useEffect } from "react";
 import { getUserProfile } from "../api/member/MemberApi";
 import { useParams } from "react-router";
 import logo from "../assets/default-profile.png";
+import { updateUserProfile } from "../api/member/MemberApi"
 
 const MyPage = () => {
   const {userId} = useParams();
-  const [userProfile, setUserProfile] = useState(null);
-
+  const [email, setEmail] = useState();
+  const [allowEmail, setAllowEmail] = useState();
+  const [allowAlarm, setAllowAlarm] = useState();
+  const [profile, setProfile] = useState();
+  const [nickname, setNickname] = useState();
+ 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const data = await getUserProfile(userId); 
-      setUserProfile(data); 
+      setAllowEmail(data.allowEmail);
+      setAllowAlarm(data.allowAlarm);
+      setProfile(data.profile);
+      setNickname(data.nickname);
+      setEmail(data.email);
     };
     if(userId){
         fetchUserProfile(); 
@@ -21,10 +30,30 @@ const MyPage = () => {
     }
   }, [userId]); 
 
-  if (!userProfile) {
-    return <div>Loading...</div>;
-  }
+  const handleAllowEmailChange = () => {
+    setAllowEmail(!allowEmail);
+  };
 
+  const handleAllowAlarmChange = () => {
+    setAllowAlarm(!allowAlarm);
+  }; 
+  const handleSaveProfile = async () => {
+    const updatedProfile = {
+      allowEmail,
+      allowAlarm,
+      profile,
+      nickname,
+    };
+    console.log("Saving profile with:", updatedProfile);
+    try {
+        const response = await updateUserProfile(userId, updatedProfile); // API 호출로 업데이트
+        console.log(response);  // API 응답 확인
+        alert("저장되었습니다.");
+    } catch (error) {
+      console.error("프로필 저장 실패:", error);
+      alert("저장 중 오류가 발생했습니다.");
+    }
+  };
    return (
     <div className="flex items-center justify-center min-h-screen">
   {/* 메인 컨테이너 */}
@@ -35,58 +64,102 @@ const MyPage = () => {
       <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
         이메일
       </div>
-      <div className="flex-1 text-xl text-black ml-4">{userProfile.email}</div>
+      <div className="flex-1 text-xl text-black ml-4">{email}</div>
     </div>
 
     {/* 프로필 */}
-    <div className="flex items-center mb-8 w-full px-6">
-      <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-        프로필 사진
-      </div>
-      <img className="w-40 h-40 rounded-full ml-8" src={logo} alt="Profile" />
-      <button className="ml-16 text-xl text-blue-500">수정</button>
-    </div>
+<div className="flex items-center mb-8 w-full px-6">
+  <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
+    프로필 사진
+  </div>
+  <img
+    className="w-40 h-40 rounded-full ml-8"
+    src={profile=== 'default' ? logo : profile}
+    alt="Profile"
+  />
+  <input
+    type="file"
+    id="profile-upload"
+    accept="image/*"
+    className="hidden"
+    onChange={(e) => {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setProfile(event.target.result); // 선택한 이미지를 상태로 저장
+        };
+        reader.readAsDataURL(e.target.files[0]); // 파일을 base64로 변환
+      }
+    }}
+  />
+  <button
+    className="w-[100px] h-[50px] text-xl text-blue-500 border border-gray-300 text-center rounded-lg flex items-center justify-center ml-auto"
+    onClick={() => document.getElementById('profile-upload').click()} // 파일 선택창 열기
+  >
+    수정
+  </button>
+</div>
+
 
     {/* 닉네임 */}
-    <div className="flex items-center mb-8 w-full px-6">
-      <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-        닉네임
-      </div>
-      <div className="flex-1 text-xl ml-4">{userProfile.nickname}</div>
-      <button className="ml-16 text-xl text-blue-500">수정</button>
-    </div>
+<div className="flex items-center mb-8 w-full px-6">
+  <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
+    닉네임
+  </div>
+  <input
+    type="text"
+    value={nickname}
+    onChange={(e) => setNickname(e.target.value)}
+    className="w-[300px] h-[40px] text-xl ml-4 px-2 border border-gray-300 rounded-lg"
+  />
+</div>
+
 
     {/* 알람 토글 */}
-    <div className="flex items-center mb-6 w-full px-6">
-      <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-        알람
-      </div>
-      <label className="inline-flex items-center ml-4">
-        <input
-          type="checkbox"
-          checked={userProfile.allowAlarm}
-          readOnly
-          className="form-checkbox h-5 w-5 text-blue-500"
-        />
-      </label>
-    </div>
-
-    {/* 이메일 알림 토글 */}
-    <div className="flex items-center w-full px-6">
-      <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-        이메일 수신
-      </div>
-      <label className="inline-flex items-center ml-4">
-        <input
-          type="checkbox"
-          checked={userProfile.allowEmail}
-          readOnly
-          className="form-checkbox h-5 w-5 text-blue-500"
-        />
-      </label>
-    </div>
+<div className="flex items-center mb-6 w-full px-6">
+  <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
+    알람 수신
+  </div>
+  <div className="ml-4">
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={allowAlarm}
+        onChange={handleAllowAlarmChange}
+      />
+      <div className="w-16 h-8 bg-gray-300 rounded-full peer-checked:bg-blue-500 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 transition duration-200"></div> {/* 너비 확대 */}
+      <span className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full peer-checked:translate-x-7 transform transition duration-200"></span>
+    </label>
   </div>
 </div>
+
+<div className="flex items-center w-full px-6 mb-1">
+  <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
+    이메일 수신
+  </div>
+  <div className="ml-4">
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={allowEmail}
+        onChange={handleAllowEmailChange} 
+      />
+      <div className="w-16 h-8 bg-gray-300 rounded-full peer-checked:bg-blue-500 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 transition duration-200"></div> {/* 너비 확대 */}
+      <span className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full peer-checked:translate-x-7 transform transition duration-200"></span>
+    </label>
+  </div>
+
+
+  <button className="ml-auto w-[100px] h-[50px] text-xl text-black border border-gray-300 rounded-lg flex items-center justify-center"
+  onClick={handleSaveProfile}>
+    저장
+  </button>
+</div>
+
+    </div>
+    </div>
 
   
   );

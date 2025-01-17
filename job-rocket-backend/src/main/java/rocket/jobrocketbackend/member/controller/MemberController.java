@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import rocket.jobrocketbackend.member.request.MemberEditReq;
 import rocket.jobrocketbackend.member.service.MemberService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
@@ -49,6 +47,19 @@ public class MemberController {
         } catch (Exception e) {
             log.error("Error fetching user profile: ", e);
             throw new RuntimeException("User profile not found");
+        }
+    }
+
+    @PostMapping("/mypage/{userId}")
+    public ResponseEntity<?> updateUserProfile(
+            @PathVariable("userId") Long userId,
+            @RequestBody MemberEditReq memberEditReq) {
+        try {
+            memberService.updateUserProfile(userId, memberEditReq);
+            return ResponseEntity.ok("프로필이 성공적으로 업데이트되었습니다.");
+        } catch (Exception e) {
+            log.error("Error updating user profile: ", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("프로필 업데이트 실패");
         }
     }
 }
