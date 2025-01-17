@@ -13,9 +13,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public Map<String, Object> getUserProfileByNickname(String nickname) {
-        MemberEntity member = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new RuntimeException("User not found with nickname: " + nickname));
+    public Map<String, Object> getUserProfileById(Long memberId) {
+        MemberEntity member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         return Map.of(
                 "id", member.getId(),

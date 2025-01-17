@@ -13,13 +13,15 @@ public class MemberDTO {
     private Role role;       // ROLE_MEMBER 등 역할
     private String nickname;   // 사용자 닉네임
     private String profile;    // 프로필 사진 URL
-    private String email;      // 사용자 이메일
+    private String email; // 사용자 이메일
+    private Long id;
 
-    public MemberDTO(Role role, String nickname, String profile, String email) {
+    public MemberDTO(Role role, String nickname, String profile, String email, Long id) {
         this.role=role;
         this.nickname=nickname;
         this.profile=profile;
         this.email=email;
+        this.id=id;
     }
     public static MemberDTO from(MemberEntity userEntity){
         return MemberDTO.builder()
@@ -27,6 +29,7 @@ public class MemberDTO {
                 .nickname(userEntity.getNickname())
                 .email(userEntity.getEmail())
                 .profile(userEntity.getProfile())
+                .id(userEntity.getId())
                 .build();
     }
 }

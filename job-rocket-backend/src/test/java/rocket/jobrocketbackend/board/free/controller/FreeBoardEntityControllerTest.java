@@ -48,7 +48,7 @@ class FreeBoardEntityControllerTest {
 
     @BeforeEach
     void init(){
-        CustomOAuth2User principal = new CustomOAuth2User(new MemberDTO(Role.MEMBER,"닉네임","","test@naver.com"));
+        CustomOAuth2User principal = new CustomOAuth2User(new MemberDTO(Role.MEMBER,"닉네임","","test@naver.com",1L));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 principal,
                 null,
