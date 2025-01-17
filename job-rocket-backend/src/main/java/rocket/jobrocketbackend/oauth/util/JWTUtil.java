@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import rocket.jobrocketbackend.common.entity.Role;
-import rocket.jobrocketbackend.user.dto.UserDTO;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.member.dto.MemberDTO;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.member.repository.MemberRepository;
 
 import java.util.Date;
 
@@ -18,7 +17,7 @@ import java.util.Date;
 @Slf4j
 public class JWTUtil {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
@@ -65,10 +64,10 @@ public class JWTUtil {
         }
     }
 
-    public UserDTO getUserDto(String jwtToken){
+    public MemberDTO getUserDto(String jwtToken){
         String email = getMemberEmail(jwtToken,secretKey);
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException());
-        return UserDTO.from(userEntity);
+        MemberEntity userEntity = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException());
+        return MemberDTO.from(userEntity);
     }
 
     public static String getMemberEmail(String token, String secretKey) {

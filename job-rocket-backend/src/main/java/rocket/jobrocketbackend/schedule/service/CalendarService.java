@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.exception.UserNotFoundException;
-import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.member.exception.MemberNotFoundException;
+import rocket.jobrocketbackend.member.repository.MemberRepository;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import java.util.List;
 public class CalendarService {
 
     private final ScheduleRepository scheduleRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository userRepository;
 
     public List<ScheduleDTO> getScheduleList(Long memberId) {
-        UserEntity user = userRepository.findById(memberId).orElseThrow(() -> new UserNotFoundException("해당 유저가 없습니다."));
+        MemberEntity user = userRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException("해당 유저가 없습니다."));
         return scheduleRepository.findByUserAndIsNotFail(user).stream().map(ScheduleDTO::from).toList();
     }
 }

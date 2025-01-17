@@ -1,6 +1,5 @@
 package rocket.jobrocketbackend.board.free.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,13 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.member.repository.MemberRepository;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -25,11 +23,11 @@ class FreeBoardServiceTest {
     private FreeBoardService freeBoardService;
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository userRepository;
 
     @BeforeEach
     void init(){
-        UserEntity user = UserEntity.builder().nickname("닉네임").email("test@naver.com").allowEmail(false).build();
+        MemberEntity user = MemberEntity.builder().nickname("닉네임").email("test@naver.com").allowEmail(false).build();
         userRepository.save(user);
     }
 

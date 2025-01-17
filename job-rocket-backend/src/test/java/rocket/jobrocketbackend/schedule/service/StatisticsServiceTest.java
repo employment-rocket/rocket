@@ -12,8 +12,8 @@ import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.member.repository.MemberRepository;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StatisticsServiceTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository userRepository;
 
     @Autowired
     private ScheduleRepository scheduleRepository;
@@ -39,7 +39,7 @@ class StatisticsServiceTest {
     @BeforeEach
     void init() {
         LocalDate date = LocalDate.of(2024, 12, 23);
-        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
+        MemberEntity user = MemberEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
         userId = user.getId();
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();

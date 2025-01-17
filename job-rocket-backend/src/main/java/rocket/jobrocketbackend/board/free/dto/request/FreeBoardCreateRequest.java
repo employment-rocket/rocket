@@ -2,7 +2,7 @@ package rocket.jobrocketbackend.board.free.dto.request;
 
 import lombok.*;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
-import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
 
 import java.time.LocalDate;
 
@@ -15,7 +15,7 @@ public class FreeBoardCreateRequest {
     private String content;
 
 
-    public FreeBoardEntity toEntity(LocalDate today, UserEntity user){
+    public FreeBoardEntity toEntity(LocalDate today, MemberEntity user){
         return FreeBoardEntity.builder()
                 .postDate(today)
                 .user(user)

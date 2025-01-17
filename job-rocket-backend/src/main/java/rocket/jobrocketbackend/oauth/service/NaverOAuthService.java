@@ -15,10 +15,10 @@ import rocket.jobrocketbackend.common.entity.SocialType;
 import rocket.jobrocketbackend.oauth.userInfo.NaverOAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.userInfo.OAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.member.repository.MemberRepository;
 import org.springframework.http.*;
-import rocket.jobrocketbackend.user.util.NicknameGenerator;
+import rocket.jobrocketbackend.member.util.NicknameGenerator;
 
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class NaverOAuthService {
 
     private final RestTemplate oauth2Client;
     private final ObjectMapper objectMapper;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
 
     @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
@@ -51,13 +51,13 @@ public class NaverOAuthService {
     public Map<String, String> getAccessTokenAndRefreshToken(String code, String state) throws JsonProcessingException {
         String accessToken = getNaverAccessToken(code, state);
         OAuth2UserInfo naverUserInfo = getNaverUserInfo(accessToken);
-        UserEntity userEntity = saveOrUpdateUser(naverUserInfo);
+        MemberEntity memberEntity = saveOrUpdateUser(naverUserInfo);
 
-        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
-        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail());
+        String jwtAccessToken = jwtUtil.createAccessToken(memberEntity.getEmail());
+        String jwtRefreshToken = jwtUtil.createRefreshToken(memberEntity.getEmail());
 
-        userEntity.updateRefreshToken(jwtRefreshToken);
-        userRepository.save(userEntity);
+        memberEntity.updateRefreshToken(jwtRefreshToken);
+        memberRepository.save(memberEntity);
 
         return Map.of(
                 "accessToken", jwtAccessToken,
@@ -99,20 +99,20 @@ public class NaverOAuthService {
         return userInfo;
     }
 
-    private UserEntity saveOrUpdateUser(OAuth2UserInfo naverUserInfo) {
+    private MemberEntity saveOrUpdateUser(OAuth2UserInfo naverUserInfo) {
         String email = naverUserInfo.getEmail();
         String profileImage = naverUserInfo.getProfileImage();
 
         log.info("Naver User Email: {}", email);
 
-        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
+        Optional<MemberEntity> existingUser = memberRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
-            UserEntity user = existingUser.get();
-            return userRepository.save(user);
+            MemberEntity user = existingUser.get();
+            return memberRepository.save(user);
         } else {
             String nickname = NicknameGenerator.generateNickname();
-            UserEntity newUser = UserEntity.builder()
+            MemberEntity newUser = MemberEntity.builder()
                     .email(email)
                     .nickname(nickname)
                     .profile(profileImage)
@@ -120,7 +120,7 @@ public class NaverOAuthService {
                     .role(Role.MEMBER)
                     .allowEmail(false)
                     .build();
-            return userRepository.save(newUser);
+            return memberRepository.save(newUser);
         }
     }
 }

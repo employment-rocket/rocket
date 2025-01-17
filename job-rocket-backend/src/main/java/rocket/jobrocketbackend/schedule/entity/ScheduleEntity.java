@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
-import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
 
 import java.time.LocalDate;
 
@@ -28,7 +28,7 @@ public class ScheduleEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private UserEntity user;
+    private MemberEntity user;
 
     @Enumerated(EnumType.STRING)
     private ScheduleType type;
@@ -46,7 +46,7 @@ public class ScheduleEntity {
         this.state = dto.getState();
     }
 
-    public static ScheduleEntity create(ScheduleCreateDTO dto, UserEntity user) {
+    public static ScheduleEntity create(ScheduleCreateDTO dto, MemberEntity user) {
         return ScheduleEntity.builder()
                 .title(dto.getTitle())
                 .user(user)

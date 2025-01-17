@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import rocket.jobrocketbackend.common.entity.Category;
-import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
 
 @Getter
 @Builder
@@ -24,7 +24,7 @@ public class AnswerEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private UserEntity member;
+    private MemberEntity member;
 
     private String content;
 

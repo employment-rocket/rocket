@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.user.entity;
+package rocket.jobrocketbackend.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.introduce.entity.IntroduceEntity;
 import rocket.jobrocketbackend.common.entity.SocialType;
 
-import java.util.Optional;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Table(name="member")
-public class UserEntity {
+public class MemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +38,10 @@ public class UserEntity {
 
     private String refreshToken;
 
+    @Column(nullable = false)
+    private Boolean allowAlarm=false;
+
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerEntity> answers = new ArrayList<>();
 
@@ -47,7 +49,7 @@ public class UserEntity {
     private List<IntroduceEntity> introduces = new ArrayList<>();
 
     @Builder
-    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail,String refreshToken) {
+    public MemberEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail, String refreshToken, Boolean allowAlarm) {
         this.id=id;
         this.email = email;
         this.nickname = nickname;
@@ -56,11 +58,12 @@ public class UserEntity {
         this.allowEmail=allowEmail;
         this.role = role;
         this.refreshToken=refreshToken;
+        this.allowAlarm=allowAlarm;
     }
 
 
 
-    public UserEntity update(String nickname, String profile) {
+    public MemberEntity update(String nickname, String profile) {
         if (!this.nickname.equals(nickname)) {
             this.nickname = nickname;
         }
@@ -70,7 +73,7 @@ public class UserEntity {
         return this;
     }
 
-    public UserEntity updateRefreshToken(String refreshToken) {
+    public MemberEntity updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }

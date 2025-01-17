@@ -1,11 +1,8 @@
 package rocket.jobrocketbackend.oauth.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -17,10 +14,10 @@ import rocket.jobrocketbackend.common.entity.SocialType;
 import rocket.jobrocketbackend.oauth.userInfo.KakaoOAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.userInfo.OAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.member.repository.MemberRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import rocket.jobrocketbackend.user.util.NicknameGenerator;
+import rocket.jobrocketbackend.member.util.NicknameGenerator;
 
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +29,7 @@ public class KakaoOAuthService {
 
     private final RestTemplate oauth2Client;
     private final ObjectMapper objectMapper;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
 
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -54,13 +51,13 @@ public class KakaoOAuthService {
 
         String accessToken = getKakaoAccessToken(token);
         OAuth2UserInfo kakaouserInfo = getKakaoUserInfo(accessToken);
-        UserEntity userEntity = saveOrUpdateUser(kakaouserInfo);
+        MemberEntity memeberEntity = saveOrUpdateUser(kakaouserInfo);
 
-        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
-        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail());
+        String jwtAccessToken = jwtUtil.createAccessToken(memeberEntity.getEmail());
+        String jwtRefreshToken = jwtUtil.createRefreshToken(memeberEntity.getEmail());
 
-        userEntity.updateRefreshToken(jwtRefreshToken);
-        userRepository.save(userEntity);
+        memeberEntity.updateRefreshToken(jwtRefreshToken);
+        memberRepository.save(memeberEntity);
 
         //클라이언트에 반환할 토큰
         Map<String, String> tokens = Map.of(
@@ -107,23 +104,23 @@ public class KakaoOAuthService {
         return userInfo;
     }
 
-    private UserEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
+    private MemberEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
         String email = kakaoUserInfo.getEmail();
         String profileImage = kakaoUserInfo.getProfileImage();
 
         log.info("profileImage = {}", profileImage);
 
         // 이메일로 유저 조회
-        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
+        Optional<MemberEntity> existingUser = memberRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
             // 기존 유저 정보 업데이트
-            UserEntity user = existingUser.get();
-            return userRepository.save(user);
+            MemberEntity user = existingUser.get();
+            return memberRepository.save(user);
         } else {
             String nickname = NicknameGenerator.generateNickname();
             // 새로운 유저 저장
-            UserEntity newUser = UserEntity.builder()
+            MemberEntity newUser = MemberEntity.builder()
                     .email(email)
                     .nickname(nickname)
                     .profile(profileImage)
@@ -131,7 +128,7 @@ public class KakaoOAuthService {
                     .role(Role.MEMBER) // 기본 역할 부여
                     .allowEmail(false) // 동의항목에 따른 설정
                     .build();
-            return userRepository.save(newUser);
+            return memberRepository.save(newUser);
         }
     }
 

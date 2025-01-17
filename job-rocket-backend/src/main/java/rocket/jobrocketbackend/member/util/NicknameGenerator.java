@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.user.util;
+package rocket.jobrocketbackend.member.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

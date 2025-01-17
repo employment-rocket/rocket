@@ -1,9 +1,9 @@
-package rocket.jobrocketbackend.user.exception;
+package rocket.jobrocketbackend.member.exception;
 
 import rocket.jobrocketbackend.common.exception.RocketException;
 
-public class UserNotFoundException extends RocketException {
-    public UserNotFoundException(String message) {
+public class MemberNotFoundException extends RocketException {
+    public MemberNotFoundException(String message) {
         super(message);
     }
 
