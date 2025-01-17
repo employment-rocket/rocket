@@ -11,7 +11,7 @@ import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 
-@Entity(name = "SCHEDULE")
+@Entity(name = "schedule")
 @Getter
 @Builder
 @NoArgsConstructor

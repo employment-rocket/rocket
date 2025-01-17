@@ -1,12 +1,13 @@
-import { DayGridView } from "@fullcalendar/daygrid/internal.js";
 import FullCalendar from "@fullcalendar/react";
-import React from "react";
+import { React, useState } from "react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useQuery } from "@tanstack/react-query";
 import { getCalendarSchedule } from "../../../api/schedule/schedule";
-import Swal from "sweetalert2";
+import InfoModal from "./InfoModal";
 
 const Calendar = () => {
+	const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+	const [item, setItem] = useState({});
 	const { data, isLoading } = useQuery({
 		queryKey: ["calendar"],
 		queryFn: getCalendarSchedule,
@@ -27,36 +28,36 @@ const Calendar = () => {
 
 	const handleEventClick = (info) => {
 		const clickEvent = info.event;
-
-		Swal.fire({
-			title: clickEvent.title,
-			html: `
-				<div>${clickEvent.extendedProps.description}</div>
-				<br/>
-				<div>${clickEvent.extendedProps.memo}</div>				
-				`,
-			icon: "info",
-			footer: `~ ${clickEvent.startStr}`,
-			draggable: true,
-		});
+		setItem(clickEvent);
+		setUpdateModalOpen(true);
 	};
 
 	return (
-		<div className="p-4 w-full h-full flex flex-col justify-center">
-			<div className="h-full">
-				<FullCalendar
-					plugins={[dayGridPlugin]}
-					locale={"Ko"}
-					headerToolbar={{
-						left: "prev",
-						center: "title",
-						right: "next",
-					}}
-					events={events}
-					eventClick={handleEventClick}
-				/>
+		<>
+			<div className="p-4 w-full h-full  flex flex-col justify-center">
+				<div className="p-3 h-full">
+					<FullCalendar
+						plugins={[dayGridPlugin]}
+						locale={"Ko"}
+						headerToolbar={{
+							left: "prev",
+							center: "title",
+							right: "next",
+						}}
+						events={events}
+						eventClick={handleEventClick}
+						height="100%"
+					/>
+				</div>
 			</div>
-		</div>
+			{isUpdateModalOpen && (
+				<InfoModal
+					data={item}
+					isOpen={isUpdateModalOpen}
+					onCancel={() => setUpdateModalOpen(false)}
+				/>
+			)}
+		</>
 	);
 };
 

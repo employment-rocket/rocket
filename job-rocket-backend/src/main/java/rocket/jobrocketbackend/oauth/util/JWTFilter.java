@@ -30,7 +30,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 쿠키들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
         String token = request.getHeader("Authorization");
-        log.info("token = {}", token);
         // Authorization 헤더 검증
         if (token == null) {
             System.out.println("token null");

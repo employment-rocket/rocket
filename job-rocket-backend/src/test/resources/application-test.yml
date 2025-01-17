@@ -6,3 +6,47 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
+  main:
+    allow-bean-definition-overriding: true
+
+  jwt:
+    secret: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
+    expiration: 3600000
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-name: temp
+            client-id: temp
+            client-secret: temp
+            redirect-uri: temp
+            authorization-grant-type: temp
+            scope: temp, temp, temp
+          naver:
+            client-name: temp
+            client-id: temp
+            client-secret: temp
+            redirect-uri: temp
+            authorization-grant-type: temp
+            scope: temp, temp, temp
+
+        provider:
+          kakao:
+            authorization_uri: temp
+            token_uri: temp
+            user-info-uri: temp
+            user_name_attribute: temp
+          naver:
+            authorization-uri: temp
+            token-uri: temp
+            user-info-uri: temp
+            user-name-attribute: temp
+
+gpt:
+  api:
+    url: temp
+    key: temp
+  model: temp
