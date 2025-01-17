@@ -98,8 +98,8 @@ public class AnswerService {
     }
 
     public AnswerEntity findAnswerByMemberAndQid(Long memberId, Category category, Long qid) {
-        return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid)
-                .orElseThrow(() -> new AnswerNotFoundException("Answer not found for memberId: " + memberId + ", qid: " + qid));
+        return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid).orElse(new AnswerEntity());
+//                .orElseThrow(() -> new AnswerNotFoundException("Answer not found for memberId: " + memberId + ", qid: " + qid));
     }
 
     public Long addAnswer(Authentication authentication, Category category, Long qid, String content, boolean isIn) {
