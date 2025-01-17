@@ -2,6 +2,7 @@ package rocket.jobrocketbackend.introduce.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rocket.jobrocketbackend.introduce.dto.response.IntroduceResDto;
@@ -16,17 +17,17 @@ public class IntroduceController {
     private final IntroduceService introduceService;
 
     @GetMapping
-    public ResponseEntity<List<IntroduceResDto>> getIntroduceList(@RequestParam Long memberId) {
-        List<IntroduceResDto> response = introduceService.getIntroduceListByMemberId(memberId);
+    public ResponseEntity<List<IntroduceResDto>> getIntroduceList(Authentication authentication) {
+        List<IntroduceResDto> response = introduceService.getIntroduceListByAuthentication(authentication);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/upload")
     public ResponseEntity<IntroduceResDto> uploadIntroduce(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("memberId") Long memberId,
-            @RequestParam("name") String name) {
-        IntroduceResDto response = introduceService.saveIntroduce(file, memberId, name);
+            @RequestParam("name") String name,
+            Authentication authentication) {
+        IntroduceResDto response = introduceService.saveIntroduce(file, authentication, name);
         return ResponseEntity.ok(response);
     }
 

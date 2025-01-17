@@ -11,6 +11,7 @@ import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
 import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +29,8 @@ public class IntroduceQAService {
     }
 
     private IntroduceQAResDto convertToDto(IntroduceQAEntity question, Long memberId) {
-        AnswerEntity answerEntity = answerService.findAnswerByMemberAndQid(
-                memberId, Category.INTRODUCE_QA, question.getQid());
+        Optional<AnswerEntity> optionalAnswerEntity = answerService.findAnswerByMemberAndQid(memberId, Category.INTRODUCE_QA, question.getQid());
+        AnswerEntity answerEntity = optionalAnswerEntity.orElse(null);
 
         return IntroduceQAResDto.builder()
                 .qid(question.getQid())

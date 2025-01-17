@@ -1,6 +1,7 @@
 package rocket.jobrocketbackend.answer.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
@@ -23,8 +24,11 @@ import rocket.jobrocketbackend.user.repository.UserRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -36,6 +40,7 @@ public class AnswerService {
 
     public Long extractMemberIdFromAuthentication(Authentication authentication) {
         if (authentication == null) {
+            log.info("asdfasf:", authentication.getDetails());
             throw new IllegalStateException("Authentication is missing");
         }
         String nickname = authentication.getName();
@@ -97,9 +102,8 @@ public class AnswerService {
         };
     }
 
-    public AnswerEntity findAnswerByMemberAndQid(Long memberId, Category category, Long qid) {
-        return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid)
-                .orElseThrow(() -> new AnswerNotFoundException("Answer not found for memberId: " + memberId + ", qid: " + qid));
+    public Optional<AnswerEntity> findAnswerByMemberAndQid(Long memberId, Category category, Long qid) {
+        return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid);
     }
 
     public Long addAnswer(Authentication authentication, Category category, Long qid, String content, boolean isIn) {

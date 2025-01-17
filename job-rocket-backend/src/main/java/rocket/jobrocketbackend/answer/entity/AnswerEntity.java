@@ -41,14 +41,4 @@ public class AnswerEntity {
     public void modifyContent(String content) {
         this.content = content;
     }
-
-    public static AnswerEntity empty() {
-        return AnswerEntity.builder()
-                .answerId(null)
-                .qid(null)
-                .content("")
-                .category(null)
-                .isIn(false)
-                .build();
-    }
 }

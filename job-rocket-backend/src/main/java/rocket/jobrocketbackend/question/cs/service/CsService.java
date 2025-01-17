@@ -11,7 +11,7 @@ import rocket.jobrocketbackend.question.cs.entity.CsEntity;
 import rocket.jobrocketbackend.question.cs.repository.CsRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +25,12 @@ public class CsService {
 
         return entities.stream()
                 .map(entity -> convertToDto(entity, memberId))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private CsResDto convertToDto(CsEntity entity, Long memberId) {
-        AnswerEntity answerEntity = answerService.findAnswerByMemberAndQid(memberId, Category.CS, entity.getQid());
+        Optional<AnswerEntity> optionalAnswerEntity = answerService.findAnswerByMemberAndQid(memberId, Category.CS, entity.getQid());
+        AnswerEntity answerEntity = optionalAnswerEntity.orElse(null);
 
         return CsResDto.builder()
                 .qid(entity.getQid())

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import rocket.jobrocketbackend.common.dto.PageDto;
 import rocket.jobrocketbackend.question.cs.dto.response.CsResDto;
 import rocket.jobrocketbackend.question.cs.service.CsService;
 
