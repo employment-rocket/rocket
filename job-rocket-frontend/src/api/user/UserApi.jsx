@@ -9,4 +9,3 @@ export const getUserProfile = async () => {
       console.error(error);
     }
   };
-  

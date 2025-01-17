@@ -6,7 +6,6 @@ import PersonalContainer from "../components/question/personal/PersonalContainer
 import ScriptContainer from "../components/question/script/ScriptContainer";
 import IntroduceContainer from "../components/question/introduce/IntroduceContainer";
 import ReviewContainer from "../components/question/review/ReviewContainer";
-import CompanyContainer from "../components/question/company/CompanyContainer";
 import { getCheckedAnswers } from "../api/question/QuestionApi";
 
 const Question = () => {
@@ -14,7 +13,6 @@ const Question = () => {
 	const [checkedQuestions, setCheckedQuestions] = useState({
 		csAnswerList: [],
 		personalAnswerList: [],
-		companyAnswerList: [],
 		introduceAnswerList: [],
 		reviewAnswerList: [],
 	});
@@ -25,7 +23,7 @@ const Question = () => {
 		const fetchCheckedAnswers = async () => {
 			try {
 				setLoading(true);
-				const data = await getCheckedAnswers(1);
+				const data = await getCheckedAnswers();
 				setCheckedQuestions(data || {
 					csAnswerList: [],
 					personalAnswerList: [],
@@ -78,12 +76,6 @@ const Question = () => {
 					)}
 					{category === "REVIEW" && (
 						<ReviewContainer
-							checkedQuestions={checkedQuestions}
-							setCheckedQuestions={setCheckedQuestions}
-						/>
-					)}
-					{category === "COMPANY" && (
-						<CompanyContainer
 							checkedQuestions={checkedQuestions}
 							setCheckedQuestions={setCheckedQuestions}
 						/>

@@ -55,8 +55,9 @@ createRoot(document.getElementById("root")).render(
 					<Route path="/mypage" element={<MyPage />} />
 					<Route path="/retrospect" element={<Retrospect />} />
 					<Route path="/note" element={<Note />} />
+					<Route path="/question" element={<Question />} />
 				</Route>
-				<Route path="/question" element={<Question />} />
+
 				<Route path="/site" element={<Site />} />
 				<Route path="/career" element={<Career />} />
 			</Routes>
