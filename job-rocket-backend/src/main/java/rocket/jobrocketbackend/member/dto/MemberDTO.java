@@ -10,10 +10,10 @@ import rocket.jobrocketbackend.member.entity.MemberEntity;
 @RequiredArgsConstructor
 @Builder
 public class MemberDTO {
-    private Role role;       // ROLE_MEMBER 등 역할
-    private String nickname;   // 사용자 닉네임
-    private String profile;    // 프로필 사진 URL
-    private String email; // 사용자 이메일
+    private Role role;
+    private String nickname;
+    private String profile;
+    private String email;
     private Long id;
 
     public MemberDTO(Role role, String nickname, String profile, String email, Long id) {

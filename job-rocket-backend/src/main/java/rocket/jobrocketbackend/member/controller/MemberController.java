@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rocket.jobrocketbackend.member.service.MemberService;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/member")
 @Slf4j
 public class MemberController {
 
@@ -28,7 +29,6 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication is missing");
         }
         Long memberId = customOAuth2User.getId();
-        log.info("memberid: {}", memberId);
 
         try {
             Map<String, Object> userProfile = memberService.getUserProfileById(memberId);
@@ -37,6 +37,18 @@ public class MemberController {
         } catch (Exception e) {
             log.error("Error fetching user profile: ", e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/mypage/{userId}")
+    public ResponseEntity<?> getUserProfile(@PathVariable("userId") Long id) {
+        try {
+            Map<String, Object> getMypageUserProfile = memberService.getUserProfile(id);
+            return ResponseEntity.ok(getMypageUserProfile);
+
+        } catch (Exception e) {
+            log.error("Error fetching user profile: ", e);
+            throw new RuntimeException("User profile not found");
         }
     }
 }

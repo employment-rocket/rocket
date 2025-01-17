@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getUserProfile } from "../../api/user/UserApi";
+import { getUserNicknameAndId } from "../../api/member/MemberApi";
 
 const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
   const [userInfo, setUserInfo] = useState({ nickname: "", id: null });
@@ -10,7 +10,7 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
     if (isOpen) {
       const fetchUserProfile = async () => {
         try {
-          const data = await getUserProfile();
+          const data = await getUserNicknameAndId();
           setUserInfo({ nickname: data.nickname, id: data.id });
         } catch (error) {
           setUserInfo({ nickname: "Error", id: null });
@@ -32,7 +32,7 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
       </div>
       <button
         className="w-full h-8 mt-2 text-center text-[#3f83f8] text-xl"
-        onClick={() => navigate("/mypage")}
+        onClick={() => navigate(`/member/mypage/${userInfo.id}`)}
       >
         마이페이지
       </button>
