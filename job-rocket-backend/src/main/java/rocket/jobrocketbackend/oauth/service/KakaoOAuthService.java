@@ -126,7 +126,8 @@ public class KakaoOAuthService {
                     .profile(profileImage)
                     .socialType(SocialType.KAKAO)
                     .role(Role.MEMBER) // 기본 역할 부여
-                    .allowEmail(false) // 동의항목에 따른 설정
+                    .allowEmail(false)
+                    .allowAlarm(false)// 동의항목에 따른 설정
                     .build();
             return memberRepository.save(newUser);
         }

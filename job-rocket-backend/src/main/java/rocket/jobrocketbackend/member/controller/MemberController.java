@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rocket.jobrocketbackend.member.entity.MemberEntity;
 import rocket.jobrocketbackend.member.repository.MemberRepository;
+import rocket.jobrocketbackend.member.service.MemberService;
 
 import java.util.Map;
 import java.util.Optional;
@@ -20,20 +21,22 @@ import java.util.Optional;
 @Slf4j
 public class MemberController {
 
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getUserProfile(Authentication authentication){
+    public ResponseEntity<?> getUserProfile(Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication is missing");
         }
+
         String nickname = authentication.getName();
-        Optional<MemberEntity> user = userRepository.findByNickname(nickname);
-
-        if(user.isPresent()){
-            return ResponseEntity.ok(Map.of("nickname", nickname));
+        try {
+            Map<String, Object> userProfile = memberService.getUserProfileByNickname(nickname);
+            return ResponseEntity.ok(userProfile);
+        } catch (Exception e) {
+            log.error("Error fetching user profile: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
-
 }

@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.introduce.service;
+/*package rocket.jobrocketbackend.introduce.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -94,7 +94,6 @@ public class IntroduceService {
                 .createdAt(savedIntroduce.getCreatedAt())
                 .build();
     }
-
     private List<IntroduceQAEntity> createQuestionsWithGPT(IntroduceEntity introduce, String fileContent) {
         String prompt = generatePrompt(fileContent);
         GPTRequest gptRequest = new GPTRequest(gptModel, prompt, 1, 3000, 1, 0, 0);
@@ -168,3 +167,5 @@ public class IntroduceService {
         introduceJpaRepository.delete(introduce);
     }
 }
+
+ */

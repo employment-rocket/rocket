@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { getUserProfile } from "../../api/user/UserApi";
 
 const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
-  const [nickname, setNickname] = useState("");
+  const [userInfo, setUserInfo] = useState({ nickname: "", id: null });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,9 +11,9 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
       const fetchUserProfile = async () => {
         try {
           const data = await getUserProfile();
-          setNickname(data.nickname);
+          setUserInfo({ nickname: data.nickname, id: data.id });
         } catch (error) {
-          setNickname("Error");
+          setUserInfo({ nickname: "Error", id: null });
         }
       };
       fetchUserProfile();
@@ -25,12 +25,11 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
   return (
     <div
       className="absolute top-14 right-6 w-[160px] h-[240px] bg-white rounded-2xl border border-[#dad0d0] shadow-md"
-      onMouseLeave={onClose} // 드롭다운을 닫는 동작
+      onMouseLeave={onClose}
     >
       <div className="w-full h-8 mt-2 text-center text-black text-base overflow-hidden text-ellipsis whitespace-nowrap">
-        {nickname}
+        {userInfo.nickname}
       </div>
-      {/* 메뉴들 간의 간격을 동일하게 설정 */}
       <button
         className="w-full h-8 mt-2 text-center text-[#3f83f8] text-xl"
         onClick={() => navigate("/mypage")}

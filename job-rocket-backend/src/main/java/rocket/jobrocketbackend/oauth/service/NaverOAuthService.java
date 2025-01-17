@@ -119,6 +119,7 @@ public class NaverOAuthService {
                     .socialType(SocialType.NAVER)
                     .role(Role.MEMBER)
                     .allowEmail(false)
+                    .allowAlarm(false)
                     .build();
             return memberRepository.save(newUser);
         }
