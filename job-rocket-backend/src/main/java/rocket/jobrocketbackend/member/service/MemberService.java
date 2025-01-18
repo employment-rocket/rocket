@@ -56,17 +56,6 @@ public class MemberService {
     }
 
 
-
-  /*  public String saveFile(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(UPLOAD_DIR + fileName);
-        Files.createDirectories(filePath.getParent());
-        Files.write(filePath, file.getBytes());
-        return filePath.toString();
-    }
-
-
-   */
   public String saveFile(MultipartFile file) throws IOException {
       String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
       Path filePath = Paths.get(UPLOAD_DIR + fileName);
