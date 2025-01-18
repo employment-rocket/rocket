@@ -27,6 +27,24 @@ export const getUserNicknameAndId = async () => {
       return response.data;
     } catch (error) {
       console.error("Error updating user profile:", error);
-      throw error; // 에러를 호출한 쪽으로 전달
+      throw error; 
+    }
+  };
+
+  export const uploadProfileFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await api.post("/member/file/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("업로드 결과: ", response);
+      return response.data;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw error; 
     }
   };

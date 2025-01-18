@@ -3,11 +3,17 @@ package rocket.jobrocketbackend.member.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import rocket.jobrocketbackend.member.entity.MemberEntity;
 import rocket.jobrocketbackend.member.repository.MemberRepository;
 import rocket.jobrocketbackend.member.request.MemberEditReq;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +21,7 @@ import java.util.Map;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private static final String UPLOAD_DIR = "uploads/";
 
     public Map<String, Object> getUserProfileById(Long memberId) {
         MemberEntity member = memberRepository.findById(memberId)
@@ -48,4 +55,26 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+
+
+  /*  public String saveFile(MultipartFile file) throws IOException {
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(UPLOAD_DIR + fileName);
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, file.getBytes());
+        return filePath.toString();
+    }
+
+
+   */
+  public String saveFile(MultipartFile file) throws IOException {
+      String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+      Path filePath = Paths.get(UPLOAD_DIR + fileName);
+      Files.createDirectories(filePath.getParent());
+      Files.write(filePath, file.getBytes());
+
+      // 반환되는 경로를 URL 형식으로 변환
+      String fileUrl = "/uploads/" + fileName;
+      return fileUrl;
+  }
 }

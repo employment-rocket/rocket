@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import rocket.jobrocketbackend.member.request.MemberEditReq;
 import rocket.jobrocketbackend.member.service.MemberService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
@@ -62,4 +63,15 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("프로필 업데이트 실패");
         }
     }
+
+    @PostMapping("/file/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            String filePath = memberService.saveFile(file);
+            return ResponseEntity.ok(filePath);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        }
+    }
+
 }
