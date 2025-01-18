@@ -31,9 +31,10 @@ export const getUserNicknameAndId = async () => {
     }
   };
 
-  export const uploadProfileFile = async (file) => {
+  export const uploadProfileFile = async (file, userId) => {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("userId", userId); 
   
     try {
       const response = await api.post("/member/file/upload", formData, {
@@ -48,3 +49,20 @@ export const getUserNicknameAndId = async () => {
       throw error; 
     }
   };
+
+  export const getProfileImage = async (userId) => {
+    try {
+      const response = await api.get(`member/uploads/${userId}`, {
+        responseType: 'arraybuffer'  // 이미지 데이터를 arraybuffer로 받아옴
+      });
+      console.log("받은 데이터: ", response);
+      
+      // 바이너리 데이터를 Blob 형태로 변환하고 URL로 변환
+      const imageBlob = new Blob([response.data], { type: 'image/jpeg' });  // MIME 타입에 맞게 수정
+      const imageUrl = URL.createObjectURL(imageBlob);  // Blob을 URL로 변환
+      return imageUrl;
+    } catch (error) {
+      console.error("Error fetching user profile image:", error);
+    }
+  };
+  

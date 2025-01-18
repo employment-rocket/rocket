@@ -2,22 +2,26 @@ package rocket.jobrocketbackend.member.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rocket.jobrocketbackend.member.entity.MemberEntity;
 import rocket.jobrocketbackend.member.repository.MemberRepository;
 import rocket.jobrocketbackend.member.request.MemberEditReq;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -56,14 +60,29 @@ public class MemberService {
     }
 
 
-  public String saveFile(MultipartFile file) throws IOException {
-      String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-      Path filePath = Paths.get(UPLOAD_DIR + fileName);
-      Files.createDirectories(filePath.getParent());
-      Files.write(filePath, file.getBytes());
+    public void saveFile(MultipartFile file, Long userId) throws IOException {
 
-      // 반환되는 경로를 URL 형식으로 변환
-      String fileUrl = "/uploads/" + fileName;
-      return fileUrl;
-  }
+        String fileExtension = Objects.requireNonNull(file.getOriginalFilename())
+                .substring(file.getOriginalFilename().lastIndexOf("."));
+
+
+        String fileName = userId + fileExtension;
+        Path filePath = Paths.get(UPLOAD_DIR + fileName);
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, file.getBytes());
+
+        String fileUrl = "/uploads/" + fileName;
+    }
+
+    public  byte[] getImageBytes(Long memberId) throws IOException {
+
+        Path filePath = Paths.get(UPLOAD_DIR, memberId + ".jpg");
+
+        if (!Files.exists(filePath)) {
+            throw new FileNotFoundException("File not found: " + filePath.toString());
+        }
+        log.info("filePath: {}",filePath.toUri());
+
+        return Files.readAllBytes(filePath);
+    }
 }

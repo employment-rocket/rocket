@@ -3,26 +3,43 @@ import { useState, useEffect } from "react";
 import { getUserProfile } from "../api/member/MemberApi";
 import { useParams } from "react-router";
 import logo from "../assets/default-profile.png";
-import { updateUserProfile, uploadProfileFile } from "../api/member/MemberApi"
+import { updateUserProfile, uploadProfileFile, getProfileImage } from "../api/member/MemberApi"
 
 const MyPage = () => {
   const {userId} = useParams();
   const [email, setEmail] = useState();
   const [allowEmail, setAllowEmail] = useState();
   const [allowAlarm, setAllowAlarm] = useState();
-  const [profile, setProfile] = useState();
   const [nickname, setNickname] = useState();
-  const [profileImage, setProfileImage] = useState();
+  const [profile, setProfile] = useState();
  
   useEffect(() => {
     const fetchUserProfile = async () => {
+    try{
       const data = await getUserProfile(userId); 
       setAllowEmail(data.allowEmail);
       setAllowAlarm(data.allowAlarm);
-      setProfile(data.profile);
       setNickname(data.nickname);
       setEmail(data.email);
-    };
+
+
+        const fetchImage = async () => {
+            try {
+              const imageUrl = await getProfileImage(userId);
+              if (imageUrl) {
+                setProfile(imageUrl);
+              }
+            } catch (error) {
+              console.error("Failed to fetch profile image:", error);
+            }
+          };
+  
+  
+          fetchImage();
+        } catch (error) {
+          console.error("유저 프로필 로드 실패:", error);
+        }
+      };
     if(userId){
         fetchUserProfile(); 
     }
@@ -40,14 +57,11 @@ const MyPage = () => {
   }; 
   const handleFileUpload = async (file) => {
     try {
-      const fileUrl = await uploadProfileFile(file);
-      console.log("파일url: ", fileUrl);
+    //  const fileUrl = 
+      await uploadProfileFile(file,userId);
 
-      const absoluteUrl = `${import.meta.env.VITE_API_BASE_URL}${fileUrl}`;
-
-      console.log("절대 URL:", absoluteUrl);
-      setProfile(absoluteUrl);
-
+      const imageUri = await getProfileImage(userId);
+      setProfile(imageUri);
     } catch (error) {
       console.error("파일 업로드 실패:", error);
       alert("파일 업로드 중 오류가 발생했습니다.");
@@ -91,7 +105,7 @@ const MyPage = () => {
   </div>
   <img
     className="w-40 h-40 rounded-full ml-8"
-    src={profile === 'default' ? logo : profile}
+    src={profile === 'default'?logo:profile}
     alt="Profile"
   />
   <input

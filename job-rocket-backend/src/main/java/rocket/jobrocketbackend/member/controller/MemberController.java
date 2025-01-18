@@ -2,7 +2,9 @@ package rocket.jobrocketbackend.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import rocket.jobrocketbackend.member.request.MemberEditReq;
 import rocket.jobrocketbackend.member.service.MemberService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 
@@ -65,13 +68,33 @@ public class MemberController {
     }
 
     @PostMapping("/file/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
+                                             @RequestParam("userId") Long userId) {
         try {
-            String filePath = memberService.saveFile(file);
-            return ResponseEntity.ok(filePath);
+            memberService.saveFile(file, userId);
+            return ResponseEntity.ok("프로필 사진이 정상적으로 등록되었습니다");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
         }
     }
+
+
+    @GetMapping("/uploads/{userId}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getImage(@PathVariable("userId") Long userId) {
+        try {
+            byte[] imageBytes = memberService.getImageBytes(userId);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imageBytes);
+        } catch (FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
 
 }
