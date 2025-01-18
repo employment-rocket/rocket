@@ -1,4 +1,4 @@
-/*package rocket.jobrocketbackend.introduce.controller;
+package rocket.jobrocketbackend.introduce.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,4 +38,3 @@ public class IntroduceController {
 }
 
 
- */

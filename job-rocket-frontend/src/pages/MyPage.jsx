@@ -34,7 +34,6 @@ const MyPage = () => {
             }
           };
   
-  
           fetchImage();
         } catch (error) {
           console.error("유저 프로필 로드 실패:", error);
@@ -57,7 +56,6 @@ const MyPage = () => {
   }; 
   const handleFileUpload = async (file) => {
     try {
-    //  const fileUrl = 
       await uploadProfileFile(file,userId);
 
       const imageUri = await getProfileImage(userId);
@@ -75,10 +73,8 @@ const MyPage = () => {
       profile,
       nickname,
     };
-    console.log("Saving profile with:", updatedProfile);
     try {
-        const response = await updateUserProfile(userId, updatedProfile); 
-        console.log(response); 
+        await updateUserProfile(userId, updatedProfile); 
         alert("저장되었습니다.");
     } catch (error) {
       console.error("프로필 저장 실패:", error);

@@ -1,4 +1,4 @@
-/*package rocket.jobrocketbackend.introduce.service;
+package rocket.jobrocketbackend.introduce.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -167,5 +167,3 @@ public class IntroduceService {
         introduceJpaRepository.delete(introduce);
     }
 }
-
- */
