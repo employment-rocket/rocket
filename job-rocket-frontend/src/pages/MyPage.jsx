@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { getUserProfile } from "../api/member/MemberApi";
+import { getUserProfile } from "../api/user/UserApi";
 import { useParams } from "react-router";
 import logo from "../assets/default-profile.png";
-import { updateUserProfile, uploadProfileFile, getProfileImage } from "../api/member/MemberApi"
+import { updateUserProfile, uploadProfileFile, getProfileImage } from "../api/user/UserApi"
 
 const MyPage = () => {
   const {userId} = useParams();

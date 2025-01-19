@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getUserNicknameAndId } from "../../api/member/MemberApi";
+import { getUserNicknameAndId } from "../../api/user/UserApi";
 
 const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
   const [userInfo, setUserInfo] = useState({ nickname: "", id: null });

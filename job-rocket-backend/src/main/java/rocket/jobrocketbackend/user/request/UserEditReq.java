@@ -1,13 +1,12 @@
-package rocket.jobrocketbackend.member.request;
+package rocket.jobrocketbackend.user.request;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
 
 @Getter
 @NoArgsConstructor
-public class MemberEditReq {
+public class UserEditReq {
 
     private String nickname;
     private String profile;
@@ -15,7 +14,7 @@ public class MemberEditReq {
     private Boolean allowAlarm;
 
     @Builder
-    public MemberEditReq(String nickname, String profile, Boolean allowAlarm, Boolean allowEmail) {
+    public UserEditReq(String nickname, String profile, Boolean allowAlarm, Boolean allowEmail) {
         this.nickname=nickname;
         this.profile=profile;
         this.allowAlarm=allowAlarm;

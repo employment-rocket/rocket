@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.member.entity;
+package rocket.jobrocketbackend.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.introduce.entity.IntroduceEntity;
 import rocket.jobrocketbackend.common.entity.SocialType;
-import rocket.jobrocketbackend.member.request.MemberEditReq;
+import rocket.jobrocketbackend.user.request.UserEditReq;
 
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Table(name="member")
-public class MemberEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +52,7 @@ public class MemberEntity {
     private List<IntroduceEntity> introduces = new ArrayList<>();
 
     @Builder
-    public MemberEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail, String refreshToken, Boolean allowAlarm) {
+    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail, String refreshToken, Boolean allowAlarm) {
         this.id=id;
         this.email = email;
         this.nickname = nickname;
@@ -64,14 +64,14 @@ public class MemberEntity {
         this.allowAlarm=allowAlarm;
     }
 
-    public void editInfo(MemberEditReq memberEditReq){
+    public void editInfo(UserEditReq memberEditReq){
         this.nickname = memberEditReq.getNickname();
         this.profile= memberEditReq.getProfile();
         this.allowEmail = memberEditReq.getAllowEmail();
         this.allowAlarm=memberEditReq.getAllowAlarm();
     }
 
-    public MemberEntity updateRefreshToken(String refreshToken) {
+    public UserEntity updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.common.entity.Category;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public interface AnswerJpaRepository extends JpaRepository<AnswerEntity, Long> {
                                                         @Param("category") Category category,
                                                         @Param("isIn") boolean isIn);
 
-    AnswerEntity findByMemberAndCategoryAndQid(MemberEntity member, Category category, Long qid);
+    AnswerEntity findByMemberAndCategoryAndQid(UserEntity member, Category category, Long qid);
 
     Optional<AnswerEntity> findByMemberIdAndCategoryAndQid(Long memberId, Category category, Long qid);
 }

@@ -13,8 +13,8 @@ import rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
-import rocket.jobrocketbackend.member.repository.MemberRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.tuple;
 class ScheduleRepositoryTest {
 
     @Autowired
-    private MemberRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private ScheduleRepository scheduleRepository;
@@ -40,7 +40,7 @@ class ScheduleRepositoryTest {
     @BeforeEach
     void init(){
         LocalDate date = LocalDate.of(2024, 12, 23);
-        MemberEntity user = MemberEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
         userId = user.getId();
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
@@ -64,7 +64,7 @@ class ScheduleRepositoryTest {
     @Test
     void createScheduleEntity(){
         //given
-        MemberEntity user = MemberEntity.builder().nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
         userRepository.save(user);
         ScheduleEntity newSchedule = ScheduleEntity.builder()
                 .title("삼성전자")
@@ -95,7 +95,7 @@ class ScheduleRepositoryTest {
     @DisplayName("userID를 가지고 해당 유저가 가지고 있는 모든 일정관리 리스트를 반환")
     void findByUserId(){
         //given
-        MemberEntity user = userRepository.findByEmail("test@naver.com").get();
+        UserEntity user = userRepository.findByEmail("test@naver.com").get();
         //when
         List<ScheduleEntity> list = scheduleRepository.findByUser(user);
         //then
@@ -105,7 +105,7 @@ class ScheduleRepositoryTest {
     @DisplayName("scheduleId에 해당하는 schdeule를 삭제한다.")
     void deleteById() {
         // given
-        MemberEntity user = MemberEntity.builder().nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
         userRepository.save(user);
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
         scheduleRepository.save(entity);
@@ -123,7 +123,7 @@ class ScheduleRepositoryTest {
     @DisplayName("해당 유저에 진행중 상태인 Schedule를 가져온다.")
     void findByUserAndIsNotFail() {
         // given
-        MemberEntity user = userRepository.findById(userId).get();
+        UserEntity user = userRepository.findById(userId).get();
         // when
         List<ScheduleEntity> result = scheduleRepository.findByUserAndIsNotFail(user);
         // then
@@ -134,7 +134,7 @@ class ScheduleRepositoryTest {
     @DisplayName("해당 유저가 가지고있는 일정관리를 ScheduleType 당 몇개가있는지 반환")
     void findByUserAndGroupByType() {
         // given
-        MemberEntity user = userRepository.findById(userId).get();
+        UserEntity user = userRepository.findById(userId).get();
         // when
         List<ScheduleGroupDTO> result = scheduleRepository.findByUserAndGroupByType(user);
         // then
@@ -151,7 +151,7 @@ class ScheduleRepositoryTest {
     @DisplayName("해당 유저가 가지고있는 일정관리를 ScheduleState 당 몇개가있는지 반환")
     void findByUserAndGroupByState() {
         // given
-        MemberEntity user = userRepository.findById(userId).get();
+        UserEntity user = userRepository.findById(userId).get();
         // when
         List<ScheduleGroupDTO> result = scheduleRepository.findByUserAndGroupByState(user);
         // then
@@ -168,7 +168,7 @@ class ScheduleRepositoryTest {
     @DisplayName("해당 유저의 타입이 서류이고 상태가 탈락인 개수를 가져온다.")
     void findByUserAndTypeDocumentAndStateFailCount() {
         // given
-        MemberEntity user = userRepository.findById(userId).get();
+        UserEntity user = userRepository.findById(userId).get();
         LocalDate date = LocalDate.of(2025, 01, 05);
         ScheduleEntity entity = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Document).user(user).build();
         ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Document).user(user).build();

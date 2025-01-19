@@ -3,7 +3,7 @@ package rocket.jobrocketbackend.introduce.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class IntroduceEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private MemberEntity member;
+    private UserEntity member;
 
     @OneToMany(mappedBy = "introduce", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
-import rocket.jobrocketbackend.member.dto.MemberDTO;
+import rocket.jobrocketbackend.user.dto.UserDTO;
 
 import java.io.IOException;
 @Slf4j
@@ -45,7 +45,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
         // UserDTO를 생성하여 값 set
-        MemberDTO userDTO = jwtUtil.getUserDto(token);
+        UserDTO userDTO = jwtUtil.getUserDto(token);
 
         // UserDetails에 회원 정보 객체 담기
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);

@@ -20,9 +20,9 @@ import rocket.jobrocketbackend.introduce.exception.GPTProcessingException;
 import rocket.jobrocketbackend.introduce.exception.IntroduceNotFoundException;
 import rocket.jobrocketbackend.introduce.repository.IntroduceJpaRepository;
 import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
-import rocket.jobrocketbackend.member.exception.MemberNotFoundException;
-import rocket.jobrocketbackend.member.repository.MemberRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.exception.UserNotFoundException;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IntroduceService {
     private final IntroduceJpaRepository introduceJpaRepository;
-    private final MemberRepository userRepository;
+    private final UserRepository userRepository;
     private final RestTemplate restTemplate;
 
     @Value("${gpt.api.url}")
@@ -61,8 +61,8 @@ public class IntroduceService {
     }
 
     public IntroduceResDto saveIntroduce(MultipartFile file, Long memberId, String name) {
-        MemberEntity user = userRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 사용자입니다."));
+        UserEntity user = userRepository.findById(memberId)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
 
         byte[] fileData;
         try {

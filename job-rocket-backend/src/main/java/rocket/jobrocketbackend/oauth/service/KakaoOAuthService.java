@@ -14,10 +14,10 @@ import rocket.jobrocketbackend.common.entity.SocialType;
 import rocket.jobrocketbackend.oauth.userInfo.KakaoOAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.userInfo.OAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
-import rocket.jobrocketbackend.member.repository.MemberRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import rocket.jobrocketbackend.member.util.NicknameGenerator;
+import rocket.jobrocketbackend.user.util.NicknameGenerator;
 
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class KakaoOAuthService {
 
     private final RestTemplate oauth2Client;
     private final ObjectMapper objectMapper;
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
 
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
@@ -51,13 +51,13 @@ public class KakaoOAuthService {
 
         String accessToken = getKakaoAccessToken(token);
         OAuth2UserInfo kakaouserInfo = getKakaoUserInfo(accessToken);
-        MemberEntity memeberEntity = saveOrUpdateUser(kakaouserInfo);
+        UserEntity userEntity = saveOrUpdateUser(kakaouserInfo);
 
-        String jwtAccessToken = jwtUtil.createAccessToken(memeberEntity.getEmail());
-        String jwtRefreshToken = jwtUtil.createRefreshToken(memeberEntity.getEmail());
+        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
+        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail());
 
-        memeberEntity.updateRefreshToken(jwtRefreshToken);
-        memberRepository.save(memeberEntity);
+        userEntity.updateRefreshToken(jwtRefreshToken);
+        userRepository.save(userEntity);
 
         Map<String, String> tokens = Map.of(
                 "accessToken", jwtAccessToken,
@@ -103,20 +103,20 @@ public class KakaoOAuthService {
         return userInfo;
     }
 
-    private MemberEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
+    private UserEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
         String email = kakaoUserInfo.getEmail();
 
 
-        Optional<MemberEntity> existingUser = memberRepository.findByEmail(email);
+        Optional<UserEntity> existingUser = userRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
 
-            MemberEntity user = existingUser.get();
-            return memberRepository.save(user);
+            UserEntity user = existingUser.get();
+            return userRepository.save(user);
         } else {
             String nickname = NicknameGenerator.generateNickname();
 
-            MemberEntity newUser = MemberEntity.builder()
+            UserEntity newUser = UserEntity.builder()
                     .email(email)
                     .nickname(nickname)
                     .profile("default")
@@ -125,7 +125,7 @@ public class KakaoOAuthService {
                     .allowEmail(true)
                     .allowAlarm(false)
                     .build();
-            return memberRepository.save(newUser);
+            return userRepository.save(newUser);
         }
     }
 

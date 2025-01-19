@@ -6,7 +6,7 @@ import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyTypeReq
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleStateException;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleTypeException;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ class ScheduleEntityTest {
                 .build();
         //when
         //then
-        assertThatThrownBy(() -> ScheduleEntity.create(dto,new MemberEntity()))
+        assertThatThrownBy(() -> ScheduleEntity.create(dto,new UserEntity()))
                 .isInstanceOf(IllegalScheduleStateException.class)
                 .hasMessage("잘못된 상태 값입니다.");
     }

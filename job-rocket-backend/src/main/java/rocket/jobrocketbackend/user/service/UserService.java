@@ -1,14 +1,13 @@
-package rocket.jobrocketbackend.member.service;
+package rocket.jobrocketbackend.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
-import rocket.jobrocketbackend.member.repository.MemberRepository;
-import rocket.jobrocketbackend.member.request.MemberEditReq;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.repository.UserRepository;
+import rocket.jobrocketbackend.user.request.UserEditReq;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,13 +21,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class MemberService {
+public class UserService {
 
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
     public Map<String, Object> getUserProfileById(Long memberId) {
-        MemberEntity member = memberRepository.findById(memberId)
+        UserEntity member = userRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return Map.of(
@@ -37,7 +36,7 @@ public class MemberService {
         );
     }
     public Map<String, Object> getUserProfile(Long memberId){
-        MemberEntity member = memberRepository.findById(memberId)
+        UserEntity member = userRepository.findById(memberId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
 
         return Map.of(
@@ -51,12 +50,12 @@ public class MemberService {
     }
 
 
-    public void updateUserProfile(Long userId, MemberEditReq memberEditReq) {
+    public void updateUserProfile(Long userId, UserEditReq memberEditReq) {
 
-        MemberEntity member = memberRepository.findById(userId)
+        UserEntity member = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         member.editInfo(memberEditReq);
-        memberRepository.save(member);
+        userRepository.save(member);
     }
 
 

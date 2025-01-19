@@ -11,9 +11,9 @@ import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 import rocket.jobrocketbackend.schedule.exception.ScheduleNotFoundException;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
-import rocket.jobrocketbackend.member.exception.MemberNotFoundException;
-import rocket.jobrocketbackend.member.repository.MemberRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.exception.UserNotFoundException;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +26,17 @@ import java.util.stream.Collectors;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final MemberRepository userRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ScheduleDTO create(final ScheduleCreateDTO dto,final Long userId){
-        MemberEntity user = userRepository.findById(userId).orElseThrow(() -> new MemberNotFoundException("사용자 정보 없음"));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
         ScheduleEntity schedule = scheduleRepository.save(ScheduleEntity.create(dto, user));
         return ScheduleDTO.from(schedule);
     }
 
     public Map<String, List<ScheduleDTO>> getScheduleList(final Long userId){
-        MemberEntity user = userRepository.findById(userId).orElseThrow(() -> new MemberNotFoundException("사용자 정보 없음"));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
         Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUser(user)
                 .stream().map(ScheduleDTO::from).collect(Collectors.groupingBy(dto -> dto.getType().name()));
 

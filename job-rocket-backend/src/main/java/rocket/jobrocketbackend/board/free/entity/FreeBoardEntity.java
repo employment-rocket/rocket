@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 
@@ -28,5 +28,5 @@ public class FreeBoardEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private MemberEntity user;
+    private UserEntity user;
 }

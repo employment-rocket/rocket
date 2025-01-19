@@ -17,8 +17,8 @@ import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.service.FreeBoardService;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
-import rocket.jobrocketbackend.member.dto.MemberDTO;
-import rocket.jobrocketbackend.member.service.MemberService;
+import rocket.jobrocketbackend.user.dto.UserDTO;
+import rocket.jobrocketbackend.user.service.UserService;
 
 import java.time.LocalDate;
 
@@ -44,11 +44,11 @@ class FreeBoardEntityControllerTest {
     private FreeBoardService freeBoardService;
 
     @MockitoBean
-    private MemberService userService;
+    private UserService userService;
 
     @BeforeEach
     void init(){
-        CustomOAuth2User principal = new CustomOAuth2User(new MemberDTO(Role.MEMBER,"닉네임","","test@naver.com",1L));
+        CustomOAuth2User principal = new CustomOAuth2User(new UserDTO(Role.MEMBER,"닉네임","","test@naver.com",1L));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 principal,
                 null,

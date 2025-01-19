@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +24,7 @@ class ScheduleDTOTest {
                 .dueDate(LocalDate.of(2024, 12, 23))
                 .build();
         //when
-        ScheduleEntity newScheduleEntity = ScheduleEntity.create(dto,new MemberEntity());
+        ScheduleEntity newScheduleEntity = ScheduleEntity.create(dto,new UserEntity());
         //then
         assertThat(newScheduleEntity.getTitle()).isEqualTo("제목입니다");
         assertThat(newScheduleEntity.getMemo()).isEqualTo("메모입니다");

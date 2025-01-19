@@ -18,8 +18,8 @@ import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleStateException;
 import rocket.jobrocketbackend.schedule.exception.ScheduleNotFoundException;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
-import rocket.jobrocketbackend.member.entity.MemberEntity;
-import rocket.jobrocketbackend.member.repository.MemberRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ScheduleServiceTest {
 
     @Autowired
-    MemberRepository userRepository;
+    UserRepository userRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
     @Autowired
@@ -45,7 +45,7 @@ class ScheduleServiceTest {
 
     @BeforeEach
     void init() {
-        MemberEntity user = MemberEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).build();
         userRepository.save(user);
         LocalDate date = LocalDate.of(2024, 12, 23);
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
@@ -87,7 +87,7 @@ class ScheduleServiceTest {
     @DisplayName("새로운 일정관리 생성")
     void create() {
         //given
-        MemberEntity user = createUser();
+        UserEntity user = createUser();
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder()
                 .title("제목")
                 .memo("내용")
@@ -108,7 +108,7 @@ class ScheduleServiceTest {
     @DisplayName("새로운 일정관리 생성시 상태값이 이상하면 예외를 던진다.")
     void createException() {
         //given
-        MemberEntity user = createUser();
+        UserEntity user = createUser();
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder()
                 .title("제목")
                 .memo("내용")
@@ -127,7 +127,7 @@ class ScheduleServiceTest {
     @DisplayName("입력받은 id와 타입으로 해당하는 일정관리의 타입을 변경한다.")
     void modifyType() {
         //given
-        MemberEntity user = createUser();
+        UserEntity user = createUser();
         LocalDate date = LocalDate.of(2024, 12, 22);
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
         scheduleRepository.save(entity);
@@ -155,7 +155,7 @@ class ScheduleServiceTest {
     @DisplayName("scheduleId에 해당하는 schdeule를 삭제한다.")
     void delete() {
         // given
-        MemberEntity user = createUser();
+        UserEntity user = createUser();
 
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
         scheduleRepository.save(entity);
@@ -173,7 +173,7 @@ class ScheduleServiceTest {
     @DisplayName("DTO에 담겨있는 정보로 일정관리를 수정한다.")
     void modify() {
         // given
-        MemberEntity user = createUser();
+        UserEntity user = createUser();
         LocalDate date = LocalDate.of(2024, 12, 22);
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
         scheduleRepository.save(entity);
@@ -189,8 +189,8 @@ class ScheduleServiceTest {
         assertThat(entity.getState()).isEqualTo(dto.getState());
     }
 
-    private MemberEntity createUser() {
-        MemberEntity user = MemberEntity.builder().nickname("test").allowEmail(false).build();
+    private UserEntity createUser() {
+        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
         userRepository.save(user);
         return user;
     }
