@@ -36,11 +36,12 @@ createRoot(document.getElementById("root")).render(
 					element={<NaverLogin />} 
 				/>
 				<Route path="/" element={<Navigate to="/board" replace />} />
-				<Route path="/board" element={<Board />} />
+				<Route path="/board" element={<Board />} >
 						<Route index element={<Notice />} />
 						<Route path="free" element={<Free />} />
 						<Route element={<PrivateRoute />}>
 						<Route path="free/form" element={<FreeBoardForm />} />
+				</Route>
 						<Route path="qa" element={<Qa />} />
 					<Route path="review" element={<Review />} />
 					</Route>
