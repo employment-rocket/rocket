@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import rocket.jobrocketbackend.common.response.ErrorResponse;
+import rocket.jobrocketbackend.user.exception.FileNotFoundException;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -37,5 +38,16 @@ public class ExceptionController {
             errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return errorResponse;
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
+        ErrorResponse body = ErrorResponse.builder()
+                .code("404")
+                .message("찾을 수 없습니다")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(body);
     }
 }

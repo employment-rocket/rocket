@@ -13,6 +13,7 @@ import rocket.jobrocketbackend.user.service.UserService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -31,55 +32,36 @@ public class UserController {
         }
         Long memberId = customOAuth2User.getId();
 
-        try {
             Map<String, Object> userProfile = userService.getUserProfileById(memberId);
             return ResponseEntity.ok(userProfile);
 
-        } catch (Exception e) {
-            log.error("Error fetching user profile: ", e);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
     }
 
     @GetMapping("/mypage/{userId}")
     public ResponseEntity<?> getUserProfile(@PathVariable("userId") Long id) {
-        try {
+
             Map<String, Object> getMypageUserProfile = userService.getUserProfile(id);
             return ResponseEntity.ok(getMypageUserProfile);
-
-        } catch (Exception e) {
-            log.error("Error fetching user profile: ", e);
-            throw new RuntimeException("User profile not found");
-        }
     }
 
 
     @PostMapping("/file/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-                                             @RequestParam("userId") Long userId) {
-        try {
+                                             @RequestParam("userId") Long userId) throws IOException {
+
             userService.saveFile(file, userId);
             return ResponseEntity.ok("프로필 사진이 정상적으로 등록되었습니다");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
-        }
+
     }
 
 
     @GetMapping("/uploads/{userId}")
     @ResponseBody
-    public ResponseEntity<byte[]> getImage(@PathVariable("userId") Long userId) {
-        try {
-            byte[] imageBytes = userService.getImageBytes(userId);
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(imageBytes);
-        } catch (FileNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    public ResponseEntity<byte[]> getImage(@PathVariable("userId") Long userId) throws FileNotFoundException {
+        byte[] imageBytes = userService.getImageBytes(userId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(imageBytes);
     }
 
     @PostMapping("/settings/email/{userId}")
@@ -87,7 +69,7 @@ public class UserController {
             @PathVariable("userId") Long userId,
             @RequestBody UserEditReq request) {
         userService.updateAllowEmail(userId, request.getAllowEmail());
-        return ResponseEntity.ok("Email setting updated successfully.");
+        return ResponseEntity.ok("이메일 유무 정상 등록.");
     }
 
     @PostMapping("/settings/alarm/{userId}")
@@ -95,7 +77,7 @@ public class UserController {
             @PathVariable("userId") Long userId,
             @RequestBody UserEditReq request) {
         userService.updateAllowAlarm(userId, request.getAllowAlarm());
-        return ResponseEntity.ok("Alarm setting updated successfully.");
+        return ResponseEntity.ok("알람 유무 정상 등록");
     }
 
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 import rocket.jobrocketbackend.user.request.UserEditReq;
 
@@ -26,18 +27,19 @@ public class UserService {
     private final UserRepository userRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
-    public Map<String, Object> getUserProfileById(Long memberId) {
-        UserEntity member = userRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Map<String, Object> getUserProfileById(Long userId) {
+        UserEntity member = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
+
 
         return Map.of(
                 "id", member.getId(),
                 "nickname", member.getNickname()
         );
     }
-    public Map<String, Object> getUserProfile(Long memberId){
-        UserEntity member = userRepository.findById(memberId)
-                .orElseThrow(()-> new RuntimeException("User not found"));
+    public Map<String, Object> getUserProfile(Long userId){
+        UserEntity member = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
 
         return Map.of(
                 "id",member.getId(),
@@ -65,28 +67,32 @@ public class UserService {
         String fileUrl = "/uploads/" + fileName;
     }
 
-    public  byte[] getImageBytes(Long memberId) throws IOException {
 
-        Path filePath = Paths.get(UPLOAD_DIR, memberId + ".jpg");
+    public byte[] getImageBytes(Long userId) throws FileNotFoundException {
+        Path filePath = Paths.get(UPLOAD_DIR, userId + ".jpg");
 
         if (!Files.exists(filePath)) {
             throw new FileNotFoundException("File not found: " + filePath.toString());
         }
-        log.info("filePath: {}",filePath.toUri());
 
-        return Files.readAllBytes(filePath);
+        try {
+            return Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to read the file.", e);
+        }
     }
 
     public void updateAllowEmail(Long userId, Boolean allowEmail) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
+
         user.updateAllowEmail(allowEmail);
         userRepository.save(user);
     }
 
     public void updateAllowAlarm(Long userId, Boolean allowAlarm) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
         user.updateAllowAlarm(allowAlarm);
         userRepository.save(user);
     }
