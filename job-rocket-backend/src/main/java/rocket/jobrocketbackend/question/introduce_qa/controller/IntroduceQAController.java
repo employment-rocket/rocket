@@ -1,5 +1,6 @@
 package rocket.jobrocketbackend.question.introduce_qa.controller;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

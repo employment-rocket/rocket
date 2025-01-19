@@ -16,7 +16,7 @@ public class CsController {
     private final CsService csService;
 
     @GetMapping
-    public ResponseEntity<List<CsResDto>> csList(
+    public ResponseEntity<List<CsResDto>> getCsList(
             @RequestParam List<String> subcategories,
             Authentication authentication
     ) {

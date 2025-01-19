@@ -11,7 +11,6 @@ import java.util.List;
 public interface IntroduceQAJpaRepository extends JpaRepository<IntroduceQAEntity, Long> {
     List<IntroduceQAEntity> findByIntroduce_IntroduceId(Long introduceId);
 
-    @Transactional
     @Modifying
     @Query("DELETE FROM IntroduceQAEntity q WHERE q.introduce.introduceId = :introduceId")
     void deleteByIntroduceId(Long introduceId);

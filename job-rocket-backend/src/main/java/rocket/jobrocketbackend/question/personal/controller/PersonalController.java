@@ -16,7 +16,7 @@ public class PersonalController {
     private final PersonalService personalService;
 
     @GetMapping
-    public ResponseEntity<List<PersonalResDto>> personalList(Authentication authentication) {
+    public ResponseEntity<List<PersonalResDto>> getPersonalList(Authentication authentication) {
         List<PersonalResDto> personalList = personalService.findAllPersonal(authentication);
         return ResponseEntity.ok(personalList);
     }
