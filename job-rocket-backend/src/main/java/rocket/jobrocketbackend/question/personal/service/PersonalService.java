@@ -1,38 +1,44 @@
 package rocket.jobrocketbackend.question.personal.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
+import rocket.jobrocketbackend.answer.exception.AnswerNotFoundException;
 import rocket.jobrocketbackend.answer.service.AnswerService;
 import rocket.jobrocketbackend.common.entity.Category;
 import rocket.jobrocketbackend.question.personal.dto.response.PersonalResDto;
 import rocket.jobrocketbackend.question.personal.entity.PersonalEntity;
 import rocket.jobrocketbackend.question.personal.repository.PersonalRepository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PersonalService {
-    private static final int PAGE_SIZE = 5;
     private final PersonalRepository personalRepository;
     private final AnswerService answerService;
 
-    public Page<PersonalResDto> findPersonalList(int page, Long memberId) {
-        PageRequest pageable = PageRequest.of(page, PAGE_SIZE);
-        return personalRepository.findAll(pageable)
-                .map(entity -> convertToDto(entity, memberId));
+    public List<PersonalResDto> findAllPersonal(Authentication authentication) {
+        Long memberId = answerService.extractMemberIdFromAuthentication(authentication);
+        List<PersonalEntity> personalEntities = personalRepository.findAll();
+        return personalEntities.stream()
+                .map(entity -> convertToDto(entity, memberId))
+                .toList();
     }
 
     private PersonalResDto convertToDto(PersonalEntity entity, Long memberId) {
-        AnswerEntity answerEntity = answerService.findAnswerByMemberAndQid(memberId, Category.PERSONAL, entity.getQid());
+        Optional<AnswerEntity> optionalAnswerEntity = answerService.findAnswerByMemberAndQid(memberId, Category.PERSONAL, entity.getQid());
+        AnswerEntity answerEntity = optionalAnswerEntity.orElse(null);
 
         return PersonalResDto.builder()
                 .qid(entity.getQid())
                 .question(entity.getQuestion())
-                .answer(answerEntity.getContent())
-                .answerId(answerEntity.getAnswerId())
-                .isIn(answerEntity.isIn())
+                .answer(answerEntity != null ? answerEntity.getContent() : null)
+                .answerId(answerEntity != null ? answerEntity.getAnswerId() : null)
+                .isIn(answerEntity != null && answerEntity.isIn())
                 .build();
     }
 }

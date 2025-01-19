@@ -53,18 +53,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/mypage/{userId}")
-    public ResponseEntity<?> updateUserProfile(
-            @PathVariable("userId") Long userId,
-            @RequestBody UserEditReq memberEditReq) {
-        try {
-            userService.updateUserProfile(userId, memberEditReq);
-            return ResponseEntity.ok("프로필이 성공적으로 업데이트되었습니다.");
-        } catch (Exception e) {
-            log.error("Error updating user profile: ", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("프로필 업데이트 실패");
-        }
-    }
 
     @PostMapping("/file/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
@@ -94,6 +82,20 @@ public class UserController {
         }
     }
 
+    @PostMapping("/settings/email/{userId}")
+    public ResponseEntity<String> updateAllowEmail(
+            @PathVariable("userId") Long userId,
+            @RequestBody UserEditReq request) {
+        userService.updateAllowEmail(userId, request.getAllowEmail());
+        return ResponseEntity.ok("Email setting updated successfully.");
+    }
 
+    @PostMapping("/settings/alarm/{userId}")
+    public ResponseEntity<String> updateAllowAlarm(
+            @PathVariable("userId") Long userId,
+            @RequestBody UserEditReq request) {
+        userService.updateAllowAlarm(userId, request.getAllowAlarm());
+        return ResponseEntity.ok("Alarm setting updated successfully.");
+    }
 
 }

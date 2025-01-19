@@ -1,8 +1,12 @@
 package rocket.jobrocketbackend.oauth.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -24,13 +28,22 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class KakaoOAuthService {
 
-    private final RestTemplate oauth2Client;
+    private final  RestTemplate oauth2Client;
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
+
+    public KakaoOAuthService(@Qualifier("restTemplate") RestTemplate oauth2Client,
+                             ObjectMapper objectMapper,
+                             UserRepository userRepository,
+                             JWTUtil jwtUtil) {
+        this.oauth2Client = oauth2Client;
+        this.objectMapper = objectMapper;
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String REDIRECT_URI;
@@ -59,6 +72,7 @@ public class KakaoOAuthService {
         userEntity.updateRefreshToken(jwtRefreshToken);
         userRepository.save(userEntity);
 
+        //클라이언트에 반환할 토큰
         Map<String, String> tokens = Map.of(
                 "accessToken", jwtAccessToken,
                 "refreshToken", jwtRefreshToken

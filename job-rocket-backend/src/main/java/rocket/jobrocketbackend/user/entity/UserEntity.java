@@ -64,15 +64,18 @@ public class UserEntity {
         this.allowAlarm=allowAlarm;
     }
 
-    public void editInfo(UserEditReq memberEditReq){
-        this.nickname = memberEditReq.getNickname();
-        this.profile= memberEditReq.getProfile();
-        this.allowEmail = memberEditReq.getAllowEmail();
-        this.allowAlarm=memberEditReq.getAllowAlarm();
-    }
-
     public UserEntity updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        return this;
+    }
+
+    public UserEntity updateAllowEmail(Boolean allowEmail){
+        this.allowEmail=allowEmail;
+        return this;
+    }
+
+    public UserEntity updateAllowAlarm(Boolean allowAlarm){
+        this.allowAlarm=allowAlarm;
         return this;
     }
 }

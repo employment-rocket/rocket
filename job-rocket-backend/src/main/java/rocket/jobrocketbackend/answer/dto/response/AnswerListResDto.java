@@ -12,7 +12,6 @@ import java.util.List;
 public class AnswerListResDto {
     private List<AnswerResDto> csAnswerList;
     private List<AnswerResDto> personalAnswerList;
-    private List<AnswerResDto> companyAnswerList;
     private List<AnswerResDto> introduceAnswerList;
     private List<AnswerResDto> reviewAnswerList;
 }

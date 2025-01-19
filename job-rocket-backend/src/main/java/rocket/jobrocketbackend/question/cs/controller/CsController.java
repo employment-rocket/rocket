@@ -1,10 +1,9 @@
 package rocket.jobrocketbackend.question.cs.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import rocket.jobrocketbackend.common.dto.PageDto;
 import rocket.jobrocketbackend.question.cs.dto.response.CsResDto;
 import rocket.jobrocketbackend.question.cs.service.CsService;
 
@@ -16,15 +15,12 @@ import java.util.List;
 public class CsController {
     private final CsService csService;
 
-    @GetMapping("/{page}")
-    public ResponseEntity<PageDto<CsResDto>> csList(
-            @PathVariable int page,
-            @RequestParam Long memberId,
-            @RequestParam List<String> subcategories
+    @GetMapping
+    public ResponseEntity<List<CsResDto>> getCsList(
+            @RequestParam List<String> subcategories,
+            Authentication authentication
     ) {
-        Page<CsResDto> csList = csService.findCsListBySubcategories(page, memberId, subcategories);
-        PageDto<CsResDto> pageDto = PageDto.of(csList);
-        return ResponseEntity.ok(pageDto);
+        List<CsResDto> csList = csService.findCsListBySubcategories(subcategories, authentication);
+        return ResponseEntity.ok(csList);
     }
-
 }

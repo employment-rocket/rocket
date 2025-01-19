@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import PersonalQuestion from "./PersonalQuestion";
 import { getPersonalQuestions } from "../../../api/question/QuestionApi";
 
+const ITEMS_PER_PAGE = 5;
+
 const PersonalQuestionBox = ({ onAddCheckedQuestion, onRemoveCheckedQuestion, checkedQuestions }) => {
     const [questions, setQuestions] = useState([]);
-    const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const memberId = 1;
 
     const fetchQuestions = async () => {
         try {
             setLoading(true);
-            const data = await getPersonalQuestions(currentPage - 1, memberId);
-            setQuestions(data.content || []);
-            setTotalPages(data.totalPages || 1);
+            const data = await getPersonalQuestions();
+            setQuestions(data || []);
         } catch (err) {
             setError("인성 질문을 불러오는 중 문제가 발생했습니다.");
         } finally {
@@ -25,10 +25,26 @@ const PersonalQuestionBox = ({ onAddCheckedQuestion, onRemoveCheckedQuestion, ch
 
     useEffect(() => {
         fetchQuestions();
-    }, [currentPage]);
+    }, []);
+
+    const filteredQuestions = questions.filter((q) =>
+        q.question.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const paginatedQuestions = filteredQuestions.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    const totalPages = Math.ceil(filteredQuestions.length / ITEMS_PER_PAGE);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1);
     };
 
     return (
@@ -38,15 +54,22 @@ const PersonalQuestionBox = ({ onAddCheckedQuestion, onRemoveCheckedQuestion, ch
         >
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold">인성 질문 선택</h3>
+                <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    placeholder="검색..."
+                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-1/2"
+                />
             </div>
             <div className="flex-1 overflow-y-auto">
                 {loading ? (
                     <p className="text-center text-gray-500">질문을 불러오는 중...</p>
                 ) : error ? (
                     <p className="text-center text-red-500">{error}</p>
-                ) : questions.length > 0 ? (
+                ) : paginatedQuestions.length > 0 ? (
                     <div className="grid grid-cols-1 gap-4">
-                        {questions.map((q) => (
+                        {paginatedQuestions.map((q) => (
                             <PersonalQuestion
                                 key={q.qid}
                                 qid={q.qid}

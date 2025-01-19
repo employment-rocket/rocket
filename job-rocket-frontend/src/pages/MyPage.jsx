@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { getUserProfile } from "../api/user/UserApi";
 import { useParams } from "react-router";
 import logo from "../assets/default-profile.png";
-import { updateUserProfile, uploadProfileFile, getProfileImage } from "../api/user/UserApi"
+import { uploadProfileFile, getProfileImage, updatedAllowEmail, updatedAllowAlarm} from "../api/user/UserApi"
 
 const MyPage = () => {
   const {userId} = useParams();
@@ -12,7 +12,10 @@ const MyPage = () => {
   const [allowAlarm, setAllowAlarm] = useState();
   const [nickname, setNickname] = useState();
   const [profile, setProfile] = useState();
- 
+    
+
+  console.log("profile: ", profile);
+
   useEffect(() => {
     const fetchUserProfile = async () => {
     try{
@@ -21,10 +24,12 @@ const MyPage = () => {
       setAllowAlarm(data.allowAlarm);
       setNickname(data.nickname);
       setEmail(data.email);
+      setProfile(data.profile);
 
-
+      if(profile!=='default'){
         const fetchImage = async () => {
             try {
+                
               const imageUrl = await getProfileImage(userId);
               if (imageUrl) {
                 setProfile(imageUrl);
@@ -33,12 +38,14 @@ const MyPage = () => {
               console.error("Failed to fetch profile image:", error);
             }
           };
-  
           fetchImage();
+        }
         } catch (error) {
           console.error("유저 프로필 로드 실패:", error);
         }
+
       };
+    
     if(userId){
         fetchUserProfile(); 
     }
@@ -47,13 +54,28 @@ const MyPage = () => {
     }
   }, [userId]); 
 
-  const handleAllowEmailChange = () => {
-    setAllowEmail(!allowEmail);
+  const handleAllowEmailChange = async () => {
+    const updateAllowEmail = !allowEmail; 
+    setAllowEmail(updateAllowEmail);
+    try {
+        await updatedAllowEmail(userId, updateAllowEmail);
+      } catch (error) {
+        console.error("이메일 알림 설정 업데이트 중 오류 발생:", error);
+      }
+    
   };
 
-  const handleAllowAlarmChange = () => {
-    setAllowAlarm(!allowAlarm);
+  const handleAllowAlarmChange = async () => {
+    const updateAllowAlarm = !allowAlarm;
+    setAllowAlarm(updateAllowAlarm);
+    try{
+        await updatedAllowAlarm(userId, updateAllowAlarm);
+    }catch(error){
+        console.error("알람 설정 업데이트 중 오류 발생");
+    }
   }; 
+
+
   const handleFileUpload = async (file) => {
     try {
       await uploadProfileFile(file,userId);
@@ -66,21 +88,6 @@ const MyPage = () => {
     }
   };
 
-  const handleSaveProfile = async () => {
-    const updatedProfile = {
-      allowEmail,
-      allowAlarm,
-      profile,
-      nickname,
-    };
-    try {
-        await updateUserProfile(userId, updatedProfile); 
-        alert("저장되었습니다.");
-    } catch (error) {
-      console.error("프로필 저장 실패:", error);
-      alert("저장 중 오류가 발생했습니다.");
-    }
-  };
    return (
     <div className="flex items-center justify-center min-h-screen">
 
@@ -129,12 +136,7 @@ const MyPage = () => {
   <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
     닉네임
   </div>
-  <input
-    type="text"
-    value={nickname}
-    onChange={(e) => setNickname(e.target.value)}
-    className="w-[300px] h-[40px] text-xl ml-4 px-2 border border-gray-300 rounded-lg"
-  />
+  <div className="flex-1 text-xl text-black ml-4">{nickname}</div>
 </div>
 
 
@@ -174,11 +176,6 @@ const MyPage = () => {
     </label>
   </div>
 
-
-  <button className="ml-auto w-[100px] h-[50px] text-xl text-black border border-gray-300 rounded-lg flex items-center justify-center"
-  onClick={handleSaveProfile}>
-    저장
-  </button>
 </div>
 
     </div>

@@ -50,14 +50,6 @@ public class UserService {
     }
 
 
-    public void updateUserProfile(Long userId, UserEditReq memberEditReq) {
-
-        UserEntity member = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        member.editInfo(memberEditReq);
-        userRepository.save(member);
-    }
-
 
     public void saveFile(MultipartFile file, Long userId) throws IOException {
 
@@ -83,5 +75,19 @@ public class UserService {
         log.info("filePath: {}",filePath.toUri());
 
         return Files.readAllBytes(filePath);
+    }
+
+    public void updateAllowEmail(Long userId, Boolean allowEmail) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+        user.updateAllowEmail(allowEmail);
+        userRepository.save(user);
+    }
+
+    public void updateAllowAlarm(Long userId, Boolean allowAlarm) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+        user.updateAllowAlarm(allowAlarm);
+        userRepository.save(user);
     }
 }

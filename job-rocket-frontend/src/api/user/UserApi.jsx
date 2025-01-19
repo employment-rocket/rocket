@@ -2,7 +2,7 @@ import api from "../api";
 
 export const getUserNicknameAndId = async () => {
     try {
-      const response = await api.get("/member/profile");
+      const response = await api.get("/user/profile");
       return response.data;
     } catch (error) {
       console.error(error);
@@ -11,20 +11,10 @@ export const getUserNicknameAndId = async () => {
 
   export const getUserProfile = async (userId) => {
     try {
-      const response = await api.get(`/member/mypage/${userId}`);
+      const response = await api.get(`/user/mypage/${userId}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching user profile:", error);
-    }
-  };
-
-  export const updateUserProfile = async (userId, updatedProfile) => {
-    try {
-      const response = await api.post(`/member/mypage/${userId}`, updatedProfile);
-      return response.data;
-    } catch (error) {
-      console.error("Error updating user profile:", error);
-      throw error; 
     }
   };
 
@@ -34,7 +24,7 @@ export const getUserNicknameAndId = async () => {
     formData.append("userId", userId); 
   
     try {
-      const response = await api.post("/member/file/upload", formData, {
+      const response = await api.post("/user/file/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -47,7 +37,7 @@ export const getUserNicknameAndId = async () => {
 
   export const getProfileImage = async (userId) => {
     try {
-      const response = await api.get(`member/uploads/${userId}`, {
+      const response = await api.get(`user/uploads/${userId}`, {
         responseType: 'arraybuffer' 
       });
       
@@ -58,4 +48,30 @@ export const getUserNicknameAndId = async () => {
       console.error("Error fetching user profile image:", error);
     }
   };
+  
+
+export const updatedAllowEmail = async (userId, allowEmail) => {
+  try {
+    const response = await api.post(`/user/settings/email/${userId}`, {
+      allowEmail
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating email settings:", error);
+    throw error;
+  }
+};
+
+
+export const updatedAllowAlarm = async (userId, allowAlarm) => {
+  try {
+    const response = await api.post(`/user/settings/alarm/${userId}`, {
+      allowAlarm
+    });
+    return response.data; 
+  } catch (error) {
+    console.error("Error updating alarm settings:", error);
+    throw error;
+  }
+};
   

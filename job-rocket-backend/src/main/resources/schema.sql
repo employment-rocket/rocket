@@ -27,8 +27,7 @@ CREATE TABLE answer (
                         category VARCHAR(50) NOT NULL,
                         is_in BOOLEAN,
                         FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE,
-                        FOREIGN KEY (qid) REFERENCES cs(qid) ON DELETE CASCADE,
-                        CHECK (category IN ('CS', 'PERSONAL', 'COMPANY_QA', 'INTRODUCE_QA', 'REVIEW_QA'))
+                        CHECK (category IN ('CS', 'PERSONAL', 'INTRODUCE_QA', 'REVIEW_QA'))
 );
 CREATE TABLE personal (
                           qid BIGINT AUTO_INCREMENT PRIMARY KEY,

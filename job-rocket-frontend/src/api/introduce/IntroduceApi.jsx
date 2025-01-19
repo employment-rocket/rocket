@@ -1,31 +1,28 @@
 import api from "../api";
 
-export const uploadIntroduce = async (file, memberId, name) => {
+export const uploadIntroduce = async (file, name) => {
 	try {
 		const formData = new FormData();
 		formData.append("file", file);
-		formData.append("memberId", 1);
 		formData.append("name", name);
 
 		const response = await api.post("/introduces/upload", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
+				Authorization: `Bearer ${localStorage.getItem("AccessToken")}`
 			},
 		});
 
 		return response.data;
 	} catch (error) {
-		const errorMessage =
-			error.response?.data?.message || "파일 업로드 실패";
+		const errorMessage = error.response?.data?.message || "파일 업로드 실패";
 		throw new Error(errorMessage);
 	}
 };
 
-export const getIntroduces = async (memberId) => {
+export const getIntroduces = async () => {
 	try {
-		const response = await api.get("/introduces", {
-			params: { memberId: 1 },
-		});
+		const response = await api.get("/introduces");
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching introduces:", error);
@@ -42,26 +39,12 @@ export const deleteIntroduce = async (introduceId) => {
 	}
 };
 
-export const getIntroduceQuestions = async (introduceId, memberId) => {
+export const getIntroduceQuestions = async (introduceId) => {
 	try {
-		const response = await api.get(
-			`/questions/introduce-qa/${introduceId}`,
-			{
-				params: { memberId: 1 },
-			}
-		);
+		const response = await api.get(`/questions/introduce-qa/${introduceId}`);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching introduce questions:", error);
-		throw error;
-	}
-};
-
-export const deleteIntroduceQuestion = async (qid) => {
-	try {
-		await api.delete(`/questions/introduce-qa/${qid}`);
-	} catch (error) {
-		console.error("Error deleting question:", error);
 		throw error;
 	}
 };

@@ -1,6 +1,8 @@
 package rocket.jobrocketbackend.answer.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.dto.response.AnswerResDto;
@@ -11,18 +13,25 @@ import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRe
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.answer.repository.AnswerJpaRepository;
 import rocket.jobrocketbackend.common.entity.Category;
-import rocket.jobrocketbackend.question.cs.repository.CsRepository;
-import rocket.jobrocketbackend.question.personal.repository.PersonalRepository;
-import rocket.jobrocketbackend.user.entity.UserEntity;
-import rocket.jobrocketbackend.user.repository.UserRepository;
 import rocket.jobrocketbackend.question.cs.entity.CsEntity;
+import rocket.jobrocketbackend.question.cs.repository.CsRepository;
 import rocket.jobrocketbackend.question.personal.entity.PersonalEntity;
+import rocket.jobrocketbackend.question.personal.repository.PersonalRepository;
+import rocket.jobrocketbackend.question.introduce_qa.dto.response.IntroduceQAResDto;
+import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
+import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRepository;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.exception.UserNotFoundException;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -32,21 +41,37 @@ public class AnswerService {
     private final PersonalRepository personalRepository;
     private final IntroduceQAJpaRepository introduceQARepository;
 
-    public AnswerListResDto findCheckedAnswerList(Long memberId) {
-        if (!userRepository.existsById(memberId)) {
-            throw new UserNotFoundException("Member with ID " + memberId + " does not exist.");
+    public Long extractMemberIdFromAuthentication(Authentication authentication) {
+        if (authentication == null) {
+            log.info("asdfasf:", authentication.getDetails());
+            throw new IllegalStateException("Authentication is missing");
         }
+        String nickname = authentication.getName();
+        UserEntity user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        return user.getId();
+    }
 
+    public AnswerListResDto findCheckedAnswerList(Authentication authentication) {
+        Long memberId = extractMemberIdFromAuthentication(authentication);
+        return getAnswerList(memberId, true);
+    }
+
+    public AnswerListResDto findUncheckedAnswerList(Authentication authentication) {
+        Long memberId = extractMemberIdFromAuthentication(authentication);
+        return getAnswerList(memberId, false);
+    }
+
+    private AnswerListResDto getAnswerList(Long memberId, boolean isIn) {
         Map<Category, List<AnswerResDto>> answersByCategory = Arrays.stream(Category.values())
                 .collect(Collectors.toMap(
                         category -> category,
-                        category -> mapToDto(answerJpaRepository.findByMemberIdAndCategoryAndIsIn(memberId, category, true), category)
+                        category -> mapToDto(answerJpaRepository.findByMemberIdAndCategoryAndIsIn(memberId, category, isIn), category)
                 ));
 
         return AnswerListResDto.builder()
                 .csAnswerList(answersByCategory.get(Category.CS))
                 .personalAnswerList(answersByCategory.get(Category.PERSONAL))
-                .companyAnswerList(answersByCategory.get(Category.COMPANY_QA))
                 .introduceAnswerList(answersByCategory.get(Category.INTRODUCE_QA))
                 .reviewAnswerList(answersByCategory.get(Category.REVIEW_QA))
                 .build();
@@ -65,11 +90,6 @@ public class AnswerService {
                 .toList();
     }
 
-    public AnswerEntity findAnswerByMemberAndQid(Long memberId, Category category, Long qid) {
-        return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid)
-                .orElse(AnswerEntity.empty());
-    }
-
     private String fetchQuestionByCategoryAndQid(Category category, Long qid) {
         return switch (category) {
             case CS -> csRepository.findById(qid)
@@ -85,7 +105,12 @@ public class AnswerService {
         };
     }
 
-    public Long addAnswer(Long memberId, Category category, Long qid, String content, boolean isIn) {
+    public Optional<AnswerEntity> findAnswerByMemberAndQid(Long memberId, Category category, Long qid) {
+        return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid);
+    }
+
+    public Long addAnswer(Authentication authentication, Category category, Long qid, String content, boolean isIn) {
+        Long memberId = extractMemberIdFromAuthentication(authentication);
         UserEntity user = userRepository.findById(memberId)
                 .orElseThrow(() -> new UserNotFoundException("user not found: ." + memberId));
         AnswerEntity answer = AnswerEntity.builder()
@@ -117,9 +142,10 @@ public class AnswerService {
         answerJpaRepository.save(existingAnswer);
     }
 
-    public void removeAnswer(Long memberId, Category category, Long qid) {
+    public void removeAnswer(Authentication authentication, Category category, Long qid) {
+        Long memberId = extractMemberIdFromAuthentication(authentication);
         UserEntity user = userRepository.findById(memberId)
-                .orElseThrow(() -> new UserNotFoundException("user not found: ." + memberId));
+                .orElseThrow(() -> new UserNotFoundException("user not found: " + memberId));
 
         AnswerEntity answer = answerJpaRepository.findByMemberAndCategoryAndQid(user, category, qid);
         if (answer != null) {
@@ -128,25 +154,4 @@ public class AnswerService {
             throw new AnswerNotFoundException("Answer not found for the given criteria.");
         }
     }
-
-    public AnswerListResDto findUncheckedAnswerList(Long memberId) {
-        if (!userRepository.existsById(memberId)) {
-            throw new UserNotFoundException("Member with ID " + memberId + " does not exist.");
-        }
-
-        Map<Category, List<AnswerResDto>> answersByCategory = Arrays.stream(Category.values())
-                .collect(Collectors.toMap(
-                        category -> category,
-                        category -> mapToDto(answerJpaRepository.findByMemberIdAndCategoryAndIsIn(memberId, category, false), category)
-                ));
-
-        return AnswerListResDto.builder()
-                .csAnswerList(answersByCategory.get(Category.CS))
-                .personalAnswerList(answersByCategory.get(Category.PERSONAL))
-                .companyAnswerList(answersByCategory.get(Category.COMPANY_QA))
-                .introduceAnswerList(answersByCategory.get(Category.INTRODUCE_QA))
-                .reviewAnswerList(answersByCategory.get(Category.REVIEW_QA))
-                .build();
-    }
-
 }

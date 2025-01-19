@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 public enum Category {
     CS("CS"),
     PERSONAL("PERSONAL"),
-    COMPANY_QA("COMPANY_QA"),
     INTRODUCE_QA("INTRODUCE_QA"),
     REVIEW_QA("REVIEW_QA");
 
