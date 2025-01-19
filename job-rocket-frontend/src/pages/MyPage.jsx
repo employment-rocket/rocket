@@ -14,8 +14,6 @@ const MyPage = () => {
   const [profile, setProfile] = useState();
     
 
-  console.log("profile: ", profile);
-
   useEffect(() => {
     const fetchUserProfile = async () => {
     try{
@@ -26,24 +24,24 @@ const MyPage = () => {
       setEmail(data.email);
       setProfile(data.profile);
 
-      if(profile!=='default'){
+      if(data.profile!=='default'){
         const fetchImage = async () => {
             try {
                 
               const imageUrl = await getProfileImage(userId);
-              if (imageUrl) {
-                setProfile(imageUrl);
-              }
+            setProfile(imageUrl);
+              
             } catch (error) {
               console.error("Failed to fetch profile image:", error);
             }
           };
           fetchImage();
-        }
+      }
         } catch (error) {
           console.error("유저 프로필 로드 실패:", error);
         }
-
+    
+    
       };
     
     if(userId){

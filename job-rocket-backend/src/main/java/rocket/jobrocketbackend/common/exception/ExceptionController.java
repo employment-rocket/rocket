@@ -40,14 +40,4 @@ public class ExceptionController {
         return errorResponse;
     }
 
-    @ExceptionHandler(FileNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
-        ErrorResponse body = ErrorResponse.builder()
-                .code("404")
-                .message("찾을 수 없습니다")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(body);
-    }
 }
