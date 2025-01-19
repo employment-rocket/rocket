@@ -11,7 +11,6 @@ import rocket.jobrocketbackend.user.entity.UserEntity;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ScheduleEntityTest {
 

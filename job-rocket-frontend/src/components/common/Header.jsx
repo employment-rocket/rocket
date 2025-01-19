@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
-import profile from "../../assets/profile.png";
+import profile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
 import { useNavigate, useLocation } from "react-router";
 import DropdownMenu from "./DropdownMenu";
@@ -47,7 +47,7 @@ const Header = () => {
 				className="flex items-center cursor-pointer border-r border-gray-300 pr-6"
 				onClick={() => navigate("/board")}
 			>
-				<img src={logo} alt="메인로고" className="h-8 w-8 mr-2" />
+				<img src={logo} alt="메인로고" className="h-8 w-8 mr-2 rounded-full" />
 				<div className="text-lg font-bold">취업 로켓</div>
 			</div>
 

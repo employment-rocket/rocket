@@ -2,12 +2,9 @@ package rocket.jobrocketbackend.schedule.dto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyTypeRequest;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
-import rocket.jobrocketbackend.schedule.exception.IllegalScheduleStateException;
-import rocket.jobrocketbackend.schedule.exception.IllegalScheduleTypeException;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;

@@ -119,27 +119,25 @@ public class KakaoOAuthService {
 
     private UserEntity saveOrUpdateUser(OAuth2UserInfo kakaoUserInfo) {
         String email = kakaoUserInfo.getEmail();
-        String profileImage = kakaoUserInfo.getProfileImage();
 
-        log.info("profileImage = {}", profileImage);
 
-        // 이메일로 유저 조회
         Optional<UserEntity> existingUser = userRepository.findByEmail(email);
 
         if (existingUser.isPresent()) {
-            // 기존 유저 정보 업데이트
+
             UserEntity user = existingUser.get();
             return userRepository.save(user);
         } else {
             String nickname = NicknameGenerator.generateNickname();
-            // 새로운 유저 저장
+
             UserEntity newUser = UserEntity.builder()
                     .email(email)
                     .nickname(nickname)
-                    .profile(profileImage)
+                    .profile("default")
                     .socialType(SocialType.KAKAO)
-                    .role(Role.MEMBER) // 기본 역할 부여
-                    .allowEmail(false) // 동의항목에 따른 설정
+                    .role(Role.MEMBER)
+                    .allowEmail(true)
+                    .allowAlarm(false)
                     .build();
             return userRepository.save(newUser);
         }

@@ -101,9 +101,6 @@ public class NaverOAuthService {
 
     private UserEntity saveOrUpdateUser(OAuth2UserInfo naverUserInfo) {
         String email = naverUserInfo.getEmail();
-        String profileImage = naverUserInfo.getProfileImage();
-
-        log.info("Naver User Email: {}", email);
 
         Optional<UserEntity> existingUser = userRepository.findByEmail(email);
 
@@ -115,10 +112,11 @@ public class NaverOAuthService {
             UserEntity newUser = UserEntity.builder()
                     .email(email)
                     .nickname(nickname)
-                    .profile(profileImage)
+                    .profile("default")
                     .socialType(SocialType.NAVER)
                     .role(Role.MEMBER)
-                    .allowEmail(false)
+                    .allowEmail(true)
+                    .allowAlarm(false)
                     .build();
             return userRepository.save(newUser);
         }

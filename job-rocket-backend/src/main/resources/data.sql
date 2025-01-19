@@ -1,6 +1,8 @@
+
 -- member 테이블 INSERT
-INSERT INTO member (email, role, nickname, profile, allow_email, refresh_token)
-VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, 'sample-refresh-token');
+INSERT INTO member (email, role, nickname, profile, allow_email, allow_alarm ,refresh_token)
+VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, false, 'refreshtoken');
+
 
 -- cs 테이블 INSERT
 INSERT INTO cs (qid, question, subcategory, suggested) VALUES

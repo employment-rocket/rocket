@@ -3,7 +3,6 @@ package rocket.jobrocketbackend.oauth.util;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.user.dto.UserDTO;
-import rocket.jobrocketbackend.common.entity.Role;
 
 import java.io.IOException;
 @Slf4j

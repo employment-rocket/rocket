@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.user.dto.UserDTO;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
@@ -38,7 +37,7 @@ public class JWTUtil {
     public String createRefreshToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + (expiration * 2)))
+                .setExpiration(new Date(System.currentTimeMillis() + (expiration * 168)))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }

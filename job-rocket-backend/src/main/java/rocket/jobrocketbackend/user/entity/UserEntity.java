@@ -8,11 +8,12 @@ import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.introduce.entity.IntroduceEntity;
 import rocket.jobrocketbackend.common.entity.SocialType;
+import rocket.jobrocketbackend.user.request.UserEditReq;
 
-import java.util.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -40,6 +41,10 @@ public class UserEntity {
 
     private String refreshToken;
 
+    @Column(nullable = false)
+    private Boolean allowAlarm=false;
+
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerEntity> answers = new ArrayList<>();
 
@@ -47,7 +52,7 @@ public class UserEntity {
     private List<IntroduceEntity> introduces = new ArrayList<>();
 
     @Builder
-    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail,String refreshToken) {
+    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail, String refreshToken, Boolean allowAlarm) {
         this.id=id;
         this.email = email;
         this.nickname = nickname;
@@ -56,22 +61,21 @@ public class UserEntity {
         this.allowEmail=allowEmail;
         this.role = role;
         this.refreshToken=refreshToken;
-    }
-
-
-
-    public UserEntity update(String nickname, String profile) {
-        if (!this.nickname.equals(nickname)) {
-            this.nickname = nickname;
-        }
-        if (!this.profile.equals(profile)) {
-            this.profile = profile;
-        }
-        return this;
+        this.allowAlarm=allowAlarm;
     }
 
     public UserEntity updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        return this;
+    }
+
+    public UserEntity updateAllowEmail(Boolean allowEmail){
+        this.allowEmail=allowEmail;
+        return this;
+    }
+
+    public UserEntity updateAllowAlarm(Boolean allowAlarm){
+        this.allowAlarm=allowAlarm;
         return this;
     }
 }

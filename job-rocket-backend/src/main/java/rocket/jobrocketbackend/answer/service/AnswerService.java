@@ -8,6 +8,9 @@ import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.dto.response.AnswerResDto;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.answer.exception.AnswerNotFoundException;
+import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
+import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRepository;
+import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.answer.repository.AnswerJpaRepository;
 import rocket.jobrocketbackend.common.entity.Category;
 import rocket.jobrocketbackend.question.cs.entity.CsEntity;
@@ -109,7 +112,7 @@ public class AnswerService {
     public Long addAnswer(Authentication authentication, Category category, Long qid, String content, boolean isIn) {
         Long memberId = extractMemberIdFromAuthentication(authentication);
         UserEntity user = userRepository.findById(memberId)
-                .orElseThrow(() -> new UserNotFoundException("user not found: " + memberId));
+                .orElseThrow(() -> new UserNotFoundException("user not found: ." + memberId));
         AnswerEntity answer = AnswerEntity.builder()
                 .member(user)
                 .category(category)

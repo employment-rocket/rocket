@@ -1,10 +1,8 @@
 package rocket.jobrocketbackend.schedule.repository;
 
-import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.userdetails.User;
 import rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.user.entity.UserEntity;

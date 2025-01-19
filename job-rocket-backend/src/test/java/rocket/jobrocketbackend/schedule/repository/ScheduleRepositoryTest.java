@@ -1,8 +1,6 @@
 package rocket.jobrocketbackend.schedule.repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Tuple;
-import jakarta.persistence.TupleElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +18,6 @@ import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -31,7 +28,7 @@ import static org.assertj.core.api.Assertions.tuple;
 class ScheduleRepositoryTest {
 
     @Autowired
-    private UserRepository  userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private ScheduleRepository scheduleRepository;
