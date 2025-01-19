@@ -10,7 +10,6 @@ CREATE TABLE member (
                         allow_alarm BOOLEAN,
                         refresh_token VARCHAR(255)
 );
-ALTER TABLE member ALTER COLUMN profile SET DATA TYPE TEXT;
 
 -- cs 테이블 생성
 CREATE TABLE cs (
