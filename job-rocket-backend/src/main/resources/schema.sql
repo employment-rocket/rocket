@@ -4,7 +4,7 @@ CREATE TABLE member (
                         email VARCHAR(255) NOT NULL,
                         role VARCHAR(50) NOT NULL,
                         nickname VARCHAR(100),
-                        profile TEXT,
+                        profile VARCHAR(255),
                         social_type varchar(255),
                         allow_email BOOLEAN,
                         allow_alarm BOOLEAN,

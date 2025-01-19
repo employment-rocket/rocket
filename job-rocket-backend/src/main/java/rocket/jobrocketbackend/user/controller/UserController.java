@@ -27,9 +27,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        if (customOAuth2User == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication is missing");
-        }
+
         Long memberId = customOAuth2User.getId();
 
             Map<String, Object> userProfile = userService.getUserProfileById(memberId);

@@ -16,6 +16,11 @@ import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
 import Site from "./pages/Site.jsx";
+import Notice from "./components/board/notice/Notice.jsx";
+import Review from "./components/board/review/Review.jsx";
+import Qa from "./components/board/question/Qa.jsx";
+import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
+import Free from "./components/board/free/Free.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -32,8 +37,14 @@ createRoot(document.getElementById("root")).render(
 				/>
 				<Route path="/" element={<Navigate to="/board" replace />} />
 				<Route path="/board" element={<Board />} />
-
-				<Route element={<PrivateRoute />}>
+						<Route index element={<Notice />} />
+						<Route path="free" element={<Free />} />
+						<Route element={<PrivateRoute />}>
+						<Route path="free/form" element={<FreeBoardForm />} />
+						<Route path="qa" element={<Qa />} />
+					<Route path="review" element={<Review />} />
+					</Route>
+						<Route element={<PrivateRoute />}>
 					<Route path="/schedule" element={<Schedule />}>
 						<Route index element={<ScheduleHome />} />
 						<Route path="statistics" element={<Statistics />} />
