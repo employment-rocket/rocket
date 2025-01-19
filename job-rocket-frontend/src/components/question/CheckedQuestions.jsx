@@ -75,7 +75,7 @@ const CheckedQuestions = ({ className, checkedQuestions, setCheckedQuestions, lo
             className={`${className} p-4 bg-white border-blue-400 rounded-lg shadow-md h-[75vh] flex flex-col`}
             style={{ fontFamily: "CookieBold", borderWidth: "3px" }}
         >
-            <h3 className="text-lg font-bold mb-4 text-center text-gray-500">선택한 질문</h3>
+            <h3 className="text-lg font-bold mb-4 text-center text-gray-500">선택한 질문 목록</h3>
             <hr style={{ borderTopWidth: "3px" }} className="border-blue-400 mb-4" />
             <div className="mb-4">
                 <input

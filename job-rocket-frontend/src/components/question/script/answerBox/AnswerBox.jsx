@@ -24,7 +24,7 @@ const AnswerBox = ({ categories, checkedQuestions = {}, onAddCheckedQuestion, on
         const fetchUncheckedAnswers = async () => {
             setLoading(true);
             try {
-                const data = await getUncheckedAnswers(1);
+                const data = await getUncheckedAnswers();
                 setUncheckedQuestions(data || {
                     csAnswerList: [],
                     personalAnswerList: [],

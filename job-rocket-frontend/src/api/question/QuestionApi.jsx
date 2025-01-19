@@ -1,9 +1,8 @@
 import api from "../api";
-export const getCheckedAnswers = async (memberId) => {
+
+export const getCheckedAnswers = async () => {
 	try {
-		const response = await api.get("/answers", {
-			params: { memberId },
-		});
+		const response = await api.get("/answers");
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching checked answers:", error);
@@ -11,11 +10,9 @@ export const getCheckedAnswers = async (memberId) => {
 	}
 };
 
-export const getUncheckedAnswers = async (memberId) => {
+export const getUncheckedAnswers = async () => {
 	try {
-		const response = await api.get("/answers/unchecked", {
-			params: { memberId },
-		});
+		const response = await api.get("/answers/unchecked");
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching unchecked answers:", error);
@@ -23,16 +20,10 @@ export const getUncheckedAnswers = async (memberId) => {
 	}
 };
 
-export const createAnswer = async ({
-	memberId,
-	category,
-	qid,
-	content = "",
-	isIn = true,
-}) => {
+export const createAnswer = async ({ category, qid, content = "", isIn = true }) => {
 	try {
 		const response = await api.post("/answers", null, {
-			params: { memberId, category: category, qid, content, isIn },
+			params: { category, qid, content, isIn },
 		});
 		return response.data;
 	} catch (error) {
@@ -65,10 +56,10 @@ export const toggleAnswerIsIn = async ({ answerId }) => {
 	}
 };
 
-export const deleteAnswer = async ({ memberId, category, qid }) => {
+export const deleteAnswer = async ({ category, qid }) => {
 	try {
 		const response = await api.delete("/answers", {
-			params: { memberId, category, qid },
+			params: { category, qid },
 		});
 		return response.data;
 	} catch (error) {
@@ -77,21 +68,25 @@ export const deleteAnswer = async ({ memberId, category, qid }) => {
 	}
 };
 
-export const getCsQuestions = async (page, memberId, subcategories) => {
+export const getCsQuestions = async (subcategories) => {
 	const params = new URLSearchParams();
-	params.append("memberId", memberId);
-	subcategories.forEach((subcategory) =>
-		params.append("subcategories", subcategory)
-	);
+	subcategories.forEach((subcategory) => params.append("subcategories", subcategory));
 
-	const response = await api.get(`/questions/cs/${page}`, { params });
-	return response.data;
+	try {
+		const response = await api.get("/questions/cs", { params });
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching CS questions:", error);
+		throw error;
+	}
 };
 
-export const getPersonalQuestions = async (page, memberId) => {
-	const params = new URLSearchParams();
-	params.append("memberId", memberId);
-
-	const response = await api.get(`/questions/personal/${page}`, { params });
-	return response.data;
+export const getPersonalQuestions = async () => {
+	try {
+		const response = await api.get("/questions/personal");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching personal questions:", error);
+		throw error;
+	}
 };

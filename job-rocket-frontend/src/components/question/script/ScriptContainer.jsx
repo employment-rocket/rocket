@@ -6,7 +6,6 @@ const ScriptContainer = ({ checkedQuestions, setCheckedQuestions }) => {
     const categories = [
         { label: "인성", value: "PERSONAL" },
         { label: "CS", value: "CS" },
-        { label: "기업", value: "COMPANY_QA" },
         { label: "자소서", value: "INTRODUCE_QA" },
         { label: "복기", value: "REVIEW_QA" },
     ];

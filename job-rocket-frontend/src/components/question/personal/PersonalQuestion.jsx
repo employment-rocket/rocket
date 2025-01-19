@@ -38,7 +38,6 @@ const PersonalQuestion = ({
             } else {
                 if (!newAnswerId) {
                     const createdAnswerId = await createAnswer({
-                        memberId: 1,
                         category: "PERSONAL",
                         qid,
                         content: currentAnswer,
@@ -72,7 +71,6 @@ const PersonalQuestion = ({
         try {
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
-                    memberId: 1,
                     category: "PERSONAL",
                     qid,
                     content: currentAnswer,

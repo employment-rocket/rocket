@@ -1,9 +1,12 @@
 import React from "react";
 
 const Introduce = ({ text, createdAt, onDelete, onSelect }) => {
-    const formatDate = (dateString) => {
+    const formatDate = (dateArray) => {
+        if (!Array.isArray(dateArray) || dateArray.length < 3) return "날짜 정보 없음";
+        const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+        const date = new Date(year, month - 1, day, hour, minute, second);
         const options = { year: "numeric", month: "long", day: "numeric" };
-        return new Date(dateString).toLocaleDateString("ko-KR", options);
+        return date.toLocaleDateString("ko-KR", options);
     };
 
     const handleDelete = (e) => {
