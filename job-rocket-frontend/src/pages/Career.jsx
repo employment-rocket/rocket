@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import ProfileCategory from "../components/profile/ProfileCategory";
 import CareerSection from "../components/career/CareerSection";
 import CareerMenuSection from "../components/career/careerCommon/CareerMenuSection";
-import PDFPanelSection from "../components/career/pdf/PDFPanelSection";
 import { getProfile } from "../api/profile/ProfileAPI";
+import PDFPanelSection from "../components/career/pdf/PDFPanelSection";
 
 const Career = () => {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ const Career = () => {
     PORTFOLIO: "포트폴리오",
     EXPERIENCE: "경력",
     CERTIFICATION: "자격증",
+    NEWSECTION: "새로운 섹션", // 추가 섹션 예제
   };
 
   useEffect(() => {
@@ -37,12 +38,13 @@ const Career = () => {
           const excludedSections = ["BASICINFO", "TAGSSELECTION", "INTERESTFIELD"];
           const formattedSections = response.sections
             .filter((section) => !excludedSections.includes(section.type))
-            .map((section, index) => ({
+            .map((section) => ({
               name: section.type,
               label: sectionLabels[section.type] || section.type,
               visible: true,
-              order: index,
-            }));
+              order: section.order,
+            }))
+            .sort((a, b) => a.order - b.order);
 
           setProfile(response);
           setSections(formattedSections);
@@ -97,11 +99,11 @@ const Career = () => {
     <div className="flex flex-col w-full h-full">
       <ProfileCategory />
       <div
-        className={`flex items-stretch flex-row w-full min-h-[calc(100vh-4rem)] py-10 px-4 gap-6 transition-all duration-300 ${isSidebarOpen ? "justify-start" : "justify-center"
-          }`}
+        className={`flex items-stretch flex-row w-full min-h-[calc(100vh-4rem)] py-10 px-4 gap-6 transition-all duration-300 ${
+          isSidebarOpen ? "justify-start" : "justify-center"
+        }`}
       >
         <div className={`flex w-full max-w-6xl h-full gap-4 ${isSidebarOpen ? "ml-4" : "mx-auto"}`}>
-
           <div className="flex flex-row w-full h-auto">
             <div className="w-3/4">
               <CareerSection

@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
@@ -12,43 +12,37 @@ const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref
       console.warn("Profile reference is not ready.");
       return null;
     }
-  
+
     setIsGenerating(true);
     try {
       const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth(); // A4 너비
-      const pageHeight = pdf.internal.pageSize.getHeight(); // A4 높이
-  
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
       const canvas = await html2canvas(profileRef.current, {
-        scale: 2, // 높은 해상도로 캔버스 생성
+        scale: 2,
         useCORS: true,
         scrollY: -window.scrollY,
       });
-  
+
       const imgData = canvas.toDataURL("image/png");
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
-  
-      // PDF 비율에 맞춘 이미지 높이 계산
-      const pdfHeight = (imgHeight * pageWidth) / imgWidth;
-  
-      let yOffset = 0; // 현재 이미지의 시작 위치
+
+      let yOffset = 0;
+
       while (yOffset < imgHeight) {
-        const heightLeft = imgHeight - yOffset;
-  
-        // 현재 페이지에서 잘라낼 이미지 높이
-        const cropHeight = Math.min(heightLeft, pageHeight * (imgWidth / pageWidth));
-  
-        // 잘라낸 캔버스를 PDF에 추가
+        const cropHeight = Math.min(imgHeight - yOffset, pageHeight * (imgWidth / pageWidth));
+
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = imgWidth;
         tempCanvas.height = cropHeight;
-  
+
         const ctx = tempCanvas.getContext("2d");
         ctx.drawImage(
           canvas,
           0,
-          yOffset, // 자르기 시작하는 위치
+          yOffset,
           imgWidth,
           cropHeight,
           0,
@@ -56,21 +50,20 @@ const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref
           imgWidth,
           cropHeight
         );
-  
+
         const imgPart = tempCanvas.toDataURL("image/png");
         pdf.addImage(imgPart, "PNG", 0, 0, pageWidth, (cropHeight * pageWidth) / imgWidth);
-  
+
         yOffset += cropHeight;
-  
         if (yOffset < imgHeight) {
-          pdf.addPage(); // 다음 페이지 추가
+          pdf.addPage();
         }
       }
-  
+
       const pdfBlob = pdf.output("blob");
       const previewUrl = URL.createObjectURL(pdfBlob);
       setPdfUrl(previewUrl);
-  
+
       return pdf;
     } catch (error) {
       console.error("Error generating PDF:", error);
@@ -79,6 +72,11 @@ const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref
       setIsGenerating(false);
     }
   };
+
+  // 상태 변경 시 PDF 재생성
+  useEffect(() => {
+    generatePDF();
+  }, [sections]);
 
   useImperativeHandle(ref, () => ({
     generatePDF,
@@ -91,29 +89,20 @@ const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref
     }
   };
 
-  const toggleSection = async (sectionName) => {
+  const toggleSection = (sectionName) => {
     setSections((prev) =>
       prev.map((section) =>
-        section.name === sectionName
-          ? { ...section, visible: !section.visible }
-          : section
+        section.name === sectionName ? { ...section, visible: !section.visible } : section
       )
     );
-
-    // 상태 업데이트 후 미리보기 즉시 반영
-    await generatePDF();
   };
 
-  const filteredSections = sections.filter(
-    (section) =>
-      section.name !== "BASICINFO" &&
-      section.name !== "TAGSSELECTION" &&
-      section.name !== "INTERESTFIELD"
-  );
+  const filteredSections = sections
+    .filter((section) => section.name !== "BASICINFO" && section.name !== "TAGSSELECTION" && section.name !== "INTERESTFIELD")
+    .sort((a, b) => a.order - b.order);
 
   return (
     <div className="fixed top-0 right-0 h-full bg-white shadow-lg w-full p-6 overflow-y-auto transition-transform">
-      {/* 헤더 영역 */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">PDF 설정</h2>
         <button

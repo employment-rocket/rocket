@@ -8,7 +8,6 @@ export const getProfile = async () => {
 
   try {
     const response = await api.get(`/profiles/${memberId}`);
-    console.log("getProfile API response:", response.data);
     return response.data;
   } catch (error) {
     const errorMessage = error.response?.data?.message || "프로필 조회 실패";
@@ -73,7 +72,6 @@ export const updatePublicStatus = async (isPublic) => {
   }
 
   try {
-    console.log(`Sending public status update: isPublic=${isPublic}`);
     const response = await api.post(`/profiles/${memberId}/status`, null, {
       params: { isPublic }, 
     });

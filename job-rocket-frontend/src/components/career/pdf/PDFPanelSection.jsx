@@ -18,7 +18,6 @@ const PDFPanelSection = ({
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* 사이드바 헤더 */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">PDF 설정</h2>
           <button
@@ -29,13 +28,12 @@ const PDFPanelSection = ({
           </button>
         </div>
 
-        {/* PDF 설정 내용 */}
         <PDFPanel
           ref={pdfPanelRef}
           profileRef={profileRef}
           sections={sections}
           setSections={setSections}
-          onClose={onClose} 
+          onClose={onClose}
         />
       </div>
     )
