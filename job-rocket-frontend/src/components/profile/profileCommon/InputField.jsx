@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputField = ({ label, value, name, handleChange, type = "text" }) => {
+const InputField = ({ label, value = "", name, handleChange, type = "text" }) => {
   const handleInputChange = (e) => handleChange(e);
 
   return (
@@ -11,7 +11,7 @@ const InputField = ({ label, value, name, handleChange, type = "text" }) => {
       {type === "textarea" ? (
         <textarea
           id={name}
-          value={value}
+          value={value || ""}
           onChange={handleInputChange}
           name={name}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm resize-none"
@@ -22,7 +22,7 @@ const InputField = ({ label, value, name, handleChange, type = "text" }) => {
         <input
           type={type}
           id={name}
-          value={value}
+          value={value || ""}
           onChange={handleInputChange}
           name={name}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"

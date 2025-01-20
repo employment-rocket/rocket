@@ -43,7 +43,7 @@ const Profile = () => {
             ? { ...form, active: true, order: serverSection.order }
             : { ...form, active: false };
         });
-
+    
         updatedForms.sort((a, b) => (a.order || 0) - (b.order || 0));
         setForms(updatedForms);
       } catch (error) {

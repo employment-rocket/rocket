@@ -4,6 +4,9 @@ import BasicInfoForm from "./../profileForms/BasicInfoForm";
 
 const BasicInfo = () => {
   const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    phone: "",
     status: "default",
   });
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
@@ -18,14 +21,19 @@ const BasicInfo = () => {
         );
 
         if (basicInfoSection) {
-          setProfile(basicInfoSection.data || {});
+          setProfile(basicInfoSection.data || {
+            name: "",
+            email: "",
+            phone: "",
+            status: "default",
+          });
           setHasSavedProfile(true);
         } else {
           setHasSavedProfile(false);
         }
-        setIsProfileLoaded(true);
       } catch (error) {
         console.error("프로필 조회 실패:", error);
+      } finally {
         setIsProfileLoaded(true);
       }
     };
