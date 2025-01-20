@@ -28,8 +28,7 @@ const LanguageView = () => {
 
   return (
     <div className="p-8 bg-white rounded-lg shadow-md max-w-6xl mx-auto space-y-6 text-left">
-
-      {/* 외국어 목록이 있을 경우 보여주기 */}
+      
       {languages.length > 0 ? (
         languages.map((language, index) => (
           <LanguageItem

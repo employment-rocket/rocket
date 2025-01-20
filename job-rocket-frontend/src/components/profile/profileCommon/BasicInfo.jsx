@@ -4,7 +4,7 @@ import BasicInfoForm from "./../profileForms/BasicInfoForm";
 
 const BasicInfo = () => {
   const [profile, setProfile] = useState({
-    status: "default", // 기본 상태 "선택"
+    status: "default",
   });
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [hasSavedProfile, setHasSavedProfile] = useState(false);

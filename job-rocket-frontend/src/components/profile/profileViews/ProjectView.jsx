@@ -29,8 +29,6 @@ const ProjectView = () => {
   return (
     <div className="p-8 bg-white rounded-lg shadow-md max-w-6xl mx-auto space-y-6">
   
-
-      {/* 프로젝트 목록이 있을 경우 보여주기 */}
       {projects.length > 0 ? (
         projects.map((project, index) => (
           <ProjectItem

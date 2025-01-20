@@ -17,7 +17,6 @@ const BasicInfoForm = ({
       <div className="flex-1 space-y-6">
         <h2 className="text-2xl font-semibold">프로필 정보</h2>
 
-        {/* 이름 입력 */}
         <InputField
           label="이름"
           value={profile?.name}
@@ -25,7 +24,6 @@ const BasicInfoForm = ({
           handleChange={handleChange}
         />
 
-        {/* 직업 선택과 구직 상태 */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <JobSelector selectedJob={profile?.job} onJobSelect={setJob} />
@@ -52,7 +50,6 @@ const BasicInfoForm = ({
           </div>
         </div>
 
-        {/* 경력 및 회사명 */}
         {profile?.status !== "(신입) 구직 중이에요" && profile?.status !== "default" && (
           <div className="grid grid-cols-2 gap-4">
             <InputField
@@ -70,7 +67,6 @@ const BasicInfoForm = ({
           </div>
         )}
 
-        {/* 휴대폰 번호와 이메일 */}
         <div className="grid grid-cols-2 gap-4">
           <InputField
             label="휴대폰 번호"
@@ -86,7 +82,6 @@ const BasicInfoForm = ({
           />
         </div>
 
-        {/* 주소 입력 */}
         <div>
           <label
             htmlFor="address"
@@ -100,7 +95,6 @@ const BasicInfoForm = ({
           />
         </div>
 
-        {/* 한줄 소개 */}
         <div>
           <label
             htmlFor="introduction"
@@ -117,11 +111,10 @@ const BasicInfoForm = ({
             rows={3}
             placeholder="채용 담당자에게 특별한 인상을 줄 수 있는 소개를 작성해 보세요."
           />
-          <p className="mt-1 text-sm text-gray-500">600자 이내</p>
+          <p className="mt-1 text-sm text-gray-500">300자 이내</p>
         </div>
       </div>
 
-      {/* 프로필 이미지 */}
       <ProfileImage
         profileImage={profile?.profileImage}
         setProfileImage={setProfileImage}

@@ -8,7 +8,6 @@ const ProfileView = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // 휴대폰 번호 포맷팅 함수
   const formatPhoneNumber = (phoneNumber) => {
     if (!phoneNumber) return "휴대폰 번호 없음";
     const cleaned = ("" + phoneNumber).replace(/\D/g, "");
@@ -19,7 +18,6 @@ const ProfileView = () => {
     return phoneNumber;
   };
 
-  // 프로필 조회 함수
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -54,7 +52,7 @@ const ProfileView = () => {
       <h2 className="text-2xl font-semibold mb-6">프로필</h2>
 
       <div className="flex flex-row items-start space-x-8">
-        {/* 좌측 정보 */}
+
         <div className="flex-1 space-y-4 text-left">
           <div className="flex items-center">
             <label className="text-lg font-bold text-gray-700 w-32">이름</label>
@@ -104,7 +102,7 @@ const ProfileView = () => {
           </div>
         </div>
 
-        {/* 우측 프로필 이미지 */}
+
         <div className="w-48 h-60 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
           <img
             src={profile?.profileImage || "/path/to/default-image.jpg"}
