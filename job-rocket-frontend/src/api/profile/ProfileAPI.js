@@ -66,3 +66,42 @@ export const updateOrder = async (reorderedSections) => {
   }
 };
 
+export const updatePublicStatus = async (isPublic) => {
+  const memberId = localStorage.getItem("memberId") || 2;
+  if (!memberId) {
+    throw new Error("로그인된 사용자 ID가 없습니다.");
+  }
+
+  try {
+    console.log(`Sending public status update: isPublic=${isPublic}`);
+    const response = await api.post(`/profiles/${memberId}/status`, null, {
+      params: { isPublic }, 
+    });
+    console.log("Public status updated successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update public status:", error);
+    throw error;
+  }
+};
+
+
+export const getPublicProfiles = async () => {
+  try {
+    const response = await api.get("/profiles/public"); 
+    return response.data; 
+  } catch (error) {
+    throw new Error("공개 프로필 조회 실패");
+  }
+};
+
+export const getPublicProfileById = async (memberId) => {
+  try {
+    const response = await api.get(`/profiles/public/${memberId}`);
+    return response.data; 
+  } catch (error) {
+    console.error(`ID ${memberId} 프로필 조회 실패:`, error);
+    throw new Error("프로필 조회 중 오류가 발생했습니다.");
+  }
+};
+
