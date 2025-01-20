@@ -21,6 +21,7 @@ import Review from "./components/board/review/Review.jsx";
 import Qa from "./components/board/question/Qa.jsx";
 import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
 import Free from "./components/board/free/Free.jsx";
+import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -32,20 +33,23 @@ createRoot(document.getElementById("root")).render(
 					path="/login/oauth2/callback/kakao"
 					element={<KakaoLogin />}
 				/>
-				<Route path="/login/oauth2/code/naver" 
-					element={<NaverLogin />} 
+				<Route
+					path="/login/oauth2/code/naver"
+					element={<NaverLogin />}
 				/>
 				<Route path="/" element={<Navigate to="/board" replace />} />
-				<Route path="/board" element={<Board />} >
-						<Route index element={<Notice />} />
-						<Route path="free" element={<Free />} />
-						<Route element={<PrivateRoute />}>
+				<Route path="/board" element={<Board />}>
+					<Route index element={<Notice />} />
+					<Route path="free" element={<Free />} />
+					<Route path="free/:boardId" element={<FreeBoardView />} />
+
+					<Route element={<PrivateRoute />}>
 						<Route path="free/form" element={<FreeBoardForm />} />
-				</Route>
-						<Route path="qa" element={<Qa />} />
-					<Route path="review" element={<Review />} />
 					</Route>
-						<Route element={<PrivateRoute />}>
+					<Route path="qa" element={<Qa />} />
+					<Route path="review" element={<Review />} />
+				</Route>
+				<Route element={<PrivateRoute />}>
 					<Route path="/schedule" element={<Schedule />}>
 						<Route index element={<ScheduleHome />} />
 						<Route path="statistics" element={<Statistics />} />
