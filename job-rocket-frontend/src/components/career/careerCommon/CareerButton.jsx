@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {  getProfile } from "../../../api/profile/ProfileAPI";
+import { updatePublicStatus, getProfile } from "../../../api/profile/ProfileAPI";
 
 const CareerButton = ({ onStatusChange }) => {
   const [profileRegister, setProfileRegister] = useState(false); 

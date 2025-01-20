@@ -55,5 +55,17 @@ public class ProfileController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/public")
+	public ResponseEntity<List<ProfileResponseDto>> getPublicProfiles() {
+		List<ProfileResponseDto> publicProfiles = profileService.getPublicProfiles();
+		return ResponseEntity.ok(publicProfiles);
+	}
+
+	@GetMapping("/public/{memberId}")
+	public ResponseEntity<ProfileResponseDto> getPublicProfileById(@PathVariable Long memberId) {
+		ProfileResponseDto profile = profileService.getPublicProfileById(memberId);
+		return ResponseEntity.ok(profile);
+	}
+
 
 }

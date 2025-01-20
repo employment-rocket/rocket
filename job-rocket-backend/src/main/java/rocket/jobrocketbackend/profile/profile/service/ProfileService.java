@@ -1,6 +1,7 @@
 package rocket.jobrocketbackend.profile.profile.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -14,6 +15,7 @@ import rocket.jobrocketbackend.profile.profile.entity.ProfileEntity;
 import rocket.jobrocketbackend.profile.profile.entity.Section;
 import rocket.jobrocketbackend.profile.profile.entity.SectionType;
 import rocket.jobrocketbackend.profile.profile.exception.ProfileNotFoundException;
+import rocket.jobrocketbackend.profile.profile.exception.ProfileNotPublicException;
 import rocket.jobrocketbackend.profile.profile.repository.ProfileRepository;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
@@ -33,8 +35,7 @@ public class ProfileService
 	}
 
 	public ProfileResponseDto getProfile(Long memberId) {
-
-		UserEntity user = userRepository.findById(memberId)
+		userRepository.findById(memberId)
 			.orElseThrow(() -> new UserNotFoundException("User not found for memberId: " + memberId));
 
 		ProfileEntity profile = profileRepository.findByMemberId(memberId)
@@ -63,7 +64,7 @@ public class ProfileService
 	}
 
 	public ProfileResponseDto updateSection(Long memberId, ProfileRequestDto request) {
-		UserEntity member = userRepository.findById(memberId)
+		userRepository.findById(memberId)
 			.orElseThrow(() -> new UserNotFoundException("User not found for memberId: " + memberId));
 
 		ProfileEntity profile = profileRepository.findByMemberId(memberId)
@@ -129,9 +130,28 @@ public class ProfileService
 		return mapToResponse(updatedProfile);
 	}
 
+	public List<ProfileResponseDto> getPublicProfiles() {
+		List<ProfileEntity> publicProfiles = profileRepository.findAllByIsPublic(true);
+
+		return publicProfiles.stream()
+			.map(this::mapToResponse)
+			.toList();
+	}
+
+	public ProfileResponseDto getPublicProfileById(Long memberId) {
+		ProfileEntity profile = profileRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new ProfileNotFoundException("Profile not found for ID: " + memberId));
+
+		if (!profile.isPublic()) {
+			throw new ProfileNotPublicException("This profile is not public.");
+		}
+
+		return mapToResponse(profile);
+	}
+
 	private ProfileResponseDto mapToResponse(ProfileEntity profile) {
 		List<Section> sortedSections = profile.getSections().stream()
-			.sorted((s1, s2) -> Integer.compare(s1.getOrder(), s2.getOrder()))
+			.sorted(Comparator.comparingInt(Section::getOrder))
 			.toList();
 
 		return ProfileResponseDto.builder()
