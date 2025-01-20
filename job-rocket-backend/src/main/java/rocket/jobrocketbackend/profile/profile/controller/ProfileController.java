@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,12 @@ public class ProfileController {
 		ProfileResponseDto response = profileService.updateOrder(memberId, reorderedSections);
 		return ResponseEntity.ok(response);
 	}
+
+	@PostMapping("/{memberId}/status")
+	public ResponseEntity<Void> updatePublicStatus(@PathVariable Long memberId, @RequestParam boolean isPublic) {
+		profileService.updatePublicStatus(memberId, isPublic);
+		return ResponseEntity.ok().build();
+	}
+
 
 }

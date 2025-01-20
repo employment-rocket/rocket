@@ -32,13 +32,21 @@ public class ProfileEntity {
 			.build();
 	}
 
-	// Immutable 방식으로 sections 업데이트
 	public ProfileEntity withUpdatedSections(List<Section> updatedSections) {
 		return ProfileEntity.builder()
 			.id(this.id)
 			.memberId(this.memberId)
 			.sections(updatedSections)
 			.isPublic(this.isPublic)
+			.build();
+	}
+
+	public ProfileEntity withUpdatedPublicStatus(boolean isPublic) {
+		return ProfileEntity.builder()
+			.id(this.id)
+			.memberId(this.memberId)
+			.sections(this.sections)
+			.isPublic(isPublic)
 			.build();
 	}
 

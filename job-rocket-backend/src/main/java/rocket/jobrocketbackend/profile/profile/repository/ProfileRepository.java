@@ -9,5 +9,5 @@ import rocket.jobrocketbackend.profile.profile.entity.ProfileEntity;
 
 public interface ProfileRepository extends MongoRepository<ProfileEntity, String> {
 	Optional<ProfileEntity> findByMemberId(Long memberId);
-
+	List<ProfileEntity> findAllByIsPublic(boolean isPublic);
 }

@@ -118,6 +118,17 @@ public class ProfileService
 		return mapToResponse(updatedProfile);
 	}
 
+	public ProfileResponseDto updatePublicStatus(Long memberId, boolean isPublic) {
+
+		ProfileEntity updatedProfile = profileRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new ProfileNotFoundException("Profile not found for memberId: " + memberId))
+			.withUpdatedPublicStatus(isPublic);
+
+		profileRepository.save(updatedProfile);
+
+		return mapToResponse(updatedProfile);
+	}
+
 	private ProfileResponseDto mapToResponse(ProfileEntity profile) {
 		List<Section> sortedSections = profile.getSections().stream()
 			.sorted((s1, s2) -> Integer.compare(s1.getOrder(), s2.getOrder()))
