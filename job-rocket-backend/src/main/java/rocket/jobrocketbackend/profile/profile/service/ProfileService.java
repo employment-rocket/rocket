@@ -2,6 +2,9 @@ package rocket.jobrocketbackend.profile.profile.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -82,6 +85,37 @@ public class ProfileService
 			.order(request.getOrder())
 			.build());
 		return updatedSections;
+	}
+
+	public ProfileResponseDto updateOrder(Long memberId, List<Section> reorderedSections) {
+		if (reorderedSections == null || reorderedSections.isEmpty()) {
+			throw new IllegalArgumentException("Reordered sections list cannot be null or empty");
+		}
+
+		userRepository.findById(memberId)
+			.orElseThrow(() -> new UserNotFoundException("User not found for memberId: " + memberId));
+
+		ProfileEntity profileEntity = profileRepository.findByMemberId(memberId)
+			.orElseThrow(() -> new ProfileNotFoundException("Profile not found for memberId: " + memberId));
+
+		Map<SectionType, Section> reorderedMap = reorderedSections.stream()
+			.collect(Collectors.toMap(Section::getType, Function.identity()));
+
+		List<Section> updatedSections = profileEntity.getSections().stream()
+			.map(existingSection -> reorderedMap.containsKey(existingSection.getType())
+				? existingSection.withUpdatedOrder(reorderedMap.get(existingSection.getType()).getOrder())
+				: existingSection)
+			.collect(Collectors.toList());
+
+		reorderedSections.stream()
+			.filter(reorderedSection -> updatedSections.stream()
+				.noneMatch(existingSection -> existingSection.getType().equals(reorderedSection.getType())))
+			.forEach(updatedSections::add);
+
+		ProfileEntity updatedProfile = profileEntity.withUpdatedSections(updatedSections);
+		profileRepository.save(updatedProfile);
+
+		return mapToResponse(updatedProfile);
 	}
 
 	private ProfileResponseDto mapToResponse(ProfileEntity profile) {

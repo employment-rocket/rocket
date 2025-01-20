@@ -1,5 +1,7 @@
 package rocket.jobrocketbackend.profile.profile.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
+import rocket.jobrocketbackend.profile.profile.entity.Section;
 import rocket.jobrocketbackend.profile.profile.service.ProfileService;
 
 @RestController
@@ -36,5 +39,13 @@ public class ProfileController {
 		return ResponseEntity.ok(profileService.updateSection(memberId, request));
 	}
 
+	@PutMapping("/{memberId}/order")
+	public ResponseEntity<ProfileResponseDto> updateOrder(
+		@PathVariable Long memberId,
+		@RequestBody List<Section> reorderedSections) {
+
+		ProfileResponseDto response = profileService.updateOrder(memberId, reorderedSections);
+		return ResponseEntity.ok(response);
+	}
 
 }
