@@ -58,18 +58,25 @@ public class UserService {
         String fileExtension = Objects.requireNonNull(file.getOriginalFilename())
                 .substring(file.getOriginalFilename().lastIndexOf("."));
 
-
         String fileName = userId + fileExtension;
         Path filePath = Paths.get(UPLOAD_DIR + fileName);
         Files.createDirectories(filePath.getParent());
         Files.write(filePath, file.getBytes());
 
-        String fileUrl = "/uploads/" + fileName;
+        String fileUrl = fileName;
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException("User with ID" +userId + "not found"));
+
+        user.updateProfileImage(fileUrl);
+        userRepository.save(user);
     }
 
 
     public byte[] getImageBytes(Long userId) throws FileNotFoundException {
-        Path filePath = Paths.get(UPLOAD_DIR, userId + ".jpg");
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException("User ID"+ userId +"not found"));
+
+        Path filePath = Paths.get(UPLOAD_DIR, user.getProfile());
 
         if (!Files.exists(filePath)) {
             throw new FileNotFoundException("File not found: " + filePath.toString());
