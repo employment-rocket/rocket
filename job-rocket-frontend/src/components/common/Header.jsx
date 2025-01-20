@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router";
 import DropdownMenu from "./DropdownMenu";
 import {getProfileImage} from "../../api/user/UserApi";
 import useProfileStore from "../../store/profileImageStore";
+import Alarm from "../alarm/Alarm";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -16,6 +17,9 @@ const Header = () => {
 	const [isLogin, setLogin] = useState(false);
 	const profileImage = useProfileStore((state) => state.profileImage);
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
+	const [isAlarmOpen, setAlarmOpen] = useState(false);
+
+
 
 	useEffect(()=>{
 		const token = localStorage.getItem("AccessToken");
@@ -134,7 +138,12 @@ const Header = () => {
 				/>
 				{isLogin &&(
 					<>
-					<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" />
+					<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" onClick={() => setAlarmOpen(true)}  />
+					{isAlarmOpen && (
+        <Alarm 
+          onClose={() => setAlarmOpen(false)} 
+        />
+      )}
 					<DropdownMenu
               			isOpen={isDropdownOpen}
               			onClose={() => setDropdownOpen(false)}

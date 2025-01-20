@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rocket.jobrocketbackend.alarm.service.AlarmService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,8 +27,8 @@ public class AlarmController {
     public ResponseEntity<?> getAlarmData(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
 
         Long memberId = customOAuth2User.getId();
+        List<Map<String, Object>> alarmData = alarmService.getUserAlarmData(memberId);
 
-        Map<String, Object> alarmData = alarmService.getUserAlarmData(memberId);
         return ResponseEntity.ok(alarmData);
     }
 }

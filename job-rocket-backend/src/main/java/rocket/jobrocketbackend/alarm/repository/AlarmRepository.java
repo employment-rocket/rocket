@@ -5,10 +5,12 @@ import org.springframework.stereotype.Repository;
 import rocket.jobrocketbackend.alarm.entity.AlarmEntity;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
 
-    Optional<AlarmEntity> findById(Long id);
+
+    List<AlarmEntity> findByUserId(Long memberId);
 }
