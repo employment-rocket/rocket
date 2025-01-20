@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import rocket.jobrocketbackend.common.entity.Profile;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.common.entity.SocialType;
 import rocket.jobrocketbackend.oauth.userInfo.KakaoOAuth2UserInfo;
@@ -133,7 +134,7 @@ public class KakaoOAuthService {
             UserEntity newUser = UserEntity.builder()
                     .email(email)
                     .nickname(nickname)
-                    .profile("default")
+                    .profile(Profile.DEFAULT.getFileName())
                     .socialType(SocialType.KAKAO)
                     .role(Role.MEMBER)
                     .allowEmail(true)

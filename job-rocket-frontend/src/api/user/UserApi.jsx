@@ -35,9 +35,9 @@ export const getUserNicknameAndId = async () => {
     }
   };
 
-  export const getProfileImage = async (userId) => {
+  export const getProfileImage = async () => {
     try {
-      const response = await api.get(`user/uploads/${userId}`, {
+      const response = await api.get(`user/file/upload`, {
         responseType: 'arraybuffer' 
       });
       

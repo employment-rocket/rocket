@@ -4,6 +4,7 @@ import { getUserProfile } from "../api/user/UserApi";
 import { useParams } from "react-router";
 import logo from "../assets/default-profile.png";
 import { uploadProfileFile, getProfileImage, updatedAllowEmail, updatedAllowAlarm} from "../api/user/UserApi"
+import useProfileStore from "../store/profileImageStore";
 
 const MyPage = () => {
   const {userId} = useParams();
@@ -12,7 +13,7 @@ const MyPage = () => {
   const [allowAlarm, setAllowAlarm] = useState();
   const [nickname, setNickname] = useState();
   const [profile, setProfile] = useState();
-    
+  const setProfileImage = useProfileStore((state) => state.setProfileImage);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -27,9 +28,8 @@ const MyPage = () => {
       if(data.profile!=='default'){
         const fetchImage = async () => {
             try {
-                
-              const imageUrl = await getProfileImage(userId);
-            setProfile(imageUrl);
+              const imageUrl = await getProfileImage();
+              setProfile(imageUrl);
               
             } catch (error) {
               console.error("Failed to fetch profile image:", error);
@@ -79,6 +79,7 @@ const MyPage = () => {
       await uploadProfileFile(file,userId);
 
       const imageUri = await getProfileImage(userId);
+      setProfileImage(imageUri); 
       setProfile(imageUri);
     } catch (error) {
       console.error("파일 업로드 실패:", error);

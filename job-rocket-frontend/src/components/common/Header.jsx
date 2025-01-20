@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
-import profile from "../../assets/default-profile.png";
+import defaultProfile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
 import { useNavigate, useLocation } from "react-router";
 import DropdownMenu from "./DropdownMenu";
+import {getProfileImage} from "../../api/user/UserApi";
+import useProfileStore from "../../store/profileImageStore";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -12,17 +14,36 @@ const Header = () => {
 	const [isModalOpen, setModalOpen] = useState(false);
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
 	const [isLogin, setLogin] = useState(false);
+	const profileImage = useProfileStore((state) => state.profileImage);
+	const setProfileImage = useProfileStore((state) => state.setProfileImage);
 
 	useEffect(()=>{
 		const token = localStorage.getItem("AccessToken");
 		setLogin(!!token);
-	},[location]);
+		if (token) {
+			const fetchProfileImage = async () => {
+			  try {
+				const imageUrl = await getProfileImage();
+				console.log("image: ", imageUrl);
+				setProfileImage(imageUrl);
+			  } catch (error) {
+				console.error("Error fetching profile image:", error);
+				setProfileImage('default');
+			  }
+			};
+			fetchProfileImage();
+		  } else {
+			setProfileImage('default');
+		  }
+		}, [location, setProfileImage]);
+  
 
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
 		localStorage.removeItem("RefreshToken");
 		setLogin(false);
 		setDropdownOpen(false);
+		setProfileImage('default');
 		navigate("/");
 	  };
 	const handleProfileClick = () => {
@@ -106,9 +127,9 @@ const Header = () => {
 
 			<div className="flex items-center space-x-4 ml-auto">
 				<img
-					src={profile}
+  					src={profileImage ==='default'?defaultProfile : profileImage}
 					alt="프로필이미지"
-					className="h-6 w-6 cursor-pointer"
+					className="h-6 w-6 cursor-pointer rounded-full"
 					onClick={handleProfileClick}
 				/>
 				{isLogin &&(
