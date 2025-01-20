@@ -1,7 +1,8 @@
 
 -- member 테이블 INSERT
 INSERT INTO member (email, role, nickname, profile, allow_email, allow_alarm ,refresh_token)
-VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, false, 'refreshtoken');
+VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, false, 'refreshtoken'),
+('woneveryday@naver.com', 'MEMBER', '위험한 흰색 토끼', 'default.png', true, false, '');
 
 
 -- cs 테이블 INSERT
@@ -67,3 +68,8 @@ VALUES
     ('팀 프로젝트에서 갈등을 어떻게 해결했나요?', 1),
     ('리더로서의 경험은 무엇인가요?', 1),
     ('이 직무에 필요한 핵심 역량은 무엇이라고 생각하나요?', 1);
+
+INSERT INTO alarm (type, content, alarm_date, member_id)
+VALUES ('NOTE', '쪽지가 도착했습니다','2025-01-20','2'),
+       ('SCHEDULE', '농협은행 1차면접 마감 하루 남았습니다','2025-01-20','2'),
+       ('COMMENT', '나 취직할수 있을까? 게시글에 소심한 하얀 새가 댓글을 달았습니다','2025-01-20','2');

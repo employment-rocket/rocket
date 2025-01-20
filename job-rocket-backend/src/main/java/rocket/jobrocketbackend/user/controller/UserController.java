@@ -32,7 +32,6 @@ public class UserController {
 
             Map<String, Object> userProfile = userService.getUserProfileById(memberId);
             return ResponseEntity.ok(userProfile);
-
     }
 
     @GetMapping("/mypage/{userId}")
