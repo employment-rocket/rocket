@@ -12,12 +12,19 @@ const FreeBoardView = () => {
 	const boardId = useParams("boardId");
 
 	return (
-		<div className="flex flex-col p-3 border rounded-lg space-y-3">
-			<div className="flex justify-between">
-				<div>{mock.title}</div>
-				<div className="flex">
-					<div>수정</div>
-					<div>삭제</div>
+		<div
+			className="flex flex-col p-3 border rounded-lg space-y-3"
+			style={{ fontFamily: "CookieRegular" }}
+		>
+			<div className="flex justify-between items-center">
+				<div style={{ fontSize: "1.3rem" }}>{mock.title}</div>
+				<div className="flex gap-2 items-center">
+					<div className="bg-blue-500 text-white p-2 rounded-lg">
+						수정
+					</div>
+					<div className="border text-red-500 p-2 rounded-lg">
+						삭제
+					</div>
 				</div>
 			</div>
 			<div className="flex justify-between">
@@ -33,7 +40,9 @@ const FreeBoardView = () => {
 					placeholder="댓글을 달아주세요"
 					className="grow"
 				/>
-				<div>등록</div>
+				<div className="bg-blue-500 text-white rounded-lg p-2">
+					등록
+				</div>
 			</div>
 		</div>
 	);

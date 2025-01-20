@@ -38,6 +38,7 @@ const Free = () => {
 				<div className="grid grid-cols-2 gap-10">
 					{data.map((item) => (
 						<div
+							className="cursor-pointer"
 							key={item.id}
 							onClick={() => navigate(`/board/free/${item.id}`)}
 						>
