@@ -4,7 +4,7 @@ const FreeComment = () => {
 	return (
 		<div className="flex flex-col border rounded-lg p-3 gap-2">
 			<div className="flex justify-between ">
-				<div>청년백수</div>
+				<div>노년백수</div>
 				<div>2025-01-23</div>
 			</div>
 			<div>
