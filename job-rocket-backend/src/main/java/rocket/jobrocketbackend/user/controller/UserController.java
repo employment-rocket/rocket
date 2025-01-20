@@ -48,15 +48,16 @@ public class UserController {
                                              @RequestParam("userId") Long userId) throws IOException {
 
             userService.saveFile(file, userId);
+
             return ResponseEntity.ok("프로필 사진이 정상적으로 등록되었습니다");
 
     }
 
 
-    @GetMapping("/uploads/{userId}")
+    @GetMapping("/file/upload")
     @ResponseBody
-    public ResponseEntity<byte[]> getImage(@PathVariable("userId") Long userId) throws FileNotFoundException {
-        byte[] imageBytes = userService.getImageBytes(userId);
+    public ResponseEntity<byte[]> getImage(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws FileNotFoundException {
+        byte[] imageBytes = userService.getImageBytes(customOAuth2User.getId());
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(imageBytes);

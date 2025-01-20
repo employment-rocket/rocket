@@ -78,4 +78,9 @@ public class UserEntity {
         this.allowAlarm=allowAlarm;
         return this;
     }
+
+    public UserEntity updateProfileImage(String profileImage){
+        this.profile=profileImage;
+        return this;
+    }
 }
