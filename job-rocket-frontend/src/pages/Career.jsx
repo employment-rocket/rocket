@@ -26,7 +26,6 @@ const Career = () => {
     PORTFOLIO: "포트폴리오",
     EXPERIENCE: "경력",
     CERTIFICATION: "자격증",
-    NEWSECTION: "새로운 섹션", // 추가 섹션 예제
   };
 
   useEffect(() => {

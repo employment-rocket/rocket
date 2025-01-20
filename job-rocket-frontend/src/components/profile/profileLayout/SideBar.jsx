@@ -154,17 +154,7 @@ const Sidebar = ({ forms, setForms, toggleForm }) => {
           label="프로필 등록"
           onToggle={() => handleSidebarToggle("hubRegister")}
         />
-        <SidebarToggle
-          isActive={toggleStates.share}
-          label="프로필 공유"
-          onToggle={() => handleSidebarToggle("share")}
-        />
-        <SidebarToggle
-          isActive={toggleStates.showContact}
-          label="주소, 연락처 보이기"
-          onToggle={() => handleSidebarToggle("showContact")}
-          isDisabled={!toggleStates.share}
-        />
+       
       </div>
 
       <div className="border-t border-gray-300 my-4"></div>

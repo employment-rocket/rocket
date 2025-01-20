@@ -17,7 +17,7 @@ const CareerMenu = ({ onPDFToggle, isPDFOpen, sections, scrollToSection }) => {
       </button>
 
 
-      <h3 className="text-lg font-bold text-gray-800 mb-4 mt-10">섹션 이동</h3>
+      <h3 className="text-lg font-bold text-gray-800 mb-4 mt-10">간편 이동</h3>
       {sections && sections.length > 0 ? (
         <ul className="space-y-2">
        
