@@ -69,3 +69,11 @@ CREATE TABLE free_board (
                                    member_id BIGINT NOT NULL,
                                    FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
 );
+CREATE TABLE alarm (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    type varchar(20) NOT NULL,
+    content varchar(255) NOT NULL,
+    alarm_date date NOT NULL,
+    member_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member(member_id) ON DELETE CASCADE
+);

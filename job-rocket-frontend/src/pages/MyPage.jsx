@@ -142,7 +142,7 @@ const MyPage = () => {
 
 <div className="flex items-center mb-6 w-full px-6">
   <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-    알람 수신
+    알람 수신 동의
   </div>
   <div className="ml-4">
     <label className="relative inline-flex items-center cursor-pointer">
@@ -160,7 +160,7 @@ const MyPage = () => {
 
 <div className="flex items-center w-full px-6 mb-1">
   <div className="w-[164px] h-[50px] text-xl text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-    이메일 수신
+    이메일 수신 동의
   </div>
   <div className="ml-4">
     <label className="relative inline-flex items-center cursor-pointer">
