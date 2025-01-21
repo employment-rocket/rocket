@@ -5,7 +5,7 @@ import defaultProfile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
 import { useNavigate, useLocation } from "react-router";
 import DropdownMenu from "./DropdownMenu";
-import {getProfileImage} from "../../api/user/UserApi";
+import { getProfileImage } from "../../api/user/UserApi";
 import useProfileStore from "../../store/profileImageStore";
 import Alarm from "../alarm/Alarm";
 
@@ -21,26 +21,26 @@ const Header = () => {
 
 
 
-	useEffect(()=>{
+	useEffect(() => {
 		const token = localStorage.getItem("AccessToken");
 		setLogin(!!token);
 		if (token) {
 			const fetchProfileImage = async () => {
-			  try {
-				const imageUrl = await getProfileImage();
-				console.log("image: ", imageUrl);
-				setProfileImage(imageUrl);
-			  } catch (error) {
-				console.error("Error fetching profile image:", error);
-				setProfileImage('default');
-			  }
+				try {
+					const imageUrl = await getProfileImage();
+					console.log("image: ", imageUrl);
+					setProfileImage(imageUrl);
+				} catch (error) {
+					console.error("Error fetching profile image:", error);
+					setProfileImage('default');
+				}
 			};
 			fetchProfileImage();
-		  } else {
+		} else {
 			setProfileImage('default');
-		  }
-		}, [location, setProfileImage]);
-  
+		}
+	}, [location, setProfileImage]);
+
 
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
@@ -49,19 +49,19 @@ const Header = () => {
 		setDropdownOpen(false);
 		setProfileImage('default');
 		navigate("/");
-	  };
+	};
 	const handleProfileClick = () => {
 		if (isLogin) {
-		  setDropdownOpen(!isDropdownOpen);
+			setDropdownOpen(!isDropdownOpen);
 		} else {
-		  setModalOpen(true);
+			setModalOpen(true);
 		}
 	};
 
 	const handleLogin = () => {
 		setLogin(true);
 		setModalOpen(false);
-	  };
+	};
 
 	return (
 		<div
@@ -78,51 +78,46 @@ const Header = () => {
 
 			<div className="flex space-x-6 ml-6 text-base">
 				<div
-					className={`cursor-pointer ${
-						location.pathname.startsWith("/board")
+					className={`cursor-pointer ${location.pathname.startsWith("/board")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-					}`}
+						}`}
 					onClick={() => navigate("/board")}
 				>
 					게시판
 				</div>
 				<div
-					className={`cursor-pointer ${
-						location.pathname.startsWith("/schedule")
+					className={`cursor-pointer ${location.pathname.startsWith("/schedule")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-					}`}
+						}`}
 					onClick={() => navigate("/schedule")}
 				>
 					일정 관리
 				</div>
 				<div
-					className={`cursor-pointer ${
-						location.pathname.startsWith("/question")
+					className={`cursor-pointer ${location.pathname.startsWith("/question")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-					}`}
+						}`}
 					onClick={() => navigate("/question")}
 				>
 					면접 질문
 				</div>
 				<div
-					className={`cursor-pointer ${
-						location.pathname.startsWith("/site")
+					className={`cursor-pointer ${location.pathname.startsWith("/site")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-					}`}
+						}`}
 					onClick={() => navigate("/site")}
 				>
 					취준 도움 사이트
 				</div>
 				<div
-					className={`cursor-pointer ${
-						location.pathname.startsWith("/career")
+					className={`cursor-pointer ${location.pathname.startsWith("/career")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-					}`}
+						}`}
 					onClick={() => navigate("/career")}
 				>
 					커리어
@@ -131,35 +126,35 @@ const Header = () => {
 
 			<div className="flex items-center space-x-4 ml-auto">
 				<img
-  					src={profileImage ==='default'?defaultProfile : profileImage}
+					src={profileImage === 'default' ? defaultProfile : profileImage}
 					alt="프로필이미지"
 					className="h-6 w-6 cursor-pointer rounded-full"
 					onClick={handleProfileClick}
 				/>
-				{isLogin &&(
+				{isLogin && (
 					<>
-					<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" onClick={() => setAlarmOpen(true)}  />
-					{isAlarmOpen && (
-        <Alarm 
-          onClose={() => setAlarmOpen(false)} 
-        />
-      )}
-					<DropdownMenu
-              			isOpen={isDropdownOpen}
-              			onClose={() => setDropdownOpen(false)}
-              			onNavigate={(action) => {
-                		if (action === "logout") handleLogout();
-              }}
-            />
-			</>
-    		)}	
+						<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" onClick={() => setAlarmOpen(true)} />
+						{isAlarmOpen && (
+							<Alarm
+								onClose={() => setAlarmOpen(false)}
+							/>
+						)}
+						<DropdownMenu
+							isOpen={isDropdownOpen}
+							onClose={() => setDropdownOpen(false)}
+							onNavigate={(action) => {
+								if (action === "logout") handleLogout();
+							}}
+						/>
+					</>
+				)}
 			</div>
-      		<LoginPage
-        		isOpen={isModalOpen}
-        		onClose={() => setModalOpen(false)}
-        		onLogin={handleLogin}
-      		/>
-    </div>
-  );
+			<LoginPage
+				isOpen={isModalOpen}
+				onClose={() => setModalOpen(false)}
+				onLogin={handleLogin}
+			/>
+		</div>
+	);
 };
 export default Header;
