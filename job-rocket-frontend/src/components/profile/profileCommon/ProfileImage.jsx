@@ -1,18 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import { uploadFile } from "../../../api/profile/ProfileAPI";
 
 const ProfileImage = ({ profileImage, setProfileImage }) => {
-  const handleProfileImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png") && file.size <= 5 * 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onload = () => setProfileImage(reader.result); 
-      reader.readAsDataURL(file); 
-    } else {
-      alert("파일은 jpg, jpeg, png 형식이어야 하며, 크기는 5MB 이하여야 합니다.");
+  const [uploading, setUploading] = useState(false);
+
+  const handleProfileImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("파일 크기는 10MB를 초과할 수 없습니다.");
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      const responseMessage = await uploadFile(file, "PROFILE_IMAGE");
+      alert(responseMessage); // 성공 메시지 알림
+
+      const uploadedImageUrl = URL.createObjectURL(file); 
+      setProfileImage(uploadedImageUrl);
+
+    } catch (error) {
+      alert("이미지 업로드에 실패했습니다.");
+      console.error("업로드 오류:", error);
+    } finally {
+      setUploading(false);
     }
   };
-
-  const handleImageDelete = () => setProfileImage(null); 
 
   return (
     <div className="flex flex-col items-center w-1/4">
@@ -27,32 +43,20 @@ const ProfileImage = ({ profileImage, setProfileImage }) => {
         <input
           type="file"
           onChange={handleProfileImageChange}
-          accept="image/*"
+          accept="image/jpeg, image/png"
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
       </div>
-      {profileImage ? (
-        <div className="mt-4 flex space-x-4">
-          <button
-            onClick={() => document.querySelector('input[type="file"]').click()}
-            className="px-1 py-0.5 bg-indigo-600 text-white text-xs rounded-md shadow-md hover:bg-indigo-700 active:bg-indigo-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-          >
-            이미지 변경
-          </button>
-          <button
-            onClick={handleImageDelete}
-            className="px-1 py-0.5 bg-red-600 text-white text-xs rounded-md shadow-md hover:bg-red-700 active:bg-red-800 focus:ring-2 focus:ring-red-400 focus:outline-none"
-          >
-            이미지 삭제
-          </button>
-        </div>
-      ) : (
+      <div className="mt-4 flex space-x-4">
         <button
           onClick={() => document.querySelector('input[type="file"]').click()}
-          className="mt-4 px-3 py-1.5 bg-indigo-600 text-white text-xs rounded-md shadow-md hover:bg-indigo-700 active:bg-indigo-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+          className="px-1 py-0.5 bg-indigo-600 text-white text-xs rounded-md shadow-md hover:bg-indigo-700 active:bg-indigo-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
         >
-          이미지 등록
+          이미지 변경
         </button>
+      </div>
+      {uploading && (
+        <div className="mt-2 text-sm text-gray-500">이미지 업로드 중...</div>
       )}
     </div>
   );

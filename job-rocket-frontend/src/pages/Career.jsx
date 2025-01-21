@@ -98,9 +98,8 @@ const Career = () => {
     <div className="flex flex-col w-full h-full">
       <ProfileCategory />
       <div
-        className={`flex items-stretch flex-row w-full min-h-[calc(100vh-4rem)] py-10 px-4 gap-6 transition-all duration-300 ${
-          isSidebarOpen ? "justify-start" : "justify-center"
-        }`}
+        className={`flex items-stretch flex-row w-full min-h-[calc(100vh-4rem)] py-10 px-4 gap-6 transition-all duration-300 ${isSidebarOpen ? "justify-start" : "justify-center"
+          }`}
       >
         <div className={`flex w-full max-w-6xl h-full gap-4 ${isSidebarOpen ? "ml-4" : "mx-auto"}`}>
           <div className="flex flex-row w-full h-auto">
@@ -114,13 +113,15 @@ const Career = () => {
                 isSidebarOpen={isSidebarOpen}
               />
             </div>
-            <div className="w-1/4">
-              <CareerMenuSection
-                handleSidebarToggle={handleSidebarToggle}
-                sections={sections}
-                scrollToSection={scrollToSection}
-              />
-            </div>
+            {profile && (
+              <div className="w-1/4">
+                <CareerMenuSection
+                  handleSidebarToggle={handleSidebarToggle}
+                  sections={sections}
+                  scrollToSection={scrollToSection}
+                />
+              </div>
+            )}
           </div>
         </div>
 

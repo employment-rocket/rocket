@@ -16,13 +16,17 @@ const PortfolioView = () => {
 
         if (portfolioSection) {
           setUrls(portfolioSection.data.urls || []);
-          setFiles(portfolioSection.data.files || []);
+          setFiles(
+            (portfolioSection.data.files || []).filter(
+              (file) => typeof file === "string" && file.trim() !== ""
+            )
+          );
         } else {
           setUrls([]);
           setFiles([]);
         }
       } catch (error) {
-        console.error("포트폴리오 데이터 가져오기 실패:", error);
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
@@ -36,10 +40,8 @@ const PortfolioView = () => {
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md ">
-
-      {/* URL 목록 */}
-      <div className="mb-8 border-l-4 border-blue-500 pl-4 ">
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <div className="mb-8 border-l-4 border-blue-500 pl-4">
         <h3 className="text-md font-semibold mb-4 text-left">URL</h3>
         {urls.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -51,7 +53,7 @@ const PortfolioView = () => {
                 rel="noopener noreferrer"
                 className="block p-4 bg-indigo-50 text-indigo-600 rounded-lg shadow hover:bg-indigo-100 transition"
               >
-                {url}
+                {decodeURIComponent(url.split("/").pop()) || "URL 링크"}
               </a>
             ))}
           </div>
@@ -59,9 +61,7 @@ const PortfolioView = () => {
           <p className="text-gray-500 text-left">저장된 URL이 없습니다.</p>
         )}
       </div>
-
-      {/* 파일 목록 */}
-      <div className="border-l-4 border-blue-500 pl-4">
+      <div className="border-l-4 border-green-500 pl-4">
         <h3 className="text-md font-semibold mb-4 text-left">파일</h3>
         {files.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -73,7 +73,7 @@ const PortfolioView = () => {
                 rel="noopener noreferrer"
                 className="block p-4 bg-green-50 text-green-600 rounded-lg shadow hover:bg-green-100 transition"
               >
-                {file.split("/").pop()}
+                {decodeURIComponent(file.split("/").pop()) || "파일 다운로드"}
               </a>
             ))}
           </div>

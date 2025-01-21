@@ -11,6 +11,7 @@ import SelfIntroductionView from "../profile/profileViews/SelfIntroductionView";
 import PortfolioView from "../profile/profileViews/PortfolioView";
 import ExperienceView from "../profile/profileViews/ExperienceView";
 import CertificationView from "../profile/profileViews/CertificationView";
+import logo from "../../assets/logo.png"
 
 const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreateProfile, isSidebarOpen }) => {
   const renderSection = (section) => {
@@ -40,15 +41,14 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
 
   return (
     <div
-      className={`transition-all duration-300 ${
-        isSidebarOpen ? "w-3/4" : "w-full"
-      } bg-white rounded-lg shadow-lg p-10 space-y-12`} 
+      className={`transition-all duration-300 ${isSidebarOpen ? "w-3/4" : "w-full"
+        } bg-white rounded-lg shadow-lg p-10 space-y-12`}
     >
       {profile && Object.keys(profile).length > 0 ? (
         <div ref={profileRef} className="space-y-16">
           {/* 사용자 기본 정보 */}
           <div className="border-b pb-8">
-        
+
             <ProfileView />
           </div>
 
@@ -83,15 +83,20 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
           </div>
         </div>
       ) : (
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">작성된 프로필이 없습니다.</h2>
-          <button
-            onClick={handleCreateProfile}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-          >
-            프로필 작성하기
-          </button>
-        </div>
+        <div className="text-center max-w-3xl mx-auto p-8"> 
+        <img
+          src={logo}
+          alt="Logo"
+          className="mx-auto w-40 h-40 mb-8" 
+        />
+        <h2 className="text-4xl font-extrabold text-gray-800 mb-8">작성된 프로필이 없습니다.</h2> 
+        <button
+          onClick={handleCreateProfile}
+          className="bg-blue-500 text-white px-8 py-4 rounded-xl text-2xl hover:bg-blue-600 transition"
+        >
+          프로필 작성하기
+        </button>
+      </div>
       )}
     </div>
   );

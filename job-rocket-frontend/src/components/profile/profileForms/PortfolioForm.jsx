@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getProfile, addProfile, updateProfile } from "../../../api/profile/ProfileAPI";
+import { getProfile, addProfile, updateProfile, uploadFile, fetchFile } from "../../../api/profile/ProfileAPI";
 import PortfolioItems from "./../profileCommon/PortfolioItems";
 
 const PortfolioForm = ({ order, onSave }) => {
@@ -15,23 +15,31 @@ const PortfolioForm = ({ order, onSave }) => {
         );
 
         if (portfolioSection) {
-          const urls = portfolioSection.data.urls?.map((url, index) => ({
-            id: Date.now() + index,
-            type: "url",
-            value: url,
-          })) || [];
-          const files = portfolioSection.data.files?.map((file, index) => ({
-            id: Date.now() + index + 1000,
-            type: "file",
-            value: file,
-          })) || [];
-          setItems([...urls, ...files]);
+          const urls =
+            portfolioSection.data.urls?.map((url, index) => ({
+              id: Date.now() + index,
+              type: "url",
+              value: url,
+            })) || [];
+          const files =
+            portfolioSection.data.files?.map((file, index) => ({
+              id: Date.now() + index + 1000,
+              type: "file",
+              value: file,
+            })) || [];
+          const images =
+            portfolioSection.data.images?.map((image, index) => ({
+              id: Date.now() + index + 2000,
+              type: "image",
+              value: image,
+            })) || [];
+          setItems([...urls, ...files, ...images]);
           setHasSavedPortfolio(true);
         } else {
           setHasSavedPortfolio(false);
         }
       } catch (error) {
-        console.error("포트폴리오 데이터 불러오기 실패:", error);
+        console.error(error);
       }
     };
 
@@ -52,28 +60,43 @@ const PortfolioForm = ({ order, onSave }) => {
     setItems(items.filter((item) => item !== itemToRemove));
   };
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = async (e, isImage = false) => {
     const files = Array.from(e.target.files);
-    const maxFileSize = 100 * 1024 * 1024; 
+    const maxFileSize = 10 * 1024 * 1024;
 
     const oversizedFiles = files.filter((file) => file.size > maxFileSize);
-
     if (oversizedFiles.length > 0) {
-      alert("파일 크기는 최대 100MB까지 업로드 가능합니다.");
+      alert("파일 크기는 최대 10MB까지 업로드 가능합니다.");
       return;
     }
 
     try {
-      const uploadedFiles = await uploadFiles(files); 
-      const newFiles = uploadedFiles.map((url) => ({
-        id: Date.now() + Math.random(),
-        type: "file",
-        value: url, 
+      const uploadedFiles = await Promise.all(
+        files.map((file) =>
+          uploadFile(file, isImage ? "PROFILE_IMAGE" : "FILEUPLOAD")
+        )
+      );
+      const newFiles = uploadedFiles.map((uploadedFileUrl, index) => ({
+        id: Date.now() + index + Math.random(),
+        type: isImage ? "image" : "file",
+        value: uploadedFileUrl,
       }));
+
       setItems([...items, ...newFiles]);
     } catch (error) {
-      console.error("파일 업로드 실패:", error);
+      console.error(error);
       alert("파일 업로드 중 문제가 발생했습니다.");
+    }
+  };
+
+  const handleFileView = async (fileName, type) => {
+    try {
+      const sectionType = type === "file" ? "FILEUPLOAD" : "PROFILE_IMAGE";
+      const fileUrl = await fetchFile(fileName, sectionType);
+      window.open(fileUrl, "_blank"); // 새 창에서 파일 열기
+    } catch (error) {
+      console.error("파일 조회 중 문제가 발생했습니다:", error);
+      alert("파일을 열 수 없습니다.");
     }
   };
 
@@ -83,6 +106,7 @@ const PortfolioForm = ({ order, onSave }) => {
       data: {
         urls: items.filter((item) => item.type === "url").map((item) => item.value),
         files: items.filter((item) => item.type === "file").map((item) => item.value),
+        images: items.filter((item) => item.type === "image").map((item) => item.value),
       },
       order,
     };
@@ -93,7 +117,7 @@ const PortfolioForm = ({ order, onSave }) => {
       setHasSavedPortfolio(true);
       onSave && onSave("portfolio", true);
     } catch (error) {
-      console.error("포트폴리오 저장 실패:", error);
+      console.error(error);
       alert("포트폴리오 저장 중 문제가 발생했습니다.");
     }
   };
@@ -104,6 +128,7 @@ const PortfolioForm = ({ order, onSave }) => {
       data: {
         urls: items.filter((item) => item.type === "url").map((item) => item.value),
         files: items.filter((item) => item.type === "file").map((item) => item.value),
+        images: items.filter((item) => item.type === "image").map((item) => item.value),
       },
       order,
     };
@@ -113,7 +138,7 @@ const PortfolioForm = ({ order, onSave }) => {
       alert("포트폴리오가 성공적으로 수정되었습니다!");
       onSave && onSave("portfolio", true);
     } catch (error) {
-      console.error("포트폴리오 수정 실패:", error);
+      console.error(error);
       alert("포트폴리오 수정 중 문제가 발생했습니다.");
     }
   };
@@ -121,7 +146,6 @@ const PortfolioForm = ({ order, onSave }) => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-lg font-bold mb-4">포트폴리오</h2>
-
       <PortfolioItems
         items={items.filter((item) => item.type === "url")}
         type="url"
@@ -129,16 +153,20 @@ const PortfolioForm = ({ order, onSave }) => {
         handleItemChange={handleItemChange}
         handleRemoveItem={handleRemoveItem}
       />
-
       <PortfolioItems
         items={items.filter((item) => item.type === "file")}
         type="file"
-        handleAddItem={() => {}}
-        handleItemChange={handleItemChange}
+        handleFileUpload={(e) => handleFileUpload(e, false)}
         handleRemoveItem={handleRemoveItem}
-        handleFileUpload={handleFileUpload}
+        handleFileView={handleFileView}
       />
-
+      <PortfolioItems
+        items={items.filter((item) => item.type === "image")}
+        type="image"
+        handleFileUpload={(e) => handleFileUpload(e, true)}
+        handleRemoveItem={handleRemoveItem}
+        handleFileView={handleFileView}
+      />
       <div className="flex justify-end space-x-4 mt-4">
         {!hasSavedPortfolio ? (
           <button
