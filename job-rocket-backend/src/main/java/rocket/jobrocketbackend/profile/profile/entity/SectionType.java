@@ -14,6 +14,7 @@ public enum SectionType {
 	CERTIFICATION("자격증"),
 	LANGUAGES("외국어"),
 	SELFINTRO("자기소개"),
+	PROFILE_IMAGE("프로필 이미지"),
 	FILEUPLOAD("파일");
 
 	private String text;

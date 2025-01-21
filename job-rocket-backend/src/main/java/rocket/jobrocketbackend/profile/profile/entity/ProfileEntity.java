@@ -1,8 +1,5 @@
 package rocket.jobrocketbackend.profile.profile.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -11,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.profile.profile.entity.Section;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -51,5 +53,19 @@ public class ProfileEntity {
 			.isPublic(isPublic)
 			.build();
 	}
+
+	public ProfileEntity addFileSection(SectionType sectionType, String fileName) {
+		List<Section> updatedSections = new ArrayList<>(this.sections);
+
+		updatedSections.add(Section.builder()
+			.type(sectionType)
+			.data(Map.of("fileName", fileName))
+			.order(updatedSections.size() + 1)
+			.build());
+
+		return withUpdatedSections(updatedSections);
+	}
+
+
 
 }

@@ -1,7 +1,9 @@
 package rocket.jobrocketbackend.profile.profile.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
 import rocket.jobrocketbackend.profile.profile.entity.Section;
+import rocket.jobrocketbackend.profile.profile.entity.SectionType;
 import rocket.jobrocketbackend.profile.profile.service.ProfileService;
 
 @RestController
@@ -66,6 +70,35 @@ public class ProfileController {
 		ProfileResponseDto profile = profileService.getPublicProfileById(memberId);
 		return ResponseEntity.ok(profile);
 	}
+
+
+	@PostMapping("/{memberId}/upload")
+	public ResponseEntity<String> uploadFile(@PathVariable Long memberId,
+		@RequestParam MultipartFile file,
+		@RequestParam SectionType sectionType) throws IOException {
+
+		if (sectionType != SectionType.PROFILE_IMAGE && sectionType != SectionType.FILEUPLOAD) {
+			return ResponseEntity.badRequest().body("Invalid section type for file upload.");
+		}
+
+		profileService.saveFile(file, memberId, sectionType);
+		return ResponseEntity.ok(sectionType == SectionType.PROFILE_IMAGE ? "프로필 이미지 업로드 성공" : "파일 업로드 성공");
+	}
+
+	@GetMapping("/file/{fileName}")
+	public ResponseEntity<byte[]> getFile(
+		@PathVariable String fileName,
+		@RequestParam SectionType sectionType) throws IOException {
+		byte[] fileBytes = profileService.getFile(fileName, sectionType);
+		MediaType mediaType = sectionType == SectionType.PROFILE_IMAGE ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
+
+		return ResponseEntity.ok()
+			.contentType(mediaType)
+			.body(fileBytes);
+	}
+
+
+
 
 
 }

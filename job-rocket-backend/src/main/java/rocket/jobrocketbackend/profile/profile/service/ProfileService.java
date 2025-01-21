@@ -1,13 +1,20 @@
 package rocket.jobrocketbackend.profile.profile.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
@@ -17,7 +24,7 @@ import rocket.jobrocketbackend.profile.profile.entity.SectionType;
 import rocket.jobrocketbackend.profile.profile.exception.ProfileNotFoundException;
 import rocket.jobrocketbackend.profile.profile.exception.ProfileNotPublicException;
 import rocket.jobrocketbackend.profile.profile.repository.ProfileRepository;
-import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.exception.FileNotFoundException;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
@@ -27,6 +34,10 @@ public class ProfileService
 {
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
+
+	private static final String IMAGE_UPLOAD_DIR = "uploads/profile-images/";
+	private static final String FILE_UPLOAD_DIR = "uploads/profile-files/";
+
 
 	public ProfileService(ProfileRepository profileRepository, UserRepository userRepository) {
 		this.profileRepository = profileRepository;
@@ -42,7 +53,7 @@ public class ProfileService
 			.orElseThrow(() -> new ProfileNotFoundException("Profile not found for memberId: " + memberId));
 
 		List<Section> sortedSections = profile.getSections().stream()
-			.sorted((s1, s2) -> Integer.compare(s1.getOrder(), s2.getOrder()))
+			.sorted(Comparator.comparingInt(Section::getOrder))
 			.toList();
 
 		return ProfileResponseDto.builder()
@@ -119,15 +130,13 @@ public class ProfileService
 		return mapToResponse(updatedProfile);
 	}
 
-	public ProfileResponseDto updatePublicStatus(Long memberId, boolean isPublic) {
+	public void updatePublicStatus(Long memberId, boolean isPublic) {
 
 		ProfileEntity updatedProfile = profileRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new ProfileNotFoundException("Profile not found for memberId: " + memberId))
 			.withUpdatedPublicStatus(isPublic);
 
 		profileRepository.save(updatedProfile);
-
-		return mapToResponse(updatedProfile);
 	}
 
 	public List<ProfileResponseDto> getPublicProfiles() {
@@ -148,6 +157,76 @@ public class ProfileService
 
 		return mapToResponse(profile);
 	}
+
+
+	public void saveFile(MultipartFile file, Long memberId, SectionType sectionType) throws IOException {
+		String fileName = storeFile(file, sectionType);
+
+		ProfileEntity profile = profileRepository.findByMemberId(memberId)
+			.orElse(ProfileEntity.createWithMemberId(memberId));
+
+		if (sectionType == SectionType.PROFILE_IMAGE) {
+			Section basicInfoSection = profile.getSections().stream()
+				.filter(section -> section.getType() == SectionType.BASICINFO)
+				.findFirst()
+				.orElseGet(() -> Section.builder().type(SectionType.BASICINFO).data(new HashMap<>()).build());
+
+			basicInfoSection.getData().put("profileImage", fileName);
+			List<Section> updatedSections = new ArrayList<>(profile.getSections());
+			updatedSections.removeIf(section -> section.getType() == SectionType.BASICINFO);
+			updatedSections.add(basicInfoSection);
+
+			profile = profile.withUpdatedSections(updatedSections);
+		} else if (sectionType == SectionType.FILEUPLOAD) {
+			Section portfolioSection = profile.getSections().stream()
+				.filter(section -> section.getType() == SectionType.PORTFOLIO)
+				.findFirst()
+				.orElseGet(() -> Section.builder().type(SectionType.PORTFOLIO).data(new HashMap<>()).build());
+
+			@SuppressWarnings("unchecked")
+			List<String> files = (List<String>) portfolioSection.getData().computeIfAbsent("files", k -> new ArrayList<>());
+			files.add(fileName);
+
+			List<Section> updatedSections = new ArrayList<>(profile.getSections());
+			updatedSections.removeIf(section -> section.getType() == SectionType.PORTFOLIO);
+			updatedSections.add(portfolioSection);
+
+			profile = profile.withUpdatedSections(updatedSections);
+		}
+
+		profileRepository.save(profile);
+	}
+
+	private String storeFile(MultipartFile file, SectionType sectionType) throws IOException {
+		String fileExtension = Objects.requireNonNull(file.getOriginalFilename())
+			.substring(file.getOriginalFilename().lastIndexOf("."));
+		String fileName = System.currentTimeMillis() + fileExtension;
+
+		String uploadDir = getUploadDirectory(sectionType);
+		Path filePath = Paths.get(uploadDir, fileName);
+
+		Files.createDirectories(filePath.getParent());
+		Files.write(filePath, file.getBytes());
+
+		return fileName;
+	}
+
+	public byte[] getFile(String fileName, SectionType sectionType) throws IOException {
+		String uploadDir = getUploadDirectory(sectionType);
+		Path filePath = Paths.get(uploadDir, fileName);
+
+		if (!Files.exists(filePath)) {
+			throw new FileNotFoundException("File not found at: " + filePath);
+		}
+
+		return Files.readAllBytes(filePath);
+	}
+
+	private String getUploadDirectory(SectionType sectionType) {
+		return sectionType == SectionType.PROFILE_IMAGE ? IMAGE_UPLOAD_DIR : FILE_UPLOAD_DIR;
+	}
+
+
 
 	private ProfileResponseDto mapToResponse(ProfileEntity profile) {
 		List<Section> sortedSections = profile.getSections().stream()
