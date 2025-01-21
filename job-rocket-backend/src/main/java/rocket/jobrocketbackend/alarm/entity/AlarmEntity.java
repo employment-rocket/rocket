@@ -26,7 +26,7 @@ public class AlarmEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate alarmDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private UserEntity user;
 
