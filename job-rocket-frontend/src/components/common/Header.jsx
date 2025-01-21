@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
+import chat from "../../assets/chat.png"
 import defaultProfile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
 import { useNavigate, useLocation } from "react-router";
@@ -8,6 +9,7 @@ import DropdownMenu from "./DropdownMenu";
 import { getProfileImage } from "../../api/user/UserApi";
 import useProfileStore from "../../store/profileImageStore";
 import Alarm from "../alarm/Alarm";
+import ChatModal from "../note/ChatModal";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -18,6 +20,7 @@ const Header = () => {
 	const profileImage = useProfileStore((state) => state.profileImage);
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
 	const [isAlarmOpen, setAlarmOpen] = useState(false);
+	const [isChatOpen, setChatOpen] = useState(false);
 
 
 
@@ -79,8 +82,8 @@ const Header = () => {
 			<div className="flex space-x-6 ml-6 text-base">
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/board")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
+						? "text-blue-500 font-semibold"
+						: "text-gray-700"
 						}`}
 					onClick={() => navigate("/board")}
 				>
@@ -88,8 +91,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/schedule")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
+						? "text-blue-500 font-semibold"
+						: "text-gray-700"
 						}`}
 					onClick={() => navigate("/schedule")}
 				>
@@ -97,8 +100,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/question")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
+						? "text-blue-500 font-semibold"
+						: "text-gray-700"
 						}`}
 					onClick={() => navigate("/question")}
 				>
@@ -106,8 +109,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/site")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
+						? "text-blue-500 font-semibold"
+						: "text-gray-700"
 						}`}
 					onClick={() => navigate("/site")}
 				>
@@ -115,8 +118,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/career")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
+						? "text-blue-500 font-semibold"
+						: "text-gray-700"
 						}`}
 					onClick={() => navigate("/career")}
 				>
@@ -134,11 +137,7 @@ const Header = () => {
 				{isLogin && (
 					<>
 						<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" onClick={() => setAlarmOpen(true)} />
-						{isAlarmOpen && (
-							<Alarm
-								onClose={() => setAlarmOpen(false)}
-							/>
-						)}
+						{isAlarmOpen && <Alarm onClose={() => setAlarmOpen(false)} />}
 						<DropdownMenu
 							isOpen={isDropdownOpen}
 							onClose={() => setDropdownOpen(false)}
@@ -146,8 +145,17 @@ const Header = () => {
 								if (action === "logout") handleLogout();
 							}}
 						/>
+						<img
+							src={chat}
+							alt="채팅"
+							className="h-6 w-6 cursor-pointer"
+							onClick={() => !isChatOpen && setChatOpen(true)}
+						/>
+						{isChatOpen && <ChatModal onClose={() => setChatOpen(false)} />}
 					</>
 				)}
+
+				{isChatOpen && <ChatModal onClose={() => setChatOpen(false)} />}
 			</div>
 			<LoginPage
 				isOpen={isModalOpen}

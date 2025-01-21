@@ -10,9 +10,9 @@ const Chat = ({ chat, onClick }) => {
                     alt="profile"
                     className="w-12 h-12 rounded-full mr-4"
                 />
-                <div>
-                    <div className="font-bold text-lg">{chat.title}</div>
-                    <div className="text-base text-gray-600">{chat.lastChat}</div>
+                <div className="max-w-[200px]">
+                    <div className="font-bold text-lg truncate">{chat.title}</div>
+                    <div className="text-base text-gray-600 truncate">{chat.lastChat}</div>
                 </div>
             </div>
             <div className="flex items-center">
