@@ -46,13 +46,12 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
     >
       {profile && Object.keys(profile).length > 0 ? (
         <div ref={profileRef} className="space-y-16">
-          {/* 사용자 기본 정보 */}
+       
           <div className="border-b pb-8">
 
             <ProfileView />
           </div>
 
-          {/* 관심 분야 및 태그 섹션 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-gray-50 p-6 rounded-lg shadow">
               <h3 className="text-xl font-bold text-gray-800 mb-4">관심 분야</h3>
@@ -65,7 +64,6 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
             </div>
           </div>
 
-          {/* 기타 섹션 */}
           <div className="space-y-12">
             {sections
               .filter((section) => section.visible)
@@ -73,7 +71,7 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
               .map((section) => (
                 <div
                   key={section.name}
-                  ref={sectionRefs.current[section.name]} // 각 섹션에 ref 연결
+                  ref={sectionRefs.current[section.name]} 
                   className="bg-gray-50 p-6 rounded-lg shadow"
                 >
                   <h3 className="text-xl font-bold mb-4">{section.label}</h3>
