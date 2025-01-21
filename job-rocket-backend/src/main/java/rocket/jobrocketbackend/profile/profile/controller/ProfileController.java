@@ -3,8 +3,8 @@ package rocket.jobrocketbackend.profile.profile.controller;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
 import rocket.jobrocketbackend.profile.profile.entity.Section;
@@ -29,32 +30,42 @@ public class ProfileController {
 
 	private final ProfileService profileService;
 
-	@GetMapping("/{memberId}")
-	public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long memberId) {
+	@GetMapping
+	public ResponseEntity<ProfileResponseDto> getProfile(
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+		Long memberId = customOAuth2User.getId();
 		return ResponseEntity.ok(profileService.getProfile(memberId));
 	}
 
-	@PostMapping("/{memberId}")
-	public ResponseEntity<ProfileResponseDto> addSection(@PathVariable Long memberId, @RequestBody ProfileRequestDto request) {
+	@PostMapping
+	public ResponseEntity<ProfileResponseDto> addSection(
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+		@RequestBody ProfileRequestDto request) {
+		Long memberId = customOAuth2User.getId();
 		return ResponseEntity.ok(profileService.addSection(memberId, request));
 	}
 
-	@PutMapping("/{memberId}")
-	public ResponseEntity<ProfileResponseDto> updateSection(@PathVariable Long memberId, @RequestBody ProfileRequestDto request) {
+	@PutMapping
+	public ResponseEntity<ProfileResponseDto> updateSection(
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+		@RequestBody ProfileRequestDto request) {
+		Long memberId = customOAuth2User.getId();
 		return ResponseEntity.ok(profileService.updateSection(memberId, request));
 	}
 
-	@PutMapping("/{memberId}/order")
+	@PutMapping("/order")
 	public ResponseEntity<ProfileResponseDto> updateOrder(
-		@PathVariable Long memberId,
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
 		@RequestBody List<Section> reorderedSections) {
-
-		ProfileResponseDto response = profileService.updateOrder(memberId, reorderedSections);
-		return ResponseEntity.ok(response);
+		Long memberId = customOAuth2User.getId();
+		return ResponseEntity.ok(profileService.updateOrder(memberId, reorderedSections));
 	}
 
-	@PostMapping("/{memberId}/status")
-	public ResponseEntity<Void> updatePublicStatus(@PathVariable Long memberId, @RequestParam boolean isPublic) {
+	@PostMapping("/status")
+	public ResponseEntity<Void> updatePublicStatus(
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+		@RequestParam boolean isPublic) {
+		Long memberId = customOAuth2User.getId();
 		profileService.updatePublicStatus(memberId, isPublic);
 		return ResponseEntity.ok().build();
 	}
@@ -72,33 +83,23 @@ public class ProfileController {
 	}
 
 
-	@PostMapping("/{memberId}/upload")
-	public ResponseEntity<String> uploadFile(@PathVariable Long memberId,
+	@PostMapping("/upload")
+	public ResponseEntity<String> uploadFile(
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
 		@RequestParam MultipartFile file,
 		@RequestParam SectionType sectionType) throws IOException {
 
-		if (sectionType != SectionType.PROFILE_IMAGE && sectionType != SectionType.FILEUPLOAD) {
-			return ResponseEntity.badRequest().body("Invalid section type for file upload.");
-		}
-
-		profileService.saveFile(file, memberId, sectionType);
-		return ResponseEntity.ok(sectionType == SectionType.PROFILE_IMAGE ? "프로필 이미지 업로드 성공" : "파일 업로드 성공");
+		Long memberId = customOAuth2User.getId();
+		String resultMessage = profileService.uploadFile(file, memberId, sectionType);
+		return ResponseEntity.ok(resultMessage);
 	}
 
 	@GetMapping("/file/{fileName}")
 	public ResponseEntity<byte[]> getFile(
 		@PathVariable String fileName,
 		@RequestParam SectionType sectionType) throws IOException {
-		byte[] fileBytes = profileService.getFile(fileName, sectionType);
-		MediaType mediaType = sectionType == SectionType.PROFILE_IMAGE ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
 
-		return ResponseEntity.ok()
-			.contentType(mediaType)
-			.body(fileBytes);
+		return profileService.getFileResponse(fileName, sectionType);
 	}
-
-
-
-
 
 }
