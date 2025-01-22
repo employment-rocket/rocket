@@ -15,31 +15,28 @@ const PortfolioForm = ({ order, onSave }) => {
         );
 
         if (portfolioSection) {
-          const urls =
-            portfolioSection.data.urls?.map((url, index) => ({
-              id: Date.now() + index,
-              type: "url",
-              value: url,
-            })) || [];
-          const files =
-            portfolioSection.data.files?.map((file, index) => ({
-              id: Date.now() + index + 1000,
-              type: "file",
-              value: file,
-            })) || [];
-          const images =
-            portfolioSection.data.images?.map((image, index) => ({
-              id: Date.now() + index + 2000,
-              type: "image",
-              value: image,
-            })) || [];
+          const urls = portfolioSection.data.urls?.map((url, index) => ({
+            id: Date.now() + index,
+            type: "url",
+            value: url,
+          })) || [];
+          const files = portfolioSection.data.files?.map((file, index) => ({
+            id: Date.now() + index + 1000,
+            type: "file",
+            value: file,
+          })) || [];
+          const images = portfolioSection.data.images?.map((image, index) => ({
+            id: Date.now() + index + 2000,
+            type: "image",
+            value: image,
+          })) || [];
           setItems([...urls, ...files, ...images]);
           setHasSavedPortfolio(true);
         } else {
           setHasSavedPortfolio(false);
         }
       } catch (error) {
-        console.error(error);
+   
       }
     };
 
@@ -60,9 +57,9 @@ const PortfolioForm = ({ order, onSave }) => {
     setItems(items.filter((item) => item !== itemToRemove));
   };
 
-  const handleFileUpload = async (e, isImage = false) => {
+  const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
-    const maxFileSize = 10 * 1024 * 1024;
+    const maxFileSize = 10 * 1024 * 1024; 
 
     const oversizedFiles = files.filter((file) => file.size > maxFileSize);
     if (oversizedFiles.length > 0) {
@@ -72,13 +69,12 @@ const PortfolioForm = ({ order, onSave }) => {
 
     try {
       const uploadedFiles = await Promise.all(
-        files.map((file) =>
-          uploadFile(file, isImage ? "PROFILE_IMAGE" : "FILEUPLOAD")
-        )
+        files.map((file) => uploadFile(file, "FILEUPLOAD"))
       );
+
       const newFiles = uploadedFiles.map((uploadedFileUrl, index) => ({
         id: Date.now() + index + Math.random(),
-        type: isImage ? "image" : "file",
+        type: "file",
         value: uploadedFileUrl,
       }));
 
@@ -86,17 +82,6 @@ const PortfolioForm = ({ order, onSave }) => {
     } catch (error) {
       console.error(error);
       alert("파일 업로드 중 문제가 발생했습니다.");
-    }
-  };
-
-  const handleFileView = async (fileName, type) => {
-    try {
-      const sectionType = type === "file" ? "FILEUPLOAD" : "PROFILE_IMAGE";
-      const fileUrl = await fetchFile(fileName, sectionType);
-      window.open(fileUrl, "_blank"); // 새 창에서 파일 열기
-    } catch (error) {
-      console.error("파일 조회 중 문제가 발생했습니다:", error);
-      alert("파일을 열 수 없습니다.");
     }
   };
 
@@ -156,16 +141,8 @@ const PortfolioForm = ({ order, onSave }) => {
       <PortfolioItems
         items={items.filter((item) => item.type === "file")}
         type="file"
-        handleFileUpload={(e) => handleFileUpload(e, false)}
+        handleFileUpload={handleFileUpload}
         handleRemoveItem={handleRemoveItem}
-        handleFileView={handleFileView}
-      />
-      <PortfolioItems
-        items={items.filter((item) => item.type === "image")}
-        type="image"
-        handleFileUpload={(e) => handleFileUpload(e, true)}
-        handleRemoveItem={handleRemoveItem}
-        handleFileView={handleFileView}
       />
       <div className="flex justify-end space-x-4 mt-4">
         {!hasSavedPortfolio ? (

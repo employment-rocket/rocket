@@ -1,13 +1,18 @@
 import api from "../api";
 
+
 export const getProfile = async () => {
   try {
     const response = await api.get("/profiles");
     return response.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "프로필 조회 실패";
-    console.error("getProfile API error:", errorMessage);
-    throw new Error(errorMessage);
+    const statusCode = error.response?.status;
+
+    if (statusCode === 404) {
+      throw new Error("프로필이 작성되지 않았습니다.");
+    } else {
+      throw new Error("프로필 조회 중 오류가 발생했습니다.");
+    }
   }
 };
 

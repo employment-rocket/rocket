@@ -32,7 +32,7 @@ const TagsSelection = () => {
         setProfile(fetchedProfile);
         setIsProfileLoaded(true);
       } catch (error) {
-        console.error("프로필 조회 실패:", error);
+      
         setIsProfileLoaded(true);
       }
     };

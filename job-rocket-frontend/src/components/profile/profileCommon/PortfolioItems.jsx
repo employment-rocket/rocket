@@ -1,3 +1,5 @@
+import React from "react";
+
 const PortfolioItems = ({
   items,
   type,
@@ -35,41 +37,28 @@ const PortfolioItems = ({
             type="file"
             multiple
             className="mb-2"
-            onChange={handleFileUpload}
+            onChange={handleFileUpload} 
             accept=".pdf, .jpg, .png"
           />
           <ul>
             {items.map((item, index) => (
               <li key={index} className="flex items-center justify-between space-x-4 mb-2">
                 <a
-                  href={item.value}
+                  href={typeof item.value === "string" ? item.value : item.value.url} 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:underline truncate"
                 >
-                  {decodeURIComponent(item.value.split("/").pop()) || "파일"}
+                  {typeof item.value === "string"
+                    ? decodeURIComponent(item.value.split("/").pop()) || "파일"
+                    : "파일"}
                 </a>
-                <div className="flex items-center space-x-2">
-                  <button
-                    className="text-green-500 hover:text-green-700"
-                    onClick={() => window.open(item.value, "_blank")}
-                  >
-                    미리보기
-                  </button>
-                  <a
-                    href={item.value}
-                    download
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    다운로드
-                  </a>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => handleRemoveItem(item)}
-                  >
-                    🗑️
-                  </button>
-                </div>
+                <button
+                  className="text-red-500 hover:text-red-700"
+                  onClick={() => handleRemoveItem(item)}
+                >
+                  🗑️
+                </button>
               </li>
             ))}
           </ul>
