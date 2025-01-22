@@ -10,6 +10,6 @@ public class ProfileNotFoundException extends RocketException {
 
 	@Override
 	public int getStatusCode() {
-		return 400;
+		return 404;
 	}
 }

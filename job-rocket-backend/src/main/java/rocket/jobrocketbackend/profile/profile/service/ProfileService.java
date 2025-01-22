@@ -47,8 +47,20 @@ public class ProfileService {
 		ProfileEntity profile = profileRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new ProfileNotFoundException("회원 ID: " + memberId + "의 프로필을 찾을 수 없습니다."));
 
+		if (!isValidProfile(profile)) {
+			throw new IllegalArgumentException("프로필 조회에 실패했습니다.");
+		}
+
 		List<Section> sortedSections = sortSectionsByOrder(profile.getSections());
 		return mapToResponse(profile, sortedSections);
+	}
+
+	private boolean isValidProfile(ProfileEntity profile) {
+		if (profile.getSections() == null || profile.getSections().isEmpty()) {
+			return false;
+		}
+		return profile.getSections().stream()
+			.anyMatch(section -> section.getType() == SectionType.BASICINFO);
 	}
 
 	public ProfileResponseDto addSection(Long memberId, ProfileRequestDto request) {
