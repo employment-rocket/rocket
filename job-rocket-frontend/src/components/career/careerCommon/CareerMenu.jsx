@@ -2,6 +2,9 @@ import React from "react";
 import CareerButton from "./CareerButton";
 
 const CareerMenu = ({ onPDFToggle, isPDFOpen, sections, scrollToSection }) => {
+
+  const filteredSections = sections.filter((section) => section.name !== "PROFILE_IMAGE" && section.visible);
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 w-80">
 
@@ -18,9 +21,8 @@ const CareerMenu = ({ onPDFToggle, isPDFOpen, sections, scrollToSection }) => {
 
 
       <h3 className="text-lg font-bold text-gray-800 mb-4 mt-10">간편 이동</h3>
-      {sections && sections.length > 0 ? (
+      {filteredSections && filteredSections.length > 0 ? (
         <ul className="space-y-2">
-       
           <li>
             <button
               className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
@@ -29,18 +31,16 @@ const CareerMenu = ({ onPDFToggle, isPDFOpen, sections, scrollToSection }) => {
               프로필
             </button>
           </li>
-          {sections
-            .filter((section) => section.visible) 
-            .map((section) => (
-              <li key={section.name}>
-                <button
-                  className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
-                  onClick={() => scrollToSection(section.name)}
-                >
-                  {section.label}
-                </button>
-              </li>
-            ))}
+          {filteredSections.map((section) => (
+            <li key={section.name}>
+              <button
+                className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
+                onClick={() => scrollToSection(section.name)}
+              >
+                {section.label}
+              </button>
+            </li>
+          ))}
         </ul>
       ) : (
         <p className="text-sm text-gray-500">이동 가능한 섹션이 없습니다.</p>
