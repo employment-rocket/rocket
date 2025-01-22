@@ -51,7 +51,12 @@ const Header = () => {
 	};
 
 	const handleProfileClick = () => {
-		setDropdownOpen(!isDropdownOpen);
+		if(isLogin){
+			setDropdownOpen(!isDropdownOpen);
+		}else{
+			setModalOpen(true);
+		}
+	//	setDropdownOpen(!isDropdownOpen);
 		setAlarmOpen(false);
 		setChatOpen(false);
 	};
