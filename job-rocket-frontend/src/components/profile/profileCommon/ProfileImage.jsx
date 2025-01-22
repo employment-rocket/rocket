@@ -17,7 +17,7 @@ const ProfileImage = ({ profileImage, setProfileImage }) => {
       setUploading(true);
 
       const responseMessage = await uploadFile(file, "PROFILE_IMAGE");
-      alert(responseMessage); // 성공 메시지 알림
+      alert(responseMessage); 
 
       const uploadedImageUrl = URL.createObjectURL(file); 
       setProfileImage(uploadedImageUrl);

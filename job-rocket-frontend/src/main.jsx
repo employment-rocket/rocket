@@ -55,11 +55,14 @@ createRoot(document.getElementById("root")).render(
 					<Route path="/retrospect" element={<Retrospect />} />
 					<Route path="/note" element={<Note />} />
 					<Route path="/question" element={<Question />} />
+			
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/career" element={<Career />} />
 				</Route>
 
-				<Route path="/profile" element={<Profile />} />
+			
 				<Route path="/site" element={<Site />} />
-				<Route path="/career" element={<Career />} />
+		
 			</Routes>
 		</QueryClientProvider>
 	</BrowserRouter>

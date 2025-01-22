@@ -1,22 +1,10 @@
 package rocket.jobrocketbackend.profile.profile.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,21 +17,21 @@ import rocket.jobrocketbackend.profile.profile.entity.SectionType;
 import rocket.jobrocketbackend.profile.profile.exception.ProfileNotFoundException;
 import rocket.jobrocketbackend.profile.profile.exception.ProfileNotPublicException;
 import rocket.jobrocketbackend.profile.profile.repository.ProfileRepository;
-import rocket.jobrocketbackend.user.exception.FileNotFoundException;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
 @Service
 public class ProfileService {
+
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
+	private final ProfileFileService profileFileService;
 
-	private static final String IMAGE_UPLOAD_DIR = "uploads/profile-images/";
-	private static final String FILE_UPLOAD_DIR = "uploads/profile-files/";
-
-	public ProfileService(ProfileRepository profileRepository, UserRepository userRepository) {
+	public ProfileService(ProfileRepository profileRepository, UserRepository userRepository,
+		ProfileFileService profileFileService) {
 		this.profileRepository = profileRepository;
 		this.userRepository = userRepository;
+		this.profileFileService = profileFileService;
 	}
 
 	public ProfileResponseDto getProfile(Long memberId) {
@@ -53,11 +41,7 @@ public class ProfileService {
 		ProfileEntity profile = profileRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new ProfileNotFoundException("회원 ID: " + memberId + "의 프로필을 찾을 수 없습니다."));
 
-		List<Section> sortedSections = Optional.ofNullable(profile.getSections())
-			.orElse(Collections.emptyList())
-			.stream()
-			.sorted(Comparator.comparingInt(Section::getOrder))
-			.collect(Collectors.toCollection(ArrayList::new)); // 수정 가능한 리스트 생성
+		List<Section> sortedSections = sortSectionsByOrder(profile.getSections());
 		return mapToResponse(profile, sortedSections);
 	}
 
@@ -84,21 +68,6 @@ public class ProfileService {
 
 		profileRepository.save(updatedProfile);
 		return mapToResponse(updatedProfile, updatedSections);
-	}
-
-	private List<Section> updateSections(ProfileEntity profileEntity, ProfileRequestDto request) {
-		return profileEntity.getSections().stream()
-			.filter(section -> !section.getType().equals(request.getType()))
-			.collect(Collectors.collectingAndThen(
-				Collectors.toCollection(ArrayList::new),
-				list -> {
-					list.add(Section.builder()
-						.type(request.getType())
-						.data(request.getData())
-						.order(request.getOrder())
-						.build());
-					return list;
-				}));
 	}
 
 	public ProfileResponseDto updateOrder(Long memberId, List<Section> reorderedSections) {
@@ -130,7 +99,6 @@ public class ProfileService {
 		}
 
 		ProfileEntity updatedProfile = createUpdatedProfile(profileEntity, updatedSections);
-
 		profileRepository.save(updatedProfile);
 		return mapToResponse(updatedProfile, updatedSections);
 	}
@@ -161,90 +129,26 @@ public class ProfileService {
 	}
 
 	public String uploadFile(MultipartFile file, Long memberId, SectionType sectionType) throws IOException {
-		validateSectionType(sectionType);
-
-		String fileName = storeFile(file, sectionType);
-		saveFileToProfile(memberId, fileName, sectionType);
-
+		String fileName = profileFileService.uploadFile(file, sectionType);
+		profileFileService.saveFileToProfile(memberId, fileName, sectionType, profileRepository);
 		return sectionType == SectionType.PROFILE_IMAGE ? "프로필 이미지 업로드 성공" : "파일 업로드 성공";
 	}
 
 	public ResponseEntity<byte[]> getFileResponse(String fileName, SectionType sectionType) throws IOException {
-		byte[] fileBytes = getFile(fileName, sectionType);
-		MediaType mediaType = sectionType == SectionType.PROFILE_IMAGE ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
-
-		return ResponseEntity.ok()
-			.contentType(mediaType)
-			.body(fileBytes);
+		return profileFileService.getFileResponse(fileName, sectionType);
 	}
 
-	private void saveFileToProfile(Long memberId, String fileName, SectionType sectionType) {
-		ProfileEntity profile = profileRepository.findByMemberId(memberId)
-			.orElse(ProfileEntity.createWithMemberId(memberId));
-
-		List<Section> updatedSections = updateFileSections(profile.getSections(), fileName, sectionType);
-		ProfileEntity updatedProfile = createUpdatedProfile(profile, updatedSections);
-
-		profileRepository.save(updatedProfile);
-	}
-
-	private List<Section> updateFileSections(List<Section> sections, String fileName, SectionType sectionType) {
-		List<Section> updatedSections = new ArrayList<>(sections); // 수정 가능한 리스트 생성
-
-		if (sectionType == SectionType.PROFILE_IMAGE) {
-			updatedSections.removeIf(section -> section.getType() == SectionType.BASICINFO);
-			updatedSections.add(Section.builder()
-				.type(SectionType.BASICINFO)
-				.data(Map.of("profileImage", fileName))
-				.build());
-		} else if (sectionType == SectionType.FILEUPLOAD) {
-			Section portfolioSection = updatedSections.stream()
-				.filter(section -> section.getType() == SectionType.PORTFOLIO)
-				.findFirst()
-				.orElseGet(() -> Section.builder().type(SectionType.PORTFOLIO).data(new HashMap<>()).build());
-
-			@SuppressWarnings("unchecked")
-			List<String> files = (List<String>) portfolioSection.getData().computeIfAbsent("files", k -> new ArrayList<>());
-			files.add(fileName);
-
-			updatedSections.removeIf(section -> section.getType() == SectionType.PORTFOLIO);
-			updatedSections.add(portfolioSection);
-		}
-
-		return updatedSections;
-	}
-
-	private void validateSectionType(SectionType sectionType) {
-		if (sectionType != SectionType.PROFILE_IMAGE && sectionType != SectionType.FILEUPLOAD) {
-			throw new IllegalArgumentException("잘못된 파일 업로드 유형입니다.");
-		}
-	}
-
-	private String storeFile(MultipartFile file, SectionType sectionType) throws IOException {
-		String fileExtension = Objects.requireNonNull(file.getOriginalFilename())
-			.substring(file.getOriginalFilename().lastIndexOf("."));
-		String fileName = System.currentTimeMillis() + fileExtension;
-
-		Path filePath = Paths.get(getUploadDirectory(sectionType), fileName);
-
-		Files.createDirectories(filePath.getParent());
-		Files.write(filePath, file.getBytes());
-
-		return fileName;
-	}
-
-	private byte[] getFile(String fileName, SectionType sectionType) throws IOException {
-		Path filePath = Paths.get(getUploadDirectory(sectionType), fileName);
-
-		if (!Files.exists(filePath)) {
-			throw new FileNotFoundException("파일을 찾을 수 없습니다: " + filePath);
-		}
-
-		return Files.readAllBytes(filePath);
-	}
-
-	private String getUploadDirectory(SectionType sectionType) {
-		return sectionType == SectionType.PROFILE_IMAGE ? IMAGE_UPLOAD_DIR : FILE_UPLOAD_DIR;
+	private List<Section> updateSections(ProfileEntity profileEntity, ProfileRequestDto request) {
+		return profileEntity.getSections().stream()
+			.filter(section -> !section.getType().equals(request.getType()))
+			.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+				list.add(Section.builder()
+					.type(request.getType())
+					.data(request.getData())
+					.order(request.getOrder())
+					.build());
+				return list;
+			}));
 	}
 
 	private ProfileEntity createUpdatedProfile(ProfileEntity profile, List<Section> updatedSections) {
@@ -266,7 +170,9 @@ public class ProfileService {
 	}
 
 	private List<Section> sortSectionsByOrder(List<Section> sections) {
-		return sections.stream()
+		return Optional.ofNullable(sections)
+			.orElse(Collections.emptyList())
+			.stream()
 			.sorted(Comparator.comparingInt(Section::getOrder))
 			.collect(Collectors.toList());
 	}
