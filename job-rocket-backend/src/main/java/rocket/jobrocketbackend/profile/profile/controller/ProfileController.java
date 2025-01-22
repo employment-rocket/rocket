@@ -82,7 +82,6 @@ public class ProfileController {
 		return ResponseEntity.ok(profile);
 	}
 
-
 	@PostMapping("/upload")
 	public ResponseEntity<String> uploadFile(
 		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,

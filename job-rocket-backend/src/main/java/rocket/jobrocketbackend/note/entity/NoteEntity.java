@@ -1,34 +1,42 @@
 package rocket.jobrocketbackend.note.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "note")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NoteEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
-    private Long senderId;
-    private Long receiverId;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH-mm-ss")
-    private LocalDateTime createdAt;
+    @ManyToOne
+    @JoinColumn(name = "conversation_id", nullable = false)
+    private ConversationEntity conversation;
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    private UserEntity sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private UserEntity receiver;
+
+    private String content;
 
     private boolean isRead;
+
+    private LocalDateTime createdAt;
 
     public void markAsRead() {
         this.isRead = true;

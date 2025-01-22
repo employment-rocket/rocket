@@ -13,7 +13,7 @@ public class NoteResDto {
     private Long id;
     private String content;
     private String senderName;
-    private Long receiverName;
+    private String receiverName;
     private LocalDateTime createdAt;
     private boolean isRead;
 }
