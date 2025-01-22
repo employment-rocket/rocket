@@ -21,6 +21,7 @@ import Review from "./components/board/review/Review.jsx";
 import Qa from "./components/board/question/Qa.jsx";
 import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
 import Free from "./components/board/free/Free.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -54,10 +55,14 @@ createRoot(document.getElementById("root")).render(
 					<Route path="/retrospect" element={<Retrospect />} />
 					<Route path="/note" element={<Note />} />
 					<Route path="/question" element={<Question />} />
+			
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/career" element={<Career />} />
 				</Route>
 
+			
 				<Route path="/site" element={<Site />} />
-				<Route path="/career" element={<Career />} />
+		
 			</Routes>
 		</QueryClientProvider>
 	</BrowserRouter>
