@@ -1,10 +1,37 @@
-import React, { useState, forwardRef, useImperativeHandle, useEffect } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
-const PDFPreview = forwardRef(({ profileRef, sections }, ref) => {
+const PDFPreview = forwardRef(({ profileRef }, ref) => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const html2pdf = async (element) => {
+    const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL("image/png");
+
+    const imgWidth = 210;
+    const pageHeight = 295;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+
+    const pdf = new jsPDF("p", "mm", "a4", true);
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, undefined, "FAST");
+    heightLeft -= pageHeight;
+
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, undefined, "FAST");
+      heightLeft -= pageHeight;
+    }
+
+    const blob = new Blob([pdf.output("blob")], { type: "application/pdf" });
+
+    return blob;
+  };
 
   const generatePDF = async () => {
     if (!profileRef?.current) {
@@ -15,49 +42,11 @@ const PDFPreview = forwardRef(({ profileRef, sections }, ref) => {
     setIsGenerating(true);
 
     try {
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const canvas = await html2canvas(profileRef.current, {
-        scale: 2,
-        useCORS: true,
-        scrollY: -window.scrollY,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-
-      let yOffset = 0;
-
-      while (yOffset < imgHeight) {
-        const pageCropHeight = Math.min(imgHeight - yOffset, pageHeight * (imgWidth / pageWidth));
-
-        pdf.addImage(
-          imgData,
-          "PNG",
-          0,
-          0,
-          pageWidth,
-          (pageCropHeight * pageWidth) / imgWidth,
-          null,
-          "FAST",
-          yOffset
-        );
-
-        yOffset += pageCropHeight;
-
-        if (yOffset < imgHeight) {
-          pdf.addPage();
-        }
-      }
-
-      const pdfBlob = pdf.output("blob");
+      const pdfBlob = await html2pdf(profileRef.current);
       const previewUrl = URL.createObjectURL(pdfBlob);
       setPdfUrl(previewUrl);
 
-      return pdf;
+      return pdfBlob;
     } catch (error) {
       console.error("Error generating PDF:", error);
       return null;
@@ -65,10 +54,6 @@ const PDFPreview = forwardRef(({ profileRef, sections }, ref) => {
       setIsGenerating(false);
     }
   };
-
-  useEffect(() => {
-    generatePDF();
-  }, [sections]);
 
   useImperativeHandle(ref, () => ({
     generatePDF,
