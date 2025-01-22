@@ -3,11 +3,12 @@ package rocket.jobrocketbackend.answer.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.service.AnswerService;
 import rocket.jobrocketbackend.common.entity.Category;
+import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
 @Slf4j
 @RequestMapping("/answers")
@@ -18,24 +19,27 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @GetMapping
-    public ResponseEntity<AnswerListResDto> getCheckedAnswerList(Authentication authentication) {
-        AnswerListResDto response = answerService.findCheckedAnswerList(authentication);
+    public ResponseEntity<AnswerListResDto> getCheckedAnswerList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        Long memberId = customOAuth2User.getId();
+        AnswerListResDto response = answerService.findCheckedAnswerList(memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/unchecked")
-    public ResponseEntity<AnswerListResDto> getUncheckedAnswerList(Authentication authentication) {
-        AnswerListResDto response = answerService.findUncheckedAnswerList(authentication);
+    public ResponseEntity<AnswerListResDto> getUncheckedAnswerList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        Long memberId = customOAuth2User.getId();
+        AnswerListResDto response = answerService.findUncheckedAnswerList(memberId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Long> createAnswer(Authentication authentication,
+    public ResponseEntity<Long> createAnswer(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                              @RequestParam Category category,
                                              @RequestParam Long qid,
                                              @RequestParam(required = false, defaultValue = "") String content,
                                              @RequestParam(required = false, defaultValue = "false") boolean isIn) {
-        Long answerId = answerService.addAnswer(authentication, category, qid, content, isIn);
+        Long memberId = customOAuth2User.getId();
+        Long answerId = answerService.addAnswer(memberId, category, qid, content, isIn);
         return ResponseEntity.ok(answerId);
     }
 
@@ -53,10 +57,11 @@ public class AnswerController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteAnswer(Authentication authentication,
+    public ResponseEntity<String> deleteAnswer(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                                @RequestParam Category category,
                                                @RequestParam Long qid) {
-        answerService.removeAnswer(authentication, category, qid);
+        Long memberId = customOAuth2User.getId();
+        answerService.removeAnswer(memberId, category, qid);
         return ResponseEntity.ok("Answer deleted successfully");
     }
 }

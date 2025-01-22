@@ -2,22 +2,17 @@ package rocket.jobrocketbackend.answer.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.dto.response.AnswerListResDto;
 import rocket.jobrocketbackend.answer.dto.response.AnswerResDto;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.answer.exception.AnswerNotFoundException;
-import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
-import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRepository;
-import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.answer.repository.AnswerJpaRepository;
 import rocket.jobrocketbackend.common.entity.Category;
 import rocket.jobrocketbackend.question.cs.entity.CsEntity;
 import rocket.jobrocketbackend.question.cs.repository.CsRepository;
 import rocket.jobrocketbackend.question.personal.entity.PersonalEntity;
 import rocket.jobrocketbackend.question.personal.repository.PersonalRepository;
-import rocket.jobrocketbackend.question.introduce_qa.dto.response.IntroduceQAResDto;
 import rocket.jobrocketbackend.question.introduce_qa.entity.IntroduceQAEntity;
 import rocket.jobrocketbackend.question.introduce_qa.repository.IntroduceQAJpaRepository;
 import rocket.jobrocketbackend.user.entity.UserEntity;
@@ -30,35 +25,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
+
     private final AnswerJpaRepository answerJpaRepository;
     private final UserRepository userRepository;
     private final CsRepository csRepository;
     private final PersonalRepository personalRepository;
     private final IntroduceQAJpaRepository introduceQARepository;
 
-    public Long extractMemberIdFromAuthentication(Authentication authentication) {
-        if (authentication == null) {
-            log.info("asdfasf:", authentication.getDetails());
-            throw new IllegalStateException("Authentication is missing");
-        }
-        String nickname = authentication.getName();
-        UserEntity user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        return user.getId();
-    }
-
-    public AnswerListResDto findCheckedAnswerList(Authentication authentication) {
-        Long memberId = extractMemberIdFromAuthentication(authentication);
+    public AnswerListResDto findCheckedAnswerList(Long memberId) {
         return getAnswerList(memberId, true);
     }
 
-    public AnswerListResDto findUncheckedAnswerList(Authentication authentication) {
-        Long memberId = extractMemberIdFromAuthentication(authentication);
+    public AnswerListResDto findUncheckedAnswerList(Long memberId) {
         return getAnswerList(memberId, false);
     }
 
@@ -109,10 +91,10 @@ public class AnswerService {
         return answerJpaRepository.findByMemberIdAndCategoryAndQid(memberId, category, qid);
     }
 
-    public Long addAnswer(Authentication authentication, Category category, Long qid, String content, boolean isIn) {
-        Long memberId = extractMemberIdFromAuthentication(authentication);
+    public Long addAnswer(Long memberId, Category category, Long qid, String content, boolean isIn) {
         UserEntity user = userRepository.findById(memberId)
-                .orElseThrow(() -> new UserNotFoundException("user not found: ." + memberId));
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + memberId));
+
         AnswerEntity answer = AnswerEntity.builder()
                 .member(user)
                 .category(category)
@@ -142,10 +124,9 @@ public class AnswerService {
         answerJpaRepository.save(existingAnswer);
     }
 
-    public void removeAnswer(Authentication authentication, Category category, Long qid) {
-        Long memberId = extractMemberIdFromAuthentication(authentication);
+    public void removeAnswer(Long memberId, Category category, Long qid) {
         UserEntity user = userRepository.findById(memberId)
-                .orElseThrow(() -> new UserNotFoundException("user not found: " + memberId));
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + memberId));
 
         AnswerEntity answer = answerJpaRepository.findByMemberAndCategoryAndQid(user, category, qid);
         if (answer != null) {

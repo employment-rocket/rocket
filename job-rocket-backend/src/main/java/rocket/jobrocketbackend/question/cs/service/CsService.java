@@ -1,7 +1,6 @@
 package rocket.jobrocketbackend.question.cs.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import rocket.jobrocketbackend.answer.entity.AnswerEntity;
 import rocket.jobrocketbackend.answer.service.AnswerService;
@@ -19,8 +18,7 @@ public class CsService {
     private final CsRepository csRepository;
     private final AnswerService answerService;
 
-    public List<CsResDto> findCsListBySubcategories(List<String> subcategories, Authentication authentication) {
-        Long memberId = answerService.extractMemberIdFromAuthentication(authentication);
+    public List<CsResDto> findCsListBySubcategories(List<String> subcategories, Long memberId) {
         List<CsEntity> entities = csRepository.findBySubcategoryIn(subcategories);
 
         return entities.stream()

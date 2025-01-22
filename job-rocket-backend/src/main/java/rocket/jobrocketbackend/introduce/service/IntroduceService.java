@@ -3,7 +3,6 @@ package rocket.jobrocketbackend.introduce.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.core.Authentication;
 import rocket.jobrocketbackend.introduce.dto.response.IntroduceResDto;
 import rocket.jobrocketbackend.introduce.entity.IntroduceEntity;
 import rocket.jobrocketbackend.introduce.repository.IntroduceJpaRepository;
@@ -32,15 +31,13 @@ public class IntroduceService {
         this.gptService = gptService;
     }
 
-    public List<IntroduceResDto> getIntroduceListByAuthentication(Authentication authentication) {
-        Long memberId = extractMemberIdFromAuthentication(authentication);
+    public List<IntroduceResDto> getIntroduceList(Long memberId) {
         return introduceJpaRepository.findByMemberId(memberId).stream()
                 .map(this::convertToDto)
                 .toList();
     }
 
-    public IntroduceResDto saveIntroduce(MultipartFile file, Authentication authentication, String name) {
-        Long memberId = extractMemberIdFromAuthentication(authentication);
+    public IntroduceResDto saveIntroduce(MultipartFile file, Long memberId, String name) {
         UserEntity user = userRepository.findById(memberId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
 
@@ -75,15 +72,5 @@ public class IntroduceService {
                 .fileData(entity.getFileData())
                 .createdAt(entity.getCreatedAt())
                 .build();
-    }
-
-    private Long extractMemberIdFromAuthentication(Authentication authentication) {
-        if (authentication == null) {
-            throw new IllegalStateException("Authentication is missing");
-        }
-        String username = authentication.getName();
-        UserEntity user = userRepository.findByNickname(username)
-                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다: " + username));
-        return user.getId();
     }
 }
