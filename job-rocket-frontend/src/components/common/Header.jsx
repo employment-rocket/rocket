@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
-import chat from "../../assets/chat.png"
+import chat from "../../assets/chat.png";
 import defaultProfile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
 import { useNavigate, useLocation } from "react-router";
@@ -22,8 +22,6 @@ const Header = () => {
 	const [isAlarmOpen, setAlarmOpen] = useState(false);
 	const [isChatOpen, setChatOpen] = useState(false);
 
-
-
 	useEffect(() => {
 		const token = localStorage.getItem("AccessToken");
 		setLogin(!!token);
@@ -31,34 +29,43 @@ const Header = () => {
 			const fetchProfileImage = async () => {
 				try {
 					const imageUrl = await getProfileImage();
-					console.log("image: ", imageUrl);
 					setProfileImage(imageUrl);
 				} catch (error) {
 					console.error("Error fetching profile image:", error);
-					setProfileImage('default');
+					setProfileImage("default");
 				}
 			};
 			fetchProfileImage();
 		} else {
-			setProfileImage('default');
+			setProfileImage("default");
 		}
 	}, [location, setProfileImage]);
-
 
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
 		localStorage.removeItem("RefreshToken");
 		setLogin(false);
 		setDropdownOpen(false);
-		setProfileImage('default');
+		setProfileImage("default");
 		navigate("/");
 	};
+
 	const handleProfileClick = () => {
-		if (isLogin) {
-			setDropdownOpen(!isDropdownOpen);
-		} else {
-			setModalOpen(true);
-		}
+		setDropdownOpen(!isDropdownOpen);
+		setAlarmOpen(false);
+		setChatOpen(false);
+	};
+
+	const handleAlarmClick = () => {
+		setAlarmOpen(!isAlarmOpen);
+		setDropdownOpen(false);
+		setChatOpen(false);
+	};
+
+	const handleChatClick = () => {
+		setChatOpen(!isChatOpen);
+		setDropdownOpen(false);
+		setAlarmOpen(false);
 	};
 
 	const handleLogin = () => {
@@ -82,8 +89,8 @@ const Header = () => {
 			<div className="flex space-x-6 ml-6 text-base">
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/board")
-						? "text-blue-500 font-semibold"
-						: "text-gray-700"
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
 						}`}
 					onClick={() => navigate("/board")}
 				>
@@ -91,8 +98,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/schedule")
-						? "text-blue-500 font-semibold"
-						: "text-gray-700"
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
 						}`}
 					onClick={() => navigate("/schedule")}
 				>
@@ -100,8 +107,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/question")
-						? "text-blue-500 font-semibold"
-						: "text-gray-700"
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
 						}`}
 					onClick={() => navigate("/question")}
 				>
@@ -109,8 +116,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/site")
-						? "text-blue-500 font-semibold"
-						: "text-gray-700"
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
 						}`}
 					onClick={() => navigate("/site")}
 				>
@@ -118,8 +125,8 @@ const Header = () => {
 				</div>
 				<div
 					className={`cursor-pointer ${location.pathname.startsWith("/career")
-						? "text-blue-500 font-semibold"
-						: "text-gray-700"
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
 						}`}
 					onClick={() => navigate("/career")}
 				>
@@ -129,14 +136,19 @@ const Header = () => {
 
 			<div className="flex items-center space-x-4 ml-auto">
 				<img
-					src={profileImage === 'default' ? defaultProfile : profileImage}
+					src={profileImage === "default" ? defaultProfile : profileImage}
 					alt="프로필이미지"
 					className="h-6 w-6 cursor-pointer rounded-full"
 					onClick={handleProfileClick}
 				/>
 				{isLogin && (
 					<>
-						<img src={bell} alt="알림" className="h-6 w-6 cursor-pointer" onClick={() => setAlarmOpen(true)} />
+						<img
+							src={bell}
+							alt="알림"
+							className="h-6 w-6 cursor-pointer"
+							onClick={handleAlarmClick}
+						/>
 						{isAlarmOpen && <Alarm onClose={() => setAlarmOpen(false)} />}
 						<DropdownMenu
 							isOpen={isDropdownOpen}
@@ -149,13 +161,11 @@ const Header = () => {
 							src={chat}
 							alt="채팅"
 							className="h-6 w-6 cursor-pointer"
-							onClick={() => !isChatOpen && setChatOpen(true)}
+							onClick={handleChatClick}
 						/>
 						{isChatOpen && <ChatModal onClose={() => setChatOpen(false)} />}
 					</>
 				)}
-
-				{isChatOpen && <ChatModal onClose={() => setChatOpen(false)} />}
 			</div>
 			<LoginPage
 				isOpen={isModalOpen}
@@ -165,4 +175,5 @@ const Header = () => {
 		</div>
 	);
 };
+
 export default Header;

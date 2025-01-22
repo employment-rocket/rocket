@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import Message from "./Message";
+import door from "../../../assets/door.jpg";
 
 const generateMessages = (startId, count) => {
+    if (startId <= 0) return [];
     return Array.from({ length: count }, (_, index) => ({
         id: startId + index,
         text: `메시지 내용 ${startId + index}`,
@@ -13,7 +15,33 @@ const generateMessages = (startId, count) => {
 const MessageBox = ({ chat, onClose }) => {
     const [messages, setMessages] = useState(() => generateMessages(16, 15));
     const [newMessage, setNewMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const scrollRef = useRef(null);
+
+    const loadPreviousMessages = () => {
+        if (isLoading || !hasMoreMessages) return;
+
+        setIsLoading(true);
+        setTimeout(() => {
+            const firstMessageId = messages[0]?.id || 0;
+            const newMessages = generateMessages(firstMessageId - 15, 15);
+
+            if (newMessages.length > 0) {
+                setMessages((prev) => [...newMessages, ...prev]);
+            } else {
+                setHasMoreMessages(false);
+            }
+
+            setIsLoading(false);
+        }, 1000);
+    };
+
+    const handleScroll = () => {
+        if (scrollRef.current.scrollTop === 0 && hasMoreMessages) {
+            loadPreviousMessages();
+        }
+    };
 
     const scrollToBottom = () => {
         if (scrollRef.current) {
@@ -50,19 +78,25 @@ const MessageBox = ({ chat, onClose }) => {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="flex items-center bg-white text-black p-4 border-b">
-                <h2 className="text-sm font-semibold flex-1 text-center">{chat.title}</h2>
-                <button
-                    className="text-red-500 hover:text-red-700 text-lg font-bold"
+            <div className="flex items-center bg-white text-black p-4 border-b relative">
+                <img
+                    src={door}
+                    alt="닫기"
+                    className="h-6 w-6 cursor-pointer absolute left-4"
                     onClick={onClose}
-                >
-                    X
-                </button>
+                />
+                <h2 className="text-sm font-semibold flex-1 text-center">{chat.title}</h2>
             </div>
             <div
                 ref={scrollRef}
                 className="flex-1 overflow-y-auto p-4 bg-[#B1DFFF]"
+                onScroll={handleScroll}
             >
+                {isLoading && (
+                    <div className="text-center text-gray-500 mb-2">
+                        이전 메시지를 불러오는 중...
+                    </div>
+                )}
                 {messages.map((message) => (
                     <Message key={message.id} message={message} />
                 ))}
