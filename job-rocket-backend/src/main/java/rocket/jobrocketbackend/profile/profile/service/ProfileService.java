@@ -1,10 +1,16 @@
 package rocket.jobrocketbackend.profile.profile.service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -128,14 +134,38 @@ public class ProfileService {
 		return mapToResponse(profile, sortSectionsByOrder(profile.getSections()));
 	}
 
-	public String uploadFile(MultipartFile file, Long memberId, SectionType sectionType) throws IOException {
+	public Map<String, String> uploadFileWithResponse(MultipartFile file, Long memberId, SectionType sectionType) throws IOException {
 		String fileName = profileFileService.uploadFile(file, sectionType);
-		profileFileService.saveFileToProfile(memberId, fileName, sectionType, profileRepository);
-		return sectionType == SectionType.PROFILE_IMAGE ? "프로필 이미지 업로드 성공" : "파일 업로드 성공";
+		ProfileEntity profile = profileRepository.findByMemberId(memberId)
+			.orElse(ProfileEntity.createWithMemberId(memberId));
+
+		updateFileSections(profile.getSections(), fileName, sectionType);
+
+		profileRepository.save(profile);
+
+		return Map.of(
+			"message", "파일 업로드 성공",
+			"fileName", fileName
+		);
 	}
 
 	public ResponseEntity<byte[]> getFileResponse(String fileName, SectionType sectionType) throws IOException {
-		return profileFileService.getFileResponse(fileName, sectionType);
+		Map<String, Object> fileAndMediaType = profileFileService.getFileAndMediaType(fileName, sectionType);
+
+		return ResponseEntity.ok()
+			.contentType((MediaType) fileAndMediaType.get("mediaType"))
+			.body((byte[]) fileAndMediaType.get("fileBytes"));
+	}
+
+	private void updateFileSections(List<Section> sections, String fileName, SectionType sectionType) {
+		if (sectionType == SectionType.PROFILE_IMAGE) {
+			sections.removeIf(section -> section.getType() == SectionType.PROFILE_IMAGE);
+
+			sections.add(Section.builder()
+				.type(SectionType.PROFILE_IMAGE)
+				.data(Map.of("profileImage", fileName))
+				.build());
+		}
 	}
 
 	private List<Section> updateSections(ProfileEntity profileEntity, ProfileRequestDto request) {
