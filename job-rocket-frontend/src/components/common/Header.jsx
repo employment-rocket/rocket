@@ -40,7 +40,7 @@ const Header = () => {
 			setProfileImage("default");
 		}
 	}, [location, setProfileImage]);
-//주석
+
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
 		localStorage.removeItem("RefreshToken");
