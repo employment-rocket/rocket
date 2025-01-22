@@ -83,4 +83,5 @@ public class UserEntity {
         this.profile=profileImage;
         return this;
     }
+
 }
