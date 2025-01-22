@@ -40,7 +40,7 @@ const Header = () => {
 			setProfileImage("default");
 		}
 	}, [location, setProfileImage]);
-
+//주석
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
 		localStorage.removeItem("RefreshToken");
@@ -56,7 +56,6 @@ const Header = () => {
 		}else{
 			setModalOpen(true);
 		}
-	//	setDropdownOpen(!isDropdownOpen);
 		setAlarmOpen(false);
 		setChatOpen(false);
 	};
