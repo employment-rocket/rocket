@@ -113,7 +113,7 @@ const UpdateModal = ({ isOpen, onCancel, data }) => {
 						className="py-2 bg-blue-500 text-white rounded-lg w-full"
 						onClick={onSave}
 					>
-						수장
+						수정
 					</button>
 				</div>
 			</div>

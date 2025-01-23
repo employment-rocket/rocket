@@ -14,8 +14,6 @@ const Free = () => {
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
-
-	console.log(data);
 	return (
 		<div
 			className="flex flex-col space-y-3 h-[80vh]"
@@ -39,7 +37,13 @@ const Free = () => {
 			<div className="h-full border bottom-3 rounded-lg p-3  overflow-y-auto scrollbar-hide">
 				<div className="grid grid-cols-2 gap-10">
 					{data.map((item) => (
-						<FreeBoardItem key={item.id} item={item} />
+						<div
+							className="cursor-pointer"
+							key={item.id}
+							onClick={() => navigate(`/board/free/${item.id}`)}
+						>
+							<FreeBoardItem item={item} />
+						</div>
 					))}
 				</div>
 			</div>

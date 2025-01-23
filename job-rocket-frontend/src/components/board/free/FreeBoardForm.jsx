@@ -18,9 +18,9 @@ const FreeBoardForm = () => {
 	};
 
 	return (
-		<div className="border rounded-lg h-full">
+		<div className="border rounded-lg ">
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col gap-5 p-3 items-center h-full">
+				<div className="flex flex-col gap-5 p-3 items-center ">
 					{errors.title && (
 						<span className="text-red-600">
 							제목은 필수 입니다.
@@ -33,8 +33,7 @@ const FreeBoardForm = () => {
 					/>
 
 					<textarea
-						cols={60}
-						rows={20}
+						rows={15}
 						placeholder="내용을 입력해 주세요"
 						className="border p-2 rounded-lg w-full"
 						{...register("content")}
