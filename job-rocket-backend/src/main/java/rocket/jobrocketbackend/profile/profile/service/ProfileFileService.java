@@ -36,6 +36,7 @@ public class ProfileFileService {
 		if (!Files.exists(filePath)) {
 			throw new IllegalArgumentException("파일을 찾을 수 없습니다: " + fileName);
 		}
+
 		return Files.readAllBytes(filePath);
 	}
 
