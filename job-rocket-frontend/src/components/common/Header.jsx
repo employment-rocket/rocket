@@ -39,9 +39,9 @@ const Header = () => {
 	}, [isAuthenticated, location]);
 
 	const handleProfileClick = () => {
-		if(isLogin){
+		if (isAuthenticated) {
 			setDropdownOpen(!isDropdownOpen);
-		}else{
+		} else {
 			setModalOpen(true);
 		}
 		setAlarmOpen(false);

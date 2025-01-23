@@ -10,9 +10,7 @@ export const connectWebSocket = (onMessageReceived) => {
     stompClient = new Client({
         webSocketFactory: () => new SockJS(WEBSOCKET_URL),
         reconnectDelay: 5000,
-        debug: (str) => console.log(str),
         onConnect: () => {
-            console.log("Connected to WebSocket");
             stompClient.subscribe("/user/queue/messages", (message) => {
                 if (onMessageReceived) {
                     const parsedMessage = JSON.parse(message.body);
@@ -31,7 +29,6 @@ export const connectWebSocket = (onMessageReceived) => {
 export const disconnectWebSocket = () => {
     if (stompClient) {
         stompClient.deactivate();
-        console.log("Disconnected from WebSocket");
     }
 };
 
@@ -85,7 +82,6 @@ export const getMessages = async (conversationId, page, size) => {
 export const markMessageAsRead = async (noteId) => {
     try {
         await api.post(`/notes/read/${noteId}`);
-        console.log("Message marked as read");
     } catch (error) {
         console.error("Error marking message as read:", error);
         throw error;

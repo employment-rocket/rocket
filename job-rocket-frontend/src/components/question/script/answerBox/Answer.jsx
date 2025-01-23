@@ -85,7 +85,6 @@ const Answer = ({
         try {
             if (!newAnswerId) {
                 const createdAnswerId = await createAnswer({
-                    memberId: 1,
                     category,
                     qid,
                     content: currentAnswer,
@@ -105,13 +104,15 @@ const Answer = ({
                     answerId: newAnswerId,
                     content: currentAnswer,
                 });
-                onAddCheckedQuestion({
-                    qid,
-                    question,
-                    category,
-                    answerId: newAnswerId,
-                    content: currentAnswer,
-                });
+                if (isSelected) {
+                    onAddCheckedQuestion({
+                        qid,
+                        question,
+                        category,
+                        answerId: newAnswerId,
+                        content: currentAnswer,
+                    });
+                }
                 alert("답변이 수정되었습니다.");
             }
             setIsEditing(false);
