@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getProfile, addProfile, updateProfile, uploadFile, fetchFile } from "../../../api/profile/ProfileAPI";
 import PortfolioItems from "../profileCommon/PortfolioItems";
 import { usePortfolio } from "./usePortfolio";
 
-const PortfolioForm = ({ order, onSave }) => {
+const PortfolioForm = ({ order }) => {
   const {
     items,
     setItems,

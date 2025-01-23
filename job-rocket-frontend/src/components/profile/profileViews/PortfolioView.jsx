@@ -17,10 +17,8 @@ const PortfolioView = () => {
       );
 
       if (portfolioSection) {
-        // Set URLs
         setUrls(portfolioSection.data.urls || []);
 
-        // Fetch and set files and images
         const fetchedItems = await Promise.all(
           (portfolioSection.data.files || []).map(async (file, index) => {
             const fileName = file.fileName || file.name;
@@ -36,7 +34,7 @@ const PortfolioView = () => {
           })
         );
 
-        setItems(fetchedItems.filter(Boolean)); // Filter null values
+        setItems(fetchedItems.filter(Boolean)); 
       } else {
         setUrls([]);
         setItems([]);
@@ -58,7 +56,7 @@ const PortfolioView = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-      {/* URL Section */}
+    
       <div className="mb-8 border-l-4 border-blue-500 pl-4">
         <h3 className="text-md font-semibold mb-4 text-left">URL</h3>
         {urls.length > 0 ? (
@@ -93,7 +91,6 @@ const PortfolioView = () => {
         )}
       </div>
 
-      {/* Files and Images Section */}
       <div className="border-l-4 border-green-500 pl-4">
         <h3 className="text-md font-semibold mb-4 text-left">파일 및 이미지</h3>
         {items.length > 0 ? (
