@@ -1,54 +1,42 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
 import chat from "../../assets/chat.png";
 import defaultProfile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
-import { useNavigate, useLocation } from "react-router";
 import DropdownMenu from "./DropdownMenu";
-import { getProfileImage } from "../../api/user/UserApi";
-import useProfileStore from "../../store/profileImageStore";
 import Alarm from "../alarm/Alarm";
 import ChatModal from "../note/ChatModal";
+import { useAuth } from "../../context/auth/AuthContext";
 
 const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { isAuthenticated, logout, getProfileImage } = useAuth();
+
 	const [isModalOpen, setModalOpen] = useState(false);
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
-	const [isLogin, setLogin] = useState(false);
-	const profileImage = useProfileStore((state) => state.profileImage);
-	const setProfileImage = useProfileStore((state) => state.setProfileImage);
 	const [isAlarmOpen, setAlarmOpen] = useState(false);
 	const [isChatOpen, setChatOpen] = useState(false);
+	const [profileImage, setProfileImage] = useState(defaultProfile);
 
 	useEffect(() => {
-		const token = localStorage.getItem("AccessToken");
-		setLogin(!!token);
-		if (token) {
+		if (isAuthenticated) {
 			const fetchProfileImage = async () => {
 				try {
 					const imageUrl = await getProfileImage();
-					setProfileImage(imageUrl);
+					setProfileImage(imageUrl || defaultProfile);
 				} catch (error) {
 					console.error("Error fetching profile image:", error);
-					setProfileImage("default");
+					setProfileImage(defaultProfile);
 				}
 			};
 			fetchProfileImage();
 		} else {
-			setProfileImage("default");
+			setProfileImage(defaultProfile);
 		}
-	}, [location, setProfileImage]);
-
-	const handleLogout = () => {
-		localStorage.removeItem("AccessToken");
-		localStorage.removeItem("RefreshToken");
-		setLogin(false);
-		setDropdownOpen(false);
-		setProfileImage("default");
-		navigate("/");
-	};
+	}, [isAuthenticated, location]);
 
 	const handleProfileClick = () => {
 		setDropdownOpen(!isDropdownOpen);
@@ -68,11 +56,6 @@ const Header = () => {
 		setAlarmOpen(false);
 	};
 
-	const handleLogin = () => {
-		setLogin(true);
-		setModalOpen(false);
-	};
-
 	return (
 		<div
 			className="flex items-center w-full top-0 h-[60px] px-6 border-b border-gray-300"
@@ -87,62 +70,35 @@ const Header = () => {
 			</div>
 
 			<div className="flex space-x-6 ml-6 text-base">
-				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/board")
+				{[
+					{ path: "/board", label: "게시판" },
+					{ path: "/schedule", label: "일정 관리" },
+					{ path: "/question", label: "면접 질문" },
+					{ path: "/site", label: "취준 도움 사이트" },
+					{ path: "/career", label: "커리어" },
+				].map(({ path, label }) => (
+					<div
+						key={path}
+						className={`cursor-pointer ${location.pathname.startsWith(path)
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-						}`}
-					onClick={() => navigate("/board")}
-				>
-					게시판
-				</div>
-				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/schedule")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
-						}`}
-					onClick={() => navigate("/schedule")}
-				>
-					일정 관리
-				</div>
-				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/question")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
-						}`}
-					onClick={() => navigate("/question")}
-				>
-					면접 질문
-				</div>
-				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/site")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
-						}`}
-					onClick={() => navigate("/site")}
-				>
-					취준 도움 사이트
-				</div>
-				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/career")
-							? "text-blue-500 font-semibold"
-							: "text-gray-700"
-						}`}
-					onClick={() => navigate("/career")}
-				>
-					커리어
-				</div>
+							}`}
+						onClick={() => navigate(path)}
+					>
+						{label}
+					</div>
+				))}
 			</div>
 
 			<div className="flex items-center space-x-4 ml-auto">
-				<img
-					src={profileImage === "default" ? defaultProfile : profileImage}
-					alt="프로필이미지"
-					className="h-6 w-6 cursor-pointer rounded-full"
-					onClick={handleProfileClick}
-				/>
-				{isLogin && (
+				{isAuthenticated ? (
 					<>
+						<img
+							src={profileImage}
+							alt="프로필이미지"
+							className="h-6 w-6 cursor-pointer rounded-full"
+							onClick={handleProfileClick}
+						/>
 						<img
 							src={bell}
 							alt="알림"
@@ -154,7 +110,7 @@ const Header = () => {
 							isOpen={isDropdownOpen}
 							onClose={() => setDropdownOpen(false)}
 							onNavigate={(action) => {
-								if (action === "logout") handleLogout();
+								if (action === "logout") logout();
 							}}
 						/>
 						<img
@@ -165,13 +121,19 @@ const Header = () => {
 						/>
 						{isChatOpen && <ChatModal onClose={() => setChatOpen(false)} />}
 					</>
+				) : (
+					<button
+						className="text-blue-500 hover:text-blue-700"
+						onClick={() => setModalOpen(true)}
+					>
+						로그인
+					</button>
 				)}
 			</div>
-			<LoginPage
-				isOpen={isModalOpen}
-				onClose={() => setModalOpen(false)}
-				onLogin={handleLogin}
-			/>
+
+			{isModalOpen && (
+				<LoginPage isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
+			)}
 		</div>
 	);
 };
