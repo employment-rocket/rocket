@@ -36,7 +36,7 @@ const FreeBoardView = () => {
 					<img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" />
 					{mock.author}
 				</div>
-				<div>{mock.post_date}</div>
+				<div className="text-gray-500">{mock.post_date}</div>
 			</div>
 
 			<hr />

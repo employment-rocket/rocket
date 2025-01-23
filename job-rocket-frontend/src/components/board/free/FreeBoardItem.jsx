@@ -19,7 +19,7 @@ const FreeBoardItem = ({ item }) => {
 					<img className="w-[1.5rem] h-[1.5rem]" src={img} />
 					{item.nickName}
 				</div>
-				<div>{item.postDate}</div>
+				<div className="text-gray-500">{item.postDate}</div>
 			</div>
 		</div>
 	);
