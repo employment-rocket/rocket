@@ -11,7 +11,7 @@ const FreeComment = () => {
 					<img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" />
 					{"노년백수"}
 				</div>
-				<div>2025-01-23</div>
+				<div className="text-gray-500">2025-01-23</div>
 			</div>
 			<div>
 				<hr />
