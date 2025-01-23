@@ -111,21 +111,20 @@ export const uploadFile = async (file, sectionType) => {
 
 export const fetchFile = async (fileName, sectionType) => {
   try {
-    const response = await api.get(`/profiles/file/${fileName}`, {
+    const response = await api.get(`/profiles/file/${encodeURIComponent(fileName)}`, {
       params: { sectionType },
       responseType: "arraybuffer",
     });
 
     const fileBlob = new Blob([response.data], {
-      type: sectionType === "PROFILE_IMAGE" ? "image/jpeg" : "application/octet-stream",
+      type: sectionType === "PROFILE_IMAGE" ? "image/jpeg" : "application/pdf",
     });
 
     const fileUrl = URL.createObjectURL(fileBlob);
     console.log("파일 조회 성공:", fileUrl);
     return fileUrl;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "파일 조회 실패";
-    console.error("fetchFile API error:", errorMessage);
-    throw new Error(errorMessage);
+    console.error("파일 조회 실패:", error.response?.data?.message || error.message);
+    throw error;
   }
 };
