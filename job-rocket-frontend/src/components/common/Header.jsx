@@ -39,7 +39,11 @@ const Header = () => {
 	}, [isAuthenticated, location]);
 
 	const handleProfileClick = () => {
-		setDropdownOpen(!isDropdownOpen);
+		if(isLogin){
+			setDropdownOpen(!isDropdownOpen);
+		}else{
+			setModalOpen(true);
+		}
 		setAlarmOpen(false);
 		setChatOpen(false);
 	};

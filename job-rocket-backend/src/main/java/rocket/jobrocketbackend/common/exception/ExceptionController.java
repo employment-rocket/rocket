@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import rocket.jobrocketbackend.common.response.ErrorResponse;
-import rocket.jobrocketbackend.user.exception.FileNotFoundException;
 
 @RestControllerAdvice
 public class ExceptionController {
