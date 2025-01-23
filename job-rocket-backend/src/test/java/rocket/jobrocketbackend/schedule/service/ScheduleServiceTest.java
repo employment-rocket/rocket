@@ -45,7 +45,7 @@ class ScheduleServiceTest {
 
     @BeforeEach
     void init() {
-        UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).allowAlarm(false).build();
         userRepository.save(user);
         LocalDate date = LocalDate.of(2024, 12, 23);
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
@@ -190,7 +190,7 @@ class ScheduleServiceTest {
     }
 
     private UserEntity createUser() {
-        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("test").allowAlarm(false).allowEmail(false).build();
         userRepository.save(user);
         return user;
     }

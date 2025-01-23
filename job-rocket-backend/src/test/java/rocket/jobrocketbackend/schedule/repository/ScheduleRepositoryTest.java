@@ -40,7 +40,7 @@ class ScheduleRepositoryTest {
     @BeforeEach
     void init(){
         LocalDate date = LocalDate.of(2024, 12, 23);
-        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).allowAlarm(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
         userId = user.getId();
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
@@ -64,7 +64,7 @@ class ScheduleRepositoryTest {
     @Test
     void createScheduleEntity(){
         //given
-        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("test").role(Role.MEMBER).allowAlarm(false).allowEmail(false).build();
         userRepository.save(user);
         ScheduleEntity newSchedule = ScheduleEntity.builder()
                 .title("삼성전자")
@@ -105,7 +105,7 @@ class ScheduleRepositoryTest {
     @DisplayName("scheduleId에 해당하는 schdeule를 삭제한다.")
     void deleteById() {
         // given
-        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("test").role(Role.MEMBER).allowAlarm(false).allowEmail(false).build();
         userRepository.save(user);
         ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
         scheduleRepository.save(entity);

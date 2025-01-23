@@ -25,4 +25,3 @@ public class ErrorResponse {
         this.validation.put(fieldName, errorMessage);
     }
 }
-

@@ -25,4 +25,3 @@ public abstract class RocketException extends RuntimeException{
         validation.put(fieldName,value);
     }
 }
-
