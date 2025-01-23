@@ -10,7 +10,9 @@ const FreeBoardView = () => {
 		content: "어림도 없지 ",
 		post_date: "2025-01-20",
 	};
-
+	const img = `${
+		import.meta.env.VITE_API_BASE_URL
+	}/board/free/temp/default.png`;
 	const boardId = useParams("boardId");
 
 	return (
@@ -30,7 +32,10 @@ const FreeBoardView = () => {
 				</div>
 			</div>
 			<div className="flex justify-between">
-				<div>{mock.author}</div>
+				<div className="flex items-center gap-1">
+					<img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" />
+					{mock.author}
+				</div>
 				<div>{mock.post_date}</div>
 			</div>
 
