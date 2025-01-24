@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.common.entity.Profile;
 
@@ -27,26 +25,14 @@ public class FreeBoardResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate postDate;
     private String profile;
-
-    public static List<FreeBoardResponse> mockDataList(){
-        LocalDate date = LocalDate.of(2025, 01, 14);
-        return List.of(new FreeBoardResponse(1L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(2L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(3L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(4L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(5L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(6L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(7L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(8L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName()),
-                new FreeBoardResponse(9L,"강한 흰수염고래","취직하는법좀요","제발요",date,Profile.DEFAULT.getFileName())
-        );
-    }
+    private Long userId;
 
     public static FreeBoardResponse from(FreeBoardEntity entity){
         return FreeBoardResponse.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
+                .userId(entity.getUser().getId())
                 .nickName(entity.getUser().getNickname())
                 .postDate(entity.getPostDate()).build();
     }

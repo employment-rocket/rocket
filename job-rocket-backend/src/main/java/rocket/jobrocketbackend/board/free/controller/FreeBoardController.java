@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
+import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.board.free.service.FreeBoardService;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 
@@ -30,13 +31,16 @@ public class FreeBoardController {
 
     @GetMapping
     public ResponseEntity<List<FreeBoardResponse>> getFreeBoardList(){
-        return ResponseEntity.ok(FreeBoardResponse.mockDataList());
+        //TODO 추후 무한스크롤
+        List<FreeBoardEntity> list = freeBoardService.findAll();
+        return ResponseEntity.ok(list.stream().map(FreeBoardResponse::from).toList());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FreeBoardResponse> getFreeBoard(@PathVariable("id")Long id){
-        List<FreeBoardResponse> list = FreeBoardResponse.mockDataList().stream().filter(item -> item.getId().equals(id)).toList();
-        return ResponseEntity.ok(list.get(0));
+    @GetMapping("/{boardId}")
+    public ResponseEntity<FreeBoardResponse> getFreeBoard(@PathVariable("boardId")Long id){
+        List<FreeBoardEntity> list = freeBoardService.findAll();
+        List<FreeBoardResponse> result = list.stream().filter(item -> item.getId().equals(id)).map(FreeBoardResponse::from).toList();
+        return ResponseEntity.ok(result.get(0));
     }
 
     @PostMapping

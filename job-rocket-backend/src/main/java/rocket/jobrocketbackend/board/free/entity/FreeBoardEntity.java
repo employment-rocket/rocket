@@ -26,7 +26,7 @@ public class FreeBoardEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate postDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private UserEntity user;
 }

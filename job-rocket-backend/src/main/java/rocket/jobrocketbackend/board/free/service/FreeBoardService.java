@@ -12,6 +12,7 @@ import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,5 +26,9 @@ public class FreeBoardService {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저입니다."));
         FreeBoardEntity board = freeBoardRepository.save(request.toEntity(today, user));
         return FreeBoardResponse.from(board);
+    }
+
+    public List<FreeBoardEntity> findAll() {
+        return freeBoardRepository.findAll();
     }
 }
