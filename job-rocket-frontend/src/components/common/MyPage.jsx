@@ -1,18 +1,19 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { getUserProfile } from "../api/user/UserApi";
-import { useParams } from "react-router";
-import logo from "../assets/default-profile.png";
+import { getUserProfile } from "../../api/user/UserApi";
+import logo from "../../assets/default-profile.png";
+import { useNavigate } from "react-router";
 import {
 	uploadProfileFile,
 	getProfileImage,
 	updatedAllowEmail,
 	updatedAllowAlarm,
-} from "../api/user/UserApi";
-import useProfileStore from "../store/profileImageStore";
+} from "../../api/user/UserApi";
+import useProfileStore from "../../store/profileImageStore";
 
-const MyPage = () => {
-	const { userId } = useParams();
+const MyPage = ({isOpen, onClose, onNavigate}) => {
+	const navigate = useNavigate();
+	const [userId, setUserId] = useState();
 	const [email, setEmail] = useState();
 	const [allowEmail, setAllowEmail] = useState();
 	const [allowAlarm, setAllowAlarm] = useState();
@@ -21,14 +22,17 @@ const MyPage = () => {
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
 
 	useEffect(() => {
+	//	if(isOpen){
 		const fetchUserProfile = async () => {
 			try {
-				const data = await getUserProfile(userId);
+				const data = await getUserProfile();
+				setUserId(data.id);
 				setAllowEmail(data.allowEmail);
 				setAllowAlarm(data.allowAlarm);
 				setNickname(data.nickname);
 				setEmail(data.email);
 				setProfile(data.profile);
+				console.log("id: ", data.id);
 
 				if (data.profile !== "default") {
 					const fetchImage = async () => {
@@ -48,13 +52,10 @@ const MyPage = () => {
 				console.error("유저 프로필 로드 실패:", error);
 			}
 		};
+		fetchUserProfile();
+//	}
+	}, []);
 
-		if (userId) {
-			fetchUserProfile();
-		} else {
-			console.error("Invalid userId");
-		}
-	}, [userId]);
 
 	const handleAllowEmailChange = async () => {
 		const updateAllowEmail = !allowEmail;
@@ -90,9 +91,9 @@ const MyPage = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center min-h-screen">
+		<div className="absolute top-14 right-6 flex items-center justify-center bg-white z-50">
 			<div
-				className="w-[632px] h-[600px] rounded-2xl border border-gray-300 bg-white shadow-md flex flex-col justify-center items-center"
+				className="w-[550px] h-[600px] rounded-2xl border border-gray-300 bg-white shadow-md flex flex-col justify-center items-center"
 				style={{ fontFamily: "CookieBold" }}
 			>
 				<div className="flex items-center mb-8 w-full px-6">
@@ -178,6 +179,14 @@ const MyPage = () => {
 						</label>
 					</div>
 				</div>
+				<div className="flex items-center justify-end w-full px-6 mb-1 ">
+  <button
+    className="w-[100px] h-[50px] mt-4 text-center text-red-500 text-xl mr-3 border border-gray-300 text-center rounded-lg "
+    onClick={() => onNavigate("logout")}
+  >
+    로그아웃
+  </button>
+</div>
 			</div>
 		</div>
 	);

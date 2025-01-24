@@ -5,17 +5,17 @@ import chat from "../../assets/chat.png";
 import defaultProfile from "../../assets/default-profile.png";
 import LoginPage from "../../pages/Login";
 import { useNavigate, useLocation } from "react-router";
-import DropdownMenu from "./DropdownMenu";
 import { getProfileImage } from "../../api/user/UserApi";
 import useProfileStore from "../../store/profileImageStore";
 import Alarm from "../alarm/Alarm";
 import ChatModal from "../note/ChatModal";
+import MyPage from "./MyPage";
 
 const Header = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [isModalOpen, setModalOpen] = useState(false);
-	const [isDropdownOpen, setDropdownOpen] = useState(false);
+	const [isMyPageOpen, setMyPageOpen] = useState(false);
 	const [isLogin, setLogin] = useState(false);
 	const profileImage = useProfileStore((state) => state.profileImage);
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
@@ -45,14 +45,14 @@ const Header = () => {
 		localStorage.removeItem("AccessToken");
 		localStorage.removeItem("RefreshToken");
 		setLogin(false);
-		setDropdownOpen(false);
+		setMyPageOpen(false);
 		setProfileImage("default");
 		navigate("/");
 	};
 
 	const handleProfileClick = () => {
 		if(isLogin){
-			setDropdownOpen(!isDropdownOpen);
+			setMyPageOpen(!isMyPageOpen);
 		}else{
 			setModalOpen(true);
 		}
@@ -62,19 +62,20 @@ const Header = () => {
 
 	const handleAlarmClick = () => {
 		setAlarmOpen(!isAlarmOpen);
-		setDropdownOpen(false);
+		setMyPageOpen(false);
 		setChatOpen(false);
 	};
 
 	const handleChatClick = () => {
 		setChatOpen(!isChatOpen);
-		setDropdownOpen(false);
+		setMyPageOpen(false);
 		setAlarmOpen(false);
 	};
 
 	const handleLogin = () => {
 		setLogin(true);
 		setModalOpen(false);
+		setMyPageOpen(false);
 	};
 
 	return (
@@ -154,9 +155,9 @@ const Header = () => {
 							onClick={handleAlarmClick}
 						/>
 						{isAlarmOpen && <Alarm onClose={() => setAlarmOpen(false)} />}
-						<DropdownMenu
-							isOpen={isDropdownOpen}
-							onClose={() => setDropdownOpen(false)}
+						<MyPage
+							isOpen={isMyPageOpen}
+							onClose={() => setMyPageOpen(false)}
 							onNavigate={(action) => {
 								if (action === "logout") handleLogout();
 							}}

@@ -1,6 +1,6 @@
 import api from "../api";
 
-export const getUserNicknameAndId = async () => {
+export const getUserProfile = async () => {
     try {
       const response = await api.get("/user/profile");
       return response.data;
@@ -9,14 +9,15 @@ export const getUserNicknameAndId = async () => {
     }
   };
 
-  export const getUserProfile = async (userId) => {
+ /* export const getUserProfile = async () => {
     try {
-      const response = await api.get(`/user/mypage/${userId}`);
+      const response = await api.get(`/user/profile`);
       return response.data;
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
   };
+  */
 
   export const uploadProfileFile = async (file, userId) => {
     const formData = new FormData();
@@ -74,4 +75,3 @@ export const updatedAllowAlarm = async (userId, allowAlarm) => {
     throw error;
   }
 };
-  
