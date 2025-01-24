@@ -5,9 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
+import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
@@ -17,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class FreeBoardServiceTest {
 
     @Autowired
@@ -27,7 +30,7 @@ class FreeBoardServiceTest {
 
     @BeforeEach
     void init(){
-        UserEntity user = UserEntity.builder().nickname("닉네임").email("test@naver.com").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("닉네임").email("test@naver.com").role(Role.MEMBER).allowEmail(false).allowAlarm(false).build();
         userRepository.save(user);
     }
 

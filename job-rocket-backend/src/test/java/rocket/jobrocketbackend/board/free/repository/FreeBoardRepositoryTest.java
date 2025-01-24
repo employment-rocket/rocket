@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
+import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
@@ -28,7 +29,7 @@ public class FreeBoardRepositoryTest {
 
     @BeforeEach
     void init(){
-        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).allowAlarm(false).role(Role.MEMBER).build();
         userRepository.save(user);
     }
 

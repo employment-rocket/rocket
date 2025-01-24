@@ -29,7 +29,7 @@ const InterestField = () => {
         }
         setIsProfileLoaded(true);
       } catch (err) {
-        console.error("프로필 조회 실패:", err);
+     
         setIsProfileLoaded(true);
       }
     };

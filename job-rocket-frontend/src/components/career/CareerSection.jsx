@@ -66,6 +66,7 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
 
           <div className="space-y-12">
             {sections
+             .filter((section) => section.name !== "PROFILE_IMAGE") 
               .filter((section) => section.visible)
               .sort((a, b) => a.order - b.order)
               .map((section) => (

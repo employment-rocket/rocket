@@ -24,7 +24,7 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
 
   return (
     <div
-      className="absolute top-14 right-6 w-[160px] h-[240px] bg-white rounded-2xl border border-[#dad0d0] shadow-md"
+      className="absolute top-14 right-6 w-[160px] h-[200px] bg-white rounded-2xl border border-[#dad0d0] shadow-md"
       onMouseLeave={onClose}
     >
       <div className="w-full h-8 mt-2 text-center text-black text-base overflow-hidden text-ellipsis whitespace-nowrap">
@@ -35,12 +35,6 @@ const DropdownMenu = ({ isOpen, onClose, onNavigate }) => {
         onClick={() => navigate(`/member/mypage/${userInfo.id}`)}
       >
         마이페이지
-      </button>
-      <button
-        className="w-full h-8 mt-2 text-center text-black text-xl"
-        onClick={() => navigate("/note")}
-      >
-        쪽지함
       </button>
       <button
         className="w-full h-8 mt-2 text-center text-black text-xl"

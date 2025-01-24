@@ -12,7 +12,13 @@ const Aside = () => {
 		{ name: "후기 게시판", path: "/board/review" },
 	];
 
-	const isActive = (path) => location.pathname === path;
+	const isActive = (path) => {
+		if (path === "/board") {
+			return location.pathname === "/board";
+		} else {
+			return location.pathname.startsWith(path);
+		}
+	};
 
 	return (
 		<div
