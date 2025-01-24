@@ -1,6 +1,8 @@
 package rocket.jobrocketbackend.profile.profile.service;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
 import rocket.jobrocketbackend.profile.profile.entity.ProfileEntity;
@@ -146,26 +149,37 @@ public class ProfileService {
 		return mapToResponse(profile, sortSectionsByOrder(profile.getSections()));
 	}
 
-	public Map<String, String> uploadFileWithResponse(MultipartFile file, Long memberId, SectionType sectionType) throws IOException {
-		String fileName = profileFileService.uploadFile(file, sectionType);
+	public Map<String, String> uploadFileWithResponse(MultipartFile file, SectionType sectionType, CustomOAuth2User customOAuth2User) throws IOException {
+		Long memberId = customOAuth2User.getId();
+		String savedFileName = profileFileService.uploadFile(file, sectionType);
+		String originalFileName = file.getOriginalFilename();
+
+		if (savedFileName == null || savedFileName.isEmpty() || originalFileName == null || originalFileName.isEmpty()) {
+			throw new IllegalStateException("업로드된 파일 이름이 유효하지 않습니다.");
+		}
+
 		ProfileEntity profile = profileRepository.findByMemberId(memberId)
 			.orElse(ProfileEntity.createWithMemberId(memberId));
 
-		updateFileSections(profile.getSections(), fileName, sectionType);
+		updateFileSections(profile.getSections(), savedFileName, sectionType);
 
 		profileRepository.save(profile);
 
 		return Map.of(
-			"message", "파일 업로드 성공",
-			"fileName", fileName
+			"savedFileName", savedFileName,
+			"originalFileName", originalFileName
 		);
 	}
+
 
 	public ResponseEntity<byte[]> getFileResponse(String fileName, SectionType sectionType) throws IOException {
 		Map<String, Object> fileAndMediaType = profileFileService.getFileAndMediaType(fileName, sectionType);
 
+		String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
 		return ResponseEntity.ok()
 			.contentType((MediaType) fileAndMediaType.get("mediaType"))
+			.header("Content-Disposition", "inline; filename*=UTF-8''" + encodedFileName)
 			.body((byte[]) fileAndMediaType.get("fileBytes"));
 	}
 
