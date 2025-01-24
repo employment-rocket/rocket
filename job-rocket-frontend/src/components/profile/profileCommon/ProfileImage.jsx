@@ -5,23 +5,23 @@ const ProfileImage = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    const fetchProfileImage = async () => {
-      try {
-        const profile = await getProfile();
-        const fileName = profile.sections.find(
-          (section) => section.type === "PROFILE_IMAGE"
-        )?.data?.profileImage;
+  const fetchProfileImage = async () => {
+    try {
+      const profile = await getProfile();
+      const fileName = profile.sections.find(
+        (section) => section.type === "PROFILE_IMAGE"
+      )?.data?.profileImage;
 
-        if (fileName) {
-          const imageUrl = await fetchFile(fileName, "PROFILE_IMAGE");
-          setProfileImage(imageUrl);
-        }
-      } catch (error) {
-        console.error("프로필 이미지 로드 실패:", error);
+      if (fileName) {
+        const imageUrl = await fetchFile(fileName, "PROFILE_IMAGE");
+        setProfileImage(imageUrl);
       }
-    };
+    } catch (error) {
+      console.error("프로필 이미지 로드 실패:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchProfileImage();
   }, []);
 
@@ -36,9 +36,9 @@ const ProfileImage = () => {
 
     try {
       setUploading(true);
-      const response = await uploadFile(file, "PROFILE_IMAGE");
-      const imageUrl = await fetchFile(response.fileName, "PROFILE_IMAGE");
-      setProfileImage(imageUrl);
+      await uploadFile(file, "PROFILE_IMAGE");
+      
+      await fetchProfileImage();
       alert("프로필 이미지가 성공적으로 업로드되었습니다!");
     } catch (error) {
       console.error("업로드 오류:", error);

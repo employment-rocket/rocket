@@ -1,87 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { getProfile, fetchFile } from "../../../api/profile/ProfileAPI";
+import { usePortfolio } from "./../profileForms/usePortfolio";
+import { fetchFile } from "../../../api/profile/ProfileAPI";
 
-const PortfolioView = () => {
-  const [urls, setUrls] = useState([]);
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const PortfolioView = ({ order }) => {
+  const { items, isLoading, fetchPortfolio } = usePortfolio(order);
 
-  const isImage = (fileName) => /\.(jpg|jpeg|png|gif)$/i.test(fileName);
-
-  const fetchPortfolio = async () => {
-    setIsLoading(true);
-    try {
-      const profileData = await getProfile();
-      const portfolioSection = profileData.sections.find(
-        (section) => section.type === "PORTFOLIO"
-      );
-
-      if (portfolioSection) {
-        setUrls(portfolioSection.data.urls || []);
-
-        const fetchedItems = await Promise.all(
-          (portfolioSection.data.files || []).map(async (file, index) => {
-            const fileName = file.fileName || file.name;
-            const fileUrl = await fetchFile(fileName, "FILEUPLOAD").catch(() => null);
-            return fileUrl
-              ? {
-                  id: Date.now() + index + Math.random(),
-                  name: fileName,
-                  url: fileUrl,
-                  type: isImage(fileName) ? "image" : "file",
-                }
-              : null;
-          })
-        );
-
-        setItems(fetchedItems.filter(Boolean)); 
-      } else {
-        setUrls([]);
-        setItems([]);
-      }
-    } catch (error) {
-      console.error("포트폴리오 조회 실패:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [fileUrls, setFileUrls] = useState({});
 
   useEffect(() => {
-    fetchPortfolio();
+    fetchPortfolio(); // 초기 로드
   }, []);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const urls = {};
+      await Promise.all(
+        items.map(async (item) => {
+          if (item.type === "file" || item.type === "image") {
+            try {
+              const fileUrl = await fetchFile(item.value, "FILEUPLOAD");
+              urls[item.id] = fileUrl;
+            } catch (error) {
+              console.error(`파일 로드 실패: ${item.name}`, error);
+              urls[item.id] = null; // 실패한 경우 null 처리
+            }
+          }
+        })
+      );
+      setFileUrls(urls);
+    };
+
+    if (items.length > 0) {
+      fetchFiles();
+    }
+  }, [items]);
 
   if (isLoading) {
     return <p className="text-gray-500">로딩 중...</p>;
   }
 
+  const urls = items.filter((item) => item.type === "url");
+  const files = items.filter((item) => item.type === "file");
+  const images = items.filter((item) => item.type === "image");
+
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-    
       <div className="mb-8 border-l-4 border-blue-500 pl-4">
         <h3 className="text-md font-semibold mb-4 text-left">URL</h3>
         {urls.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {urls.map((url, index) => (
+            {urls.map((url) => (
               <div
-                key={index}
+                key={url.id}
                 className="p-4 bg-indigo-50 text-indigo-600 rounded-lg shadow hover:bg-indigo-100 transition flex flex-col items-start space-y-2"
               >
                 <a
-                  href={url}
+                  href={url.value}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="truncate"
-                  title={decodeURIComponent(url.split("/").pop()) || "URL 링크"}
+                  className="truncate max-w-[200px] block"
+                  title={decodeURIComponent(url.value.split("/").pop()) || "URL 링크"}
                 >
-                  {decodeURIComponent(url.split("/").pop()) || "URL 링크"}
-                </a>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition"
-                >
-                  바로가기
+                  {decodeURIComponent(url.value.split("/").pop()) || "URL 링크"}
                 </a>
               </div>
             ))}
@@ -93,20 +73,20 @@ const PortfolioView = () => {
 
       <div className="border-l-4 border-green-500 pl-4">
         <h3 className="text-md font-semibold mb-4 text-left">파일 및 이미지</h3>
-        {items.length > 0 ? (
+        {files.length > 0 || images.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {items.map((item, index) => (
+            {[...files, ...images].map((item) => (
               <div
-                key={index}
+                key={item.id}
                 className="p-4 bg-green-50 text-green-600 rounded-lg shadow hover:bg-green-100 transition flex flex-col items-start space-y-2"
               >
                 {item.type === "file" ? (
                   <>
                     <a
-                      href={item.url}
+                      href={fileUrls[item.id]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="truncate"
+                      className="truncate max-w-[200px] block"
                       title={item.name || "파일 다운로드"}
                     >
                       {item.name || "파일 다운로드"}
@@ -114,12 +94,12 @@ const PortfolioView = () => {
                     <div className="flex space-x-2">
                       <button
                         className="text-sm bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition"
-                        onClick={() => window.open(item.url, "_blank")}
+                        onClick={() => window.open(fileUrls[item.id], "_blank")}
                       >
                         미리보기
                       </button>
                       <a
-                        href={item.url}
+                        href={fileUrls[item.id]}
                         download={item.name}
                         className="text-sm bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 transition"
                       >
@@ -129,9 +109,9 @@ const PortfolioView = () => {
                   </>
                 ) : (
                   <img
-                    src={item.url}
-                    alt="포트폴리오 이미지"
-                    className="max-w-full h-auto"
+                    src={fileUrls[item.id]}
+                    alt={item.name || "이미지"}
+                    className="max-w-full h-auto rounded-lg shadow"
                   />
                 )}
               </div>
