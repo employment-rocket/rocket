@@ -34,6 +34,7 @@ public class FreeBoardResponse {
                 .content(entity.getContent())
                 .userId(entity.getUser().getId())
                 .nickName(entity.getUser().getNickname())
+                .profile(entity.getUser().getProfile())
                 .postDate(entity.getPostDate()).build();
     }
 }

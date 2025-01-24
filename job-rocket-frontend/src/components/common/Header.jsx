@@ -51,9 +51,9 @@ const Header = () => {
 	};
 
 	const handleProfileClick = () => {
-		if(isLogin){
+		if (isLogin) {
 			setDropdownOpen(!isDropdownOpen);
-		}else{
+		} else {
 			setModalOpen(true);
 		}
 		setAlarmOpen(false);
@@ -86,52 +86,61 @@ const Header = () => {
 				className="flex items-center cursor-pointer border-r border-gray-300 pr-6"
 				onClick={() => navigate("/board")}
 			>
-				<img src={logo} alt="메인로고" className="h-8 w-8 mr-2 rounded-full" />
+				<img
+					src={logo}
+					alt="메인로고"
+					className="h-8 w-8 mr-2 rounded-full"
+				/>
 				<div className="text-lg font-bold">취업 로켓</div>
 			</div>
 
 			<div className="flex space-x-6 ml-6 text-base">
 				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/board")
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/board")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-						}`}
+					}`}
 					onClick={() => navigate("/board")}
 				>
 					게시판
 				</div>
 				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/schedule")
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/schedule")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-						}`}
+					}`}
 					onClick={() => navigate("/schedule")}
 				>
 					일정 관리
 				</div>
 				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/question")
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/question")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-						}`}
+					}`}
 					onClick={() => navigate("/question")}
 				>
 					면접 질문
 				</div>
 				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/site")
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/site")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-						}`}
+					}`}
 					onClick={() => navigate("/site")}
 				>
 					취준 도움 사이트
 				</div>
 				<div
-					className={`cursor-pointer ${location.pathname.startsWith("/career")
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/career")
 							? "text-blue-500 font-semibold"
 							: "text-gray-700"
-						}`}
+					}`}
 					onClick={() => navigate("/career")}
 				>
 					커리어
@@ -140,7 +149,11 @@ const Header = () => {
 
 			<div className="flex items-center space-x-4 ml-auto">
 				<img
-					src={profileImage === "default" ? defaultProfile : profileImage}
+					src={
+						profileImage === "default"
+							? defaultProfile
+							: profileImage
+					}
 					alt="프로필이미지"
 					className="h-6 w-6 cursor-pointer rounded-full"
 					onClick={handleProfileClick}
@@ -153,7 +166,9 @@ const Header = () => {
 							className="h-6 w-6 cursor-pointer"
 							onClick={handleAlarmClick}
 						/>
-						{isAlarmOpen && <Alarm onClose={() => setAlarmOpen(false)} />}
+						{isAlarmOpen && (
+							<Alarm onClose={() => setAlarmOpen(false)} />
+						)}
 						<DropdownMenu
 							isOpen={isDropdownOpen}
 							onClose={() => setDropdownOpen(false)}
@@ -167,7 +182,9 @@ const Header = () => {
 							className="h-6 w-6 cursor-pointer"
 							onClick={handleChatClick}
 						/>
-						{isChatOpen && <ChatModal onClose={() => setChatOpen(false)} />}
+						{isChatOpen && (
+							<ChatModal onClose={() => setChatOpen(false)} />
+						)}
 					</>
 				)}
 			</div>

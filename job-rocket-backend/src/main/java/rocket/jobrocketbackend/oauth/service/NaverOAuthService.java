@@ -62,7 +62,8 @@ public class NaverOAuthService {
 
         return Map.of(
                 "accessToken", jwtAccessToken,
-                "refreshToken", jwtRefreshToken
+                "refreshToken", jwtRefreshToken,
+                "memberId", String.valueOf(userEntity.getId())
         );
     }
 

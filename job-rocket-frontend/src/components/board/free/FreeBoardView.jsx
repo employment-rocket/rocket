@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
 import FreeComment from "./comment/FreeComment";
 import comment from "../../../assets/comment.png";
+import { getFreeBoard } from "../../../api/board/free-board";
+import { useQuery } from "@tanstack/react-query";
 
 const FreeBoardView = () => {
+	const { data, isLoading } = useQuery({
+		queryKey: ["freeItem"],
+		queryFn: getFreeBoard,
+	});
 	const mock = {
 		title: "나 취업할 수 있을까?",
 		author: "청년 백수",

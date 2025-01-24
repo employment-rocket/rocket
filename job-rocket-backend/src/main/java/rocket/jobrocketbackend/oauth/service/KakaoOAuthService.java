@@ -76,7 +76,8 @@ public class KakaoOAuthService {
         //클라이언트에 반환할 토큰
         Map<String, String> tokens = Map.of(
                 "accessToken", jwtAccessToken,
-                "refreshToken", jwtRefreshToken
+                "refreshToken", jwtRefreshToken,
+                "memberId", String.valueOf(userEntity.getId())
         );
 
         return tokens;

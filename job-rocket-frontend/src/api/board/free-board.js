@@ -10,6 +10,15 @@ const getFreeBoardList = async () => {
 	}
 };
 
+const getFreeBoard = async ({ boardId }) => {
+	try {
+		const response = await api.get(`/board/free/${boardId}`);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}`, error);
+	}
+};
+
 const createFreeBoard = async (title, content) => {
 	const body = {
 		title: title,
@@ -23,4 +32,4 @@ const createFreeBoard = async (title, content) => {
 	}
 };
 
-export { getFreeBoardList, createFreeBoard };
+export { getFreeBoardList, getFreeBoard, createFreeBoard };
