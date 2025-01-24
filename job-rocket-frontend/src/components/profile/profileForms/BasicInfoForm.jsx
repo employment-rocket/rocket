@@ -114,11 +114,12 @@ const BasicInfoForm = ({
           <p className="mt-1 text-sm text-gray-500">300자 이내</p>
         </div>
       </div>
-
+      
       <ProfileImage
         profileImage={profile?.profileImage}
         setProfileImage={setProfileImage}
       />
+
     </div>
   );
 };

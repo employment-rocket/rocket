@@ -1,8 +1,29 @@
-import React, { useState } from "react";
-import { uploadFile } from "../../../api/profile/ProfileAPI";
+import React, { useState, useEffect } from "react";
+import { uploadFile, getProfile, fetchFile } from "../../../api/profile/ProfileAPI";
 
-const ProfileImage = ({ profileImage, setProfileImage }) => {
+const ProfileImage = () => {
+  const [profileImage, setProfileImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      try {
+        const profile = await getProfile();
+        const fileName = profile.sections.find(
+          (section) => section.type === "PROFILE_IMAGE"
+        )?.data?.profileImage;
+
+        if (fileName) {
+          const imageUrl = await fetchFile(fileName, "PROFILE_IMAGE");
+          setProfileImage(imageUrl);
+        }
+      } catch (error) {
+        console.error("프로필 이미지 로드 실패:", error);
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
 
   const handleProfileImageChange = async (event) => {
     const file = event.target.files[0];
@@ -15,16 +36,13 @@ const ProfileImage = ({ profileImage, setProfileImage }) => {
 
     try {
       setUploading(true);
-
-      const responseMessage = await uploadFile(file, "PROFILE_IMAGE");
-      alert(responseMessage); 
-
-      const uploadedImageUrl = URL.createObjectURL(file); 
-      setProfileImage(uploadedImageUrl);
-
+      const response = await uploadFile(file, "PROFILE_IMAGE");
+      const imageUrl = await fetchFile(response.fileName, "PROFILE_IMAGE");
+      setProfileImage(imageUrl);
+      alert("프로필 이미지가 성공적으로 업로드되었습니다!");
     } catch (error) {
-      alert("이미지 업로드에 실패했습니다.");
       console.error("업로드 오류:", error);
+      alert("이미지 업로드에 실패했습니다.");
     } finally {
       setUploading(false);
     }
@@ -47,17 +65,15 @@ const ProfileImage = ({ profileImage, setProfileImage }) => {
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
       </div>
-      <div className="mt-4 flex space-x-4">
+      <div className="mt-4">
         <button
           onClick={() => document.querySelector('input[type="file"]').click()}
-          className="px-1 py-0.5 bg-indigo-600 text-white text-xs rounded-md shadow-md hover:bg-indigo-700 active:bg-indigo-800 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+          className="px-2 py-1 bg-indigo-600 text-white text-sm rounded-md shadow-md hover:bg-indigo-700"
         >
           이미지 변경
         </button>
       </div>
-      {uploading && (
-        <div className="mt-2 text-sm text-gray-500">이미지 업로드 중...</div>
-      )}
+      {uploading && <div className="mt-2 text-sm text-gray-500">이미지 업로드 중...</div>}
     </div>
   );
 };

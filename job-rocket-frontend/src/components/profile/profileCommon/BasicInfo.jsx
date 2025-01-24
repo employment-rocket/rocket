@@ -32,7 +32,7 @@ const BasicInfo = () => {
           setHasSavedProfile(false);
         }
       } catch (error) {
-        console.error("프로필 조회 실패:", error);
+    
       } finally {
         setIsProfileLoaded(true);
       }

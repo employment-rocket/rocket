@@ -1,13 +1,18 @@
 import api from "../api";
 
+
 export const getProfile = async () => {
   try {
     const response = await api.get("/profiles");
     return response.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "프로필 조회 실패";
-    console.error("getProfile API error:", errorMessage);
-    throw new Error(errorMessage);
+    const statusCode = error.response?.status;
+
+    if (statusCode === 404) {
+      throw new Error("프로필이 작성되지 않았습니다.");
+    } else {
+      throw new Error("프로필 조회 중 오류가 발생했습니다.");
+    }
   }
 };
 
@@ -106,21 +111,20 @@ export const uploadFile = async (file, sectionType) => {
 
 export const fetchFile = async (fileName, sectionType) => {
   try {
-    const response = await api.get(`/profiles/file/${fileName}`, {
+    const response = await api.get(`/profiles/file/${encodeURIComponent(fileName)}`, {
       params: { sectionType },
       responseType: "arraybuffer",
     });
 
     const fileBlob = new Blob([response.data], {
-      type: sectionType === "PROFILE_IMAGE" ? "image/jpeg" : "application/octet-stream",
+      type: sectionType === "PROFILE_IMAGE" ? "image/jpeg" : "application/pdf",
     });
 
     const fileUrl = URL.createObjectURL(fileBlob);
     console.log("파일 조회 성공:", fileUrl);
     return fileUrl;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "파일 조회 실패";
-    console.error("fetchFile API error:", errorMessage);
-    throw new Error(errorMessage);
+    console.error("파일 조회 실패:", error.response?.data?.message || error.message);
+    throw error;
   }
 };
