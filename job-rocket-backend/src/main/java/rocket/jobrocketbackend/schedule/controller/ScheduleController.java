@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleCreateRequest;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyRequest;
 import rocket.jobrocketbackend.schedule.controller.request.ScheduleModifyTypeRequest;
@@ -28,10 +30,9 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @GetMapping
-    public ResponseEntity<Map<String ,List<ScheduleResponse>>> scheduleList(){
-        //TODO 추후에 하드코딩 수정
+    public ResponseEntity<Map<String ,List<ScheduleResponse>>> scheduleList(@AuthenticationPrincipal CustomOAuth2User user){
         HashMap<String, List<ScheduleResponse>> response = new HashMap<>();
-        Map<String, List<ScheduleDTO>> map = scheduleService.getScheduleList(1L);
+        Map<String, List<ScheduleDTO>> map = scheduleService.getScheduleList(user.getId());
         for(String key : map.keySet()){
             response.put(key,map.get(key).stream().map(ScheduleResponse::from).sorted(Comparator.comparing(ScheduleResponse::getDueDate)).toList());
         }
@@ -45,11 +46,9 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponse> scheduleCreate(@Validated @RequestBody ScheduleCreateRequest request){
-        //TODO 추후에 하드코딩 수정
-        Long userId = 1L;
+    public ResponseEntity<ScheduleResponse> scheduleCreate(@Validated @RequestBody ScheduleCreateRequest request, @AuthenticationPrincipal CustomOAuth2User user){
         ScheduleCreateDTO createDTO = request.toCreateDTO();
-        ScheduleDTO dto = scheduleService.create(createDTO, userId);
+        ScheduleDTO dto = scheduleService.create(createDTO, user.getId());
         return new ResponseEntity<>(ScheduleResponse.from(dto),HttpStatus.CREATED);
     }
 
