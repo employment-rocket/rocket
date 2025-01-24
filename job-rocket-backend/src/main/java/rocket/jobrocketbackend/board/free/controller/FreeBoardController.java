@@ -2,6 +2,7 @@ package rocket.jobrocketbackend.board.free.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -38,8 +40,12 @@ public class FreeBoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<FreeBoardResponse> getFreeBoard(@PathVariable("boardId")Long id){
-        List<FreeBoardEntity> list = freeBoardService.findAll();
-        List<FreeBoardResponse> result = list.stream().filter(item -> item.getId().equals(id)).map(FreeBoardResponse::from).toList();
+        long start = System.currentTimeMillis();
+        log.info("start time = {}", start);
+        List<FreeBoardResponse> result = freeBoardService.findAll().stream().filter(item -> item.getId().equals(id)).map(FreeBoardResponse::from).toList();
+        long last = System.currentTimeMillis();
+        log.info("end time = {}", last);
+        log.info("소요 시간 = {}", last - start);
         return ResponseEntity.ok(result.get(0));
     }
 

@@ -4,12 +4,20 @@ import FreeComment from "./comment/FreeComment";
 import comment from "../../../assets/comment.png";
 import { getFreeBoard } from "../../../api/board/free-board";
 import { useQuery } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
 
 const FreeBoardView = () => {
+	let userId;
+	const token = localStorage.getItem("AccessToken");
+
+	if (token) userId = jwtDecode(token).userId;
+
+	const boardId = useParams("boardId").boardId;
 	const { data, isLoading } = useQuery({
 		queryKey: ["freeItem"],
-		queryFn: getFreeBoard,
+		queryFn: getFreeBoard({ boardId }),
 	});
+	if (isLoading) return <div>Loading...</div>;
 	const mock = {
 		title: "나 취업할 수 있을까?",
 		author: "청년 백수",
@@ -19,7 +27,6 @@ const FreeBoardView = () => {
 	const img = `${
 		import.meta.env.VITE_API_BASE_URL
 	}/board/free/temp/default.png`;
-	const boardId = useParams("boardId");
 
 	return (
 		<div
@@ -29,12 +36,16 @@ const FreeBoardView = () => {
 			<div className="flex justify-between items-center">
 				<div style={{ fontSize: "1.3rem" }}>{mock.title}</div>
 				<div className="flex gap-2 items-center">
-					<div className="bg-blue-500 text-white p-2 px-6 rounded-lg">
-						수정
-					</div>
-					<div className="border text-red-500 p-2 px-6 rounded-lg">
-						삭제
-					</div>
+					{userId && (
+						<>
+							<div className="bg-blue-500 text-white p-2 px-6 rounded-lg">
+								수정
+							</div>
+							<div className="border text-red-500 p-2 px-6 rounded-lg">
+								삭제
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 			<div className="flex justify-between">
