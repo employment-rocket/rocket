@@ -67,20 +67,16 @@ public class KakaoOAuthService {
         OAuth2UserInfo kakaouserInfo = getKakaoUserInfo(accessToken);
         UserEntity userEntity = saveOrUpdateUser(kakaouserInfo);
 
-        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
-        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail());
+        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail(), userEntity.getId());
+        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail(), userEntity.getId());
 
         userEntity.updateRefreshToken(jwtRefreshToken);
         userRepository.save(userEntity);
 
-        //클라이언트에 반환할 토큰
-        Map<String, String> tokens = Map.of(
+        return Map.of(
                 "accessToken", jwtAccessToken,
-                "refreshToken", jwtRefreshToken,
-                "memberId", String.valueOf(userEntity.getId())
+                "refreshToken", jwtRefreshToken
         );
-
-        return tokens;
     }
 
 

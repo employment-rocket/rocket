@@ -3,9 +3,9 @@ package rocket.jobrocketbackend.oauth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,7 +18,6 @@ import rocket.jobrocketbackend.oauth.userInfo.OAuth2UserInfo;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
-import org.springframework.http.*;
 import rocket.jobrocketbackend.user.util.NicknameGenerator;
 
 import java.util.Map;
@@ -54,16 +53,15 @@ public class NaverOAuthService {
         OAuth2UserInfo naverUserInfo = getNaverUserInfo(accessToken);
         UserEntity userEntity = saveOrUpdateUser(naverUserInfo);
 
-        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail());
-        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail());
+        String jwtAccessToken = jwtUtil.createAccessToken(userEntity.getEmail(), userEntity.getId());
+        String jwtRefreshToken = jwtUtil.createRefreshToken(userEntity.getEmail(),userEntity.getId());
 
         userEntity.updateRefreshToken(jwtRefreshToken);
         userRepository.save(userEntity);
 
         return Map.of(
                 "accessToken", jwtAccessToken,
-                "refreshToken", jwtRefreshToken,
-                "memberId", String.valueOf(userEntity.getId())
+                "refreshToken", jwtRefreshToken
         );
     }
 
