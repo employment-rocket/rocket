@@ -154,7 +154,7 @@ public class ProfileService {
 		String savedFileName = profileFileService.uploadFile(file, sectionType);
 		String originalFileName = file.getOriginalFilename();
 
-		if (savedFileName == null || savedFileName.isEmpty() || originalFileName == null || originalFileName.isEmpty()) {
+		if (isInvalidFileName(savedFileName, originalFileName)) {
 			throw new IllegalStateException("업로드된 파일 이름이 유효하지 않습니다.");
 		}
 
@@ -165,12 +165,21 @@ public class ProfileService {
 
 		profileRepository.save(profile);
 
+		assert originalFileName != null;
 		return Map.of(
 			"savedFileName", savedFileName,
 			"originalFileName", originalFileName
 		);
 	}
 
+	private boolean isInvalidFileName(String... fileNames) {
+		for (String fileName : fileNames) {
+			if (fileName == null || fileName.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public ResponseEntity<byte[]> getFileResponse(String fileName, SectionType sectionType) throws IOException {
 		Map<String, Object> fileAndMediaType = profileFileService.getFileAndMediaType(fileName, sectionType);
