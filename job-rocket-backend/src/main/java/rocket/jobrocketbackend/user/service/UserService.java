@@ -27,16 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
     private static final String UPLOAD_DIR = "uploads/";
 
-    public Map<String, Object> getUserProfileById(Long userId) {
-        UserEntity member = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
-
-
-        return Map.of(
-                "id", member.getId(),
-                "nickname", member.getNickname()
-        );
-    }
     public Map<String, Object> getUserProfile(Long userId){
         UserEntity member = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
