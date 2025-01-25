@@ -95,36 +95,51 @@ export const uploadFile = async (file, sectionType) => {
     formData.append("sectionType", sectionType);
 
     const response = await api.post("/profiles/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
-    console.log("파일 업로드 성공:", response.data);
-    return response.data;
+    if (!response.data.savedFileName || !response.data.originalFileName) {
+      console.error("파일 업로드 실패: 반환 데이터가 유효하지 않습니다.", response.data);
+      throw new Error("파일 업로드 실패: 반환 데이터가 유효하지 않습니다.");
+    }
+
+    return {
+      originalFileName: response.data.originalFileName,
+      savedFileName: response.data.savedFileName,
+    };
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "파일 업로드 실패";
-    console.error("uploadFile API error:", errorMessage);
-    throw new Error(errorMessage);
+    console.error("파일 업로드 중 오류 발생:", error);
+    throw new Error("파일 업로드 실패");
   }
 };
 
 export const fetchFile = async (fileName, sectionType) => {
+  if (!fileName) {
+    console.error("파일 이름이 제공되지 않았습니다.");
+    return null;
+  }
+
   try {
     const response = await api.get(`/profiles/file/${encodeURIComponent(fileName)}`, {
       params: { sectionType },
-      responseType: "arraybuffer",
+      responseType: "arraybuffer", 
     });
 
-    const fileBlob = new Blob([response.data], {
-      type: sectionType === "PROFILE_IMAGE" ? "image/jpeg" : "application/pdf",
-    });
+    const fileExtension = fileName.split('.').pop().toLowerCase();
+    const mimeType = (() => {
+      if (["jpg", "jpeg"].includes(fileExtension)) return "image/jpeg";
+      if (fileExtension === "png") return "image/png";
+      if (fileExtension === "pdf") return "application/pdf";
+      return "application/octet-stream";
+    })();
 
-    const fileUrl = URL.createObjectURL(fileBlob);
-    console.log("파일 조회 성공:", fileUrl);
-    return fileUrl;
+    const fileBlob = new Blob([response.data], { type: mimeType });
+
+    const blobUrl = URL.createObjectURL(fileBlob);
+
+    return blobUrl; 
   } catch (error) {
-    console.error("파일 조회 실패:", error.response?.data?.message || error.message);
-    throw error;
+    console.error(`파일 로드 실패: ${fileName}`, error);
+    return null;
   }
 };
