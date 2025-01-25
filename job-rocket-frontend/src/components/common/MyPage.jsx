@@ -140,7 +140,7 @@ const MyPage = ({onClose, onNavigate}) => {
 		
         </div>
 
-        <div className="flex items-center mb-8 w-full px-6">
+        <div className="flex items-center mb-3 w-full px-6">
           <div className="flex-1 text-3xl text-black text-center">
             {nickname}
           </div>
