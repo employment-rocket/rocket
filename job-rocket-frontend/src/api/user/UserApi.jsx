@@ -9,15 +9,6 @@ export const getUserProfile = async () => {
     }
   };
 
- /* export const getUserProfile = async () => {
-    try {
-      const response = await api.get(`/user/profile`);
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-    }
-  };
-  */
 
   export const uploadProfileFile = async (file, userId) => {
     const formData = new FormData();
