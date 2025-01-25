@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getUserProfile } from "../../api/user/UserApi";
 import logo from "../../assets/default-profile.png";
 import { useNavigate } from "react-router";
@@ -11,7 +11,7 @@ import {
 } from "../../api/user/UserApi";
 import useProfileStore from "../../store/profileImageStore";
 
-const MyPage = ({isOpen, onClose, onNavigate}) => {
+const MyPage = ({onClose, onNavigate}) => {
 	const navigate = useNavigate();
 	const [userId, setUserId] = useState();
 	const [email, setEmail] = useState();
@@ -20,9 +20,10 @@ const MyPage = ({isOpen, onClose, onNavigate}) => {
 	const [nickname, setNickname] = useState();
 	const [profile, setProfile] = useState();
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
+	const myPageRef = useRef();
 
 	useEffect(() => {
-	//	if(isOpen){
+
 		const fetchUserProfile = async () => {
 			try {
 				const data = await getUserProfile();
@@ -32,7 +33,6 @@ const MyPage = ({isOpen, onClose, onNavigate}) => {
 				setNickname(data.nickname);
 				setEmail(data.email);
 				setProfile(data.profile);
-				console.log("id: ", data.id);
 
 				if (data.profile !== "default") {
 					const fetchImage = async () => {
@@ -53,8 +53,20 @@ const MyPage = ({isOpen, onClose, onNavigate}) => {
 			}
 		};
 		fetchUserProfile();
-//	}
-	}, []);
+
+		const handleClickOutside = (event) => {
+			const profileImage = document.querySelector(".profile-image");
+			if (myPageRef.current && !myPageRef.current.contains(event.target)&&
+			(!profileImage || !profileImage.contains(event.target))) {
+				onClose();
+			}
+		  };
+	  
+		  document.addEventListener("mousedown", handleClickOutside);
+		  return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		  };
+		}, [onClose]);
 
 
 	const handleAllowEmailChange = async () => {
@@ -91,7 +103,8 @@ const MyPage = ({isOpen, onClose, onNavigate}) => {
 	};
 
 	return (
-		<div className="absolute top-14 right-6 flex items-center justify-center bg-white z-50">
+
+		<div ref={myPageRef} className="absolute top-14 right-6 flex items-center justify-center bg-white z-50">
 			<div
 				className="w-[550px] h-[600px] rounded-2xl border border-gray-300 bg-white shadow-md flex flex-col justify-center items-center"
 				style={{ fontFamily: "CookieBold" }}
@@ -189,6 +202,7 @@ const MyPage = ({isOpen, onClose, onNavigate}) => {
 </div>
 			</div>
 		</div>
+		//)
 	);
 };
 

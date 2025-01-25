@@ -34,15 +34,6 @@ public class UserController {
             return ResponseEntity.ok(userProfile);
     }
 
-  /*  @GetMapping("/mypage/{userId}")
-    public ResponseEntity<?> getUserProfile(@PathVariable("userId") Long id) {
-
-            Map<String, Object> getMypageUserProfile = userService.getUserProfile(id);
-            return ResponseEntity.ok(getMypageUserProfile);
-    }
-
-   */
-
 
     @PostMapping("/file/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,

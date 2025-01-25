@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
 import chat from "../../assets/chat.png";
@@ -39,7 +39,7 @@ const Header = () => {
 		} else {
 			setProfileImage("default");
 		}
-	}, [location, setProfileImage]);
+	}, [location, setProfileImage, isMyPageOpen]);
 
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
@@ -50,9 +50,10 @@ const Header = () => {
 		navigate("/");
 	};
 
-	const handleProfileClick = () => {
+	const handleProfileClick = (event) => {
+		event.stopPropagation();
 		if(isLogin){
-			setMyPageOpen(!isMyPageOpen);
+			setMyPageOpen((prev) => !prev);
 		}else{
 			setModalOpen(true);
 		}
@@ -75,7 +76,6 @@ const Header = () => {
 	const handleLogin = () => {
 		setLogin(true);
 		setModalOpen(false);
-		setMyPageOpen(false);
 	};
 
 	return (
@@ -143,7 +143,7 @@ const Header = () => {
 				<img
 					src={profileImage === "default" ? defaultProfile : profileImage}
 					alt="프로필이미지"
-					className="h-6 w-6 cursor-pointer rounded-full"
+					className="h-6 w-6 cursor-pointer rounded-full profile-image"
 					onClick={handleProfileClick}
 				/>
 				{isLogin && (
@@ -155,13 +155,12 @@ const Header = () => {
 							onClick={handleAlarmClick}
 						/>
 						{isAlarmOpen && <Alarm onClose={() => setAlarmOpen(false)} />}
-						<MyPage
-							isOpen={isMyPageOpen}
+						{isMyPageOpen && <MyPage
 							onClose={() => setMyPageOpen(false)}
 							onNavigate={(action) => {
 								if (action === "logout") handleLogout();
 							}}
-						/>
+						/>}
 						<img
 							src={chat}
 							alt="채팅"
