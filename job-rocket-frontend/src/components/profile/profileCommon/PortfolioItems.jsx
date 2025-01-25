@@ -19,7 +19,7 @@ const PortfolioItems = ({
                 type="text"
                 className="flex-1 p-2 border border-gray-300 rounded"
                 placeholder="https:// URL 입력"
-                value={item.value}
+                value={item.value || ""}
                 onChange={(e) => handleItemChange(item.id, e.target.value)}
               />
               <button
@@ -37,6 +37,7 @@ const PortfolioItems = ({
           + 링크 추가
         </button>
       </div>
+
       <div className="mb-6">
         <h3 className="text-sm font-semibold mb-2">첨부 파일</h3>
         <input
@@ -46,30 +47,29 @@ const PortfolioItems = ({
           onChange={handleFileUpload}
           accept=".pdf, .jpg, .jpeg, .png"
         />
-        <ul>
+        <ul className="space-y-2">
           {items
             .filter((item) => item.type === "file" || item.type === "image")
             .map((item, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between space-x-4 mb-2"
+                className="flex items-center justify-between space-x-4 p-2 bg-gray-50 rounded border border-gray-300"
               >
                 {item.type === "file" ? (
                   <a
-                    href={typeof item.value === "string" ? item.value : item.value.url}
+                    href={item.value || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline truncate"
+                    className="flex-1 text-blue-500 hover:underline truncate"
+                    title={item.name || "파일 이름 없음"}
                   >
-                    {typeof item.value === "string"
-                      ? decodeURIComponent(item.value.split("/").pop())
-                      : item.value.name || "파일"}
+                    {item.name || "파일 이름 없음"}
                   </a>
                 ) : (
                   <img
-                    src={typeof item.value === "string" ? item.value : item.value.url}
-                    alt="이미지"
-                    className="max-w-full h-auto"
+                    src={item.value}
+                    alt={item.name || "이미지"}
+                    className="max-w-24 max-h-24 object-cover rounded"
                   />
                 )}
                 <button

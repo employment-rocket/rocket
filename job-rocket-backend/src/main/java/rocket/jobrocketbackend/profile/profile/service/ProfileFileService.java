@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -16,23 +15,32 @@ import rocket.jobrocketbackend.profile.profile.entity.SectionType;
 @Service
 public class ProfileFileService {
 
-	private static final String IMAGE_UPLOAD_DIR = "uploads/profile-images/";
-	private static final String FILE_UPLOAD_DIR = "uploads/profile-files/";
+	private static final String BASE_DIR = System.getProperty("user.dir") + "/uploads/";
+	private static final String IMAGE_UPLOAD_DIR = BASE_DIR + "profile-images/";
+	private static final String FILE_UPLOAD_DIR = BASE_DIR + "profile-files/";
 
 	public String uploadFile(MultipartFile file, SectionType sectionType) throws IOException {
-		String fileExtension = Objects.requireNonNull(file.getOriginalFilename())
-			.substring(file.getOriginalFilename().lastIndexOf("."));
-		String fileName = System.currentTimeMillis() + fileExtension;
+		if (file == null || file.isEmpty()) {
+			throw new IllegalArgumentException("파일이 비어 있습니다.");
+		}
 
-		Path filePath = Paths.get(getUploadDirectory(sectionType), fileName);
+		String originalFileName = file.getOriginalFilename();
+		if (originalFileName == null || originalFileName.trim().isEmpty()) {
+			throw new IllegalArgumentException("파일 이름이 유효하지 않습니다.");
+		}
+
+		String savedFileName = System.currentTimeMillis() + "_" + originalFileName;
+		Path filePath = Paths.get(getUploadDirectory(sectionType), savedFileName);
+
 		Files.createDirectories(filePath.getParent());
 		Files.write(filePath, file.getBytes());
 
-		return fileName;
+		return savedFileName;
 	}
 
 	public byte[] getFile(String fileName, SectionType sectionType) throws IOException {
 		Path filePath = Paths.get(getUploadDirectory(sectionType), fileName);
+
 		if (!Files.exists(filePath)) {
 			throw new IllegalArgumentException("파일을 찾을 수 없습니다: " + fileName);
 		}
@@ -41,8 +49,12 @@ public class ProfileFileService {
 	}
 
 	public MediaType determineMediaType(String fileName) {
-		String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+		int dotIndex = fileName.lastIndexOf(".");
+		if (dotIndex == -1) {
+			return MediaType.APPLICATION_OCTET_STREAM;
+		}
 
+		String extension = fileName.substring(dotIndex + 1).toLowerCase();
 		return switch (extension) {
 			case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
 			case "png" -> MediaType.IMAGE_PNG;
