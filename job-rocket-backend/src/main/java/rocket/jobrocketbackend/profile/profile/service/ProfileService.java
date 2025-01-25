@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
 import rocket.jobrocketbackend.profile.profile.entity.ProfileEntity;
