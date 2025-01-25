@@ -149,8 +149,7 @@ public class ProfileService {
 		return mapToResponse(profile, sortSectionsByOrder(profile.getSections()));
 	}
 
-	public Map<String, String> uploadFileWithResponse(MultipartFile file, SectionType sectionType, CustomOAuth2User customOAuth2User) throws IOException {
-		Long memberId = customOAuth2User.getId();
+	public Map<String, String> uploadFileWithResponse(MultipartFile file, SectionType sectionType, Long memberId) throws IOException {
 		String savedFileName = profileFileService.uploadFile(file, sectionType);
 		String originalFileName = file.getOriginalFilename();
 

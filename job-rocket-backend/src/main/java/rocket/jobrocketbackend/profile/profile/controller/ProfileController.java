@@ -89,8 +89,8 @@ public class ProfileController {
 		@RequestParam MultipartFile file,
 		@RequestParam SectionType sectionType,
 		@AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws IOException {
-
-		Map<String, String> response = profileService.uploadFileWithResponse(file, sectionType, customOAuth2User);
+		Long memberId = customOAuth2User.getId();
+		Map<String, String> response = profileService.uploadFileWithResponse(file, sectionType, memberId);
 
 		return ResponseEntity.ok(response);
 	}
