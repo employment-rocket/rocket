@@ -10,7 +10,7 @@ import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import "./index.css";
 import Board from "./pages/Board.jsx";
 import Career from "./pages/Career.jsx";
-import MyPage from "./pages/MyPage";
+import MyPage from "./components/common/MyPage.jsx";
 import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
@@ -53,7 +53,7 @@ createRoot(document.getElementById("root")).render(
 						<Route index element={<ScheduleHome />} />
 						<Route path="statistics" element={<Statistics />} />
 					</Route>
-					<Route path="/member/mypage/:userId" element={<MyPage />} />
+
 					<Route path="/retrospect" element={<Retrospect />} />
 					<Route path="/question" element={<Question />} />
 
