@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(FreeBoardController.class)
 @WithMockUser
-class FreeBoardEntityControllerTest {
+class FreeBoardControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

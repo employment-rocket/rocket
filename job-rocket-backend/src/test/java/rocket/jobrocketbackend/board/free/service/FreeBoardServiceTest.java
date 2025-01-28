@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
+import rocket.jobrocketbackend.board.free.dto.request.FreeBoardUpdateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.board.free.exception.AccessDeniedException;
@@ -98,4 +99,25 @@ class FreeBoardServiceTest {
                 AccessDeniedException.class
         ).hasMessage("본인의 게시글만 삭제할 수 있습니다.");
     }
+
+    @Test
+    @DisplayName("게시글 수정")
+    void update() {
+        // given
+        UserEntity user = userRepository.findById(userId).get();
+        FreeBoardEntity board = FreeBoardEntity.builder()
+                .title("테스트 제목")
+                .content("테스트 내용")
+                .user(user)
+                .build();
+        FreeBoardEntity saved = freeBoardRepository.save(board);
+        FreeBoardUpdateRequest request = FreeBoardUpdateRequest.builder().id(saved.getId()).content("수정된 내용").title("수정된 제목").build();
+        // when
+        freeBoardService.update(request,userId);
+        FreeBoardResponse result = freeBoardService.findById(request.getId());
+        // then
+        assertThat(result.getContent()).isEqualTo("수정된 내용");
+        assertThat(result.getTitle()).isEqualTo("수정된 제목");
+    }
+
 }
