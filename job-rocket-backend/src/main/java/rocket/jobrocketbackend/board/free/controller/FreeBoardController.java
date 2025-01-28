@@ -40,13 +40,14 @@ public class FreeBoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<FreeBoardResponse> getFreeBoard(@PathVariable("boardId")Long id){
-        long start = System.currentTimeMillis();
-        log.info("start time = {}", start);
         List<FreeBoardResponse> result = freeBoardService.findAll().stream().filter(item -> item.getId().equals(id)).map(FreeBoardResponse::from).toList();
-        long last = System.currentTimeMillis();
-        log.info("end time = {}", last);
-        log.info("소요 시간 = {}", last - start);
         return ResponseEntity.ok(result.get(0));
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> deleteFreeBoard(@PathVariable("boardId")Long id, @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+        freeBoardService.delete(id, customOAuth2User.getId());
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping

@@ -8,17 +8,22 @@ import { jwtDecode } from "jwt-decode";
 
 const FreeBoardView = () => {
 	const boardId = useParams("boardId").boardId;
+	let isAuthor = false;
+
 	const { data, isPending } = useQuery({
 		queryKey: ["freeItem"],
 		queryFn: () => getFreeBoard({ boardId }),
 	});
 
-	let userId;
-	const token = localStorage.getItem("AccessToken");
-
-	if (token) userId = jwtDecode(token).userId;
-
 	if (isPending) return <div>Loading...</div>;
+
+	const token = localStorage.getItem("AccessToken");
+	if (token) {
+		const userInfo = jwtDecode(token);
+		if (userInfo.userId === data.userId) {
+			isAuthor = true;
+		}
+	}
 
 	const img = `${
 		import.meta.env.VITE_API_BASE_URL
@@ -32,7 +37,7 @@ const FreeBoardView = () => {
 			<div className="flex justify-between items-center">
 				<div style={{ fontSize: "1.3rem" }}>{data.title}</div>
 				<div className="flex gap-2 items-center">
-					{userId && (
+					{isAuthor && (
 						<>
 							<div className="bg-blue-500 text-white p-2 px-6 rounded-lg">
 								수정
