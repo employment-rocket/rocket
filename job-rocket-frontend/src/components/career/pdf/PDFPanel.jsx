@@ -1,15 +1,13 @@
-import React, { useState, forwardRef, useImperativeHandle, useEffect } from "react";
+import React, { useState, forwardRef, useImperativeHandle, useRef } from "react";
 import PDFPreview from "./PDFPreview";
 import PDFSectionToggleList from "./PDFSectionToggleList";
 
 const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref) => {
   const [title, setTitle] = useState("Career Profile");
-  const [isGenerating, setIsGenerating] = useState(false);
+  const pdfPreviewRef = useRef();
 
   useImperativeHandle(ref, () => ({
-    generatePDF: () => {
-      return pdfPreviewRef.current?.generatePDF();
-    },
+    generatePDF: () => pdfPreviewRef.current?.generatePDF(),
   }));
 
   const handleDownloadPDF = async () => {
@@ -18,8 +16,6 @@ const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref
       pdf.save(`${title}.pdf`);
     }
   };
-
-  const pdfPreviewRef = React.useRef();
 
   return (
     <div className="fixed top-0 right-0 h-full bg-white shadow-lg w-full p-6 overflow-y-auto transition-transform">
@@ -48,9 +44,8 @@ const PDFPanel = forwardRef(({ profileRef, sections, setSections, onClose }, ref
           <button
             onClick={handleDownloadPDF}
             className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all w-full"
-            disabled={isGenerating}
           >
-            {isGenerating ? "PDF 다운로드 중..." : "PDF 다운로드"}
+            PDF 다운로드
           </button>
         </div>
         <PDFPreview ref={pdfPreviewRef} profileRef={profileRef} sections={sections} />

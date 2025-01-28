@@ -19,6 +19,16 @@ const getFreeBoard = async ({ boardId }) => {
 	}
 };
 
+const deleteFreeBoard = async ({ boardId }) => {
+	try {
+		const response = await api.delete(`/board/free/${boardId}`);
+		console.log(response);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}`, error);
+	}
+};
+
 const createFreeBoard = async (title, content) => {
 	const body = {
 		title: title,
@@ -32,4 +42,4 @@ const createFreeBoard = async (title, content) => {
 	}
 };
 
-export { getFreeBoardList, getFreeBoard, createFreeBoard };
+export { getFreeBoardList, getFreeBoard, deleteFreeBoard, createFreeBoard };

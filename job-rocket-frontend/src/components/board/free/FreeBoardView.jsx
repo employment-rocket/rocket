@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import FreeComment from "./comment/FreeComment";
 import comment from "../../../assets/comment.png";
-import { getFreeBoard } from "../../../api/board/free-board";
+import { deleteFreeBoard, getFreeBoard } from "../../../api/board/free-board";
 import { useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
 const FreeBoardView = () => {
 	const boardId = useParams("boardId").boardId;
+	const navigate = useNavigate();
+
 	let isAuthor = false;
 
 	const { data, isPending } = useQuery({
@@ -42,7 +44,13 @@ const FreeBoardView = () => {
 							<div className="bg-blue-500 text-white p-2 px-6 rounded-lg">
 								수정
 							</div>
-							<div className="border text-red-500 p-2 px-6 rounded-lg">
+							<div
+								className="border text-red-500 p-2 px-6 rounded-lg"
+								onClick={() => {
+									deleteFreeBoard({ boardId });
+									navigate("/board/free");
+								}}
+							>
 								삭제
 							</div>
 						</>

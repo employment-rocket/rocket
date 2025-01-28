@@ -46,6 +46,4 @@ public class FreeBoardService {
         //TODO 임시
         return freeBoardRepository.findAll();
     }
-
-
 }
