@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
+import rocket.jobrocketbackend.board.free.dto.request.FreeBoardUpdateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.board.free.service.FreeBoardService;
@@ -40,13 +41,20 @@ public class FreeBoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<FreeBoardResponse> getFreeBoard(@PathVariable("boardId")Long id){
-        List<FreeBoardResponse> result = freeBoardService.findAll().stream().filter(item -> item.getId().equals(id)).map(FreeBoardResponse::from).toList();
-        return ResponseEntity.ok(result.get(0));
+        FreeBoardResponse result = freeBoardService.findById(id);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteFreeBoard(@PathVariable("boardId")Long id, @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         freeBoardService.delete(id, customOAuth2User.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<Void> patchFreeBoard(@RequestBody FreeBoardUpdateRequest request, @AuthenticationPrincipal CustomOAuth2User customOAuth2User){
+        log.info("boardId = {}, title = {}, content = {}",request.getId(), request.getTitle(), request.getContent());
+        freeBoardService.update(request, customOAuth2User.getId());
         return ResponseEntity.noContent().build();
     }
 

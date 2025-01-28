@@ -41,11 +41,16 @@ const FreeBoardView = () => {
 				<div className="flex gap-2 items-center">
 					{isAuthor && (
 						<>
-							<div className="bg-blue-500 text-white p-2 px-6 rounded-lg">
+							<div
+								className="bg-blue-500 text-white p-2 px-6 rounded-lg cursor-pointer"
+								onClick={() =>
+									navigate(`/board/free/form/${boardId}`)
+								}
+							>
 								수정
 							</div>
 							<div
-								className="border text-red-500 p-2 px-6 rounded-lg"
+								className="border text-red-500 p-2 px-6 rounded-lg cursor-pointer"
 								onClick={() => {
 									deleteFreeBoard({ boardId });
 									navigate("/board/free");

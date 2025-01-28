@@ -29,4 +29,9 @@ public class FreeBoardEntity {
     @ManyToOne(fetch = FetchType.EAGER)// TODO 추후 변경
     @JoinColumn(name = "member_id")
     private UserEntity user;
+
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }

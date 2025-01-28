@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
+import rocket.jobrocketbackend.board.free.dto.request.FreeBoardUpdateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.board.free.exception.AccessDeniedException;
@@ -31,19 +32,34 @@ public class FreeBoardService {
     }
 
     public void delete(final Long boardId, final Long userId){
-        FreeBoardEntity board = freeBoardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("존재하지 않는 boardID입니다."));
+        FreeBoardEntity board = freeBoardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         if(isNotAuthor(userId, board)){
-            throw new AccessDeniedException("본인의 게시글만 삭제할 수 있습니다.");
+            throw new AccessDeniedException();
         }
         freeBoardRepository.deleteById(boardId);
+    }
+
+    public void update(final FreeBoardUpdateRequest request,final Long userId) {
+        FreeBoardEntity board = freeBoardRepository.findById(request.getId()).orElseThrow(BoardNotFoundException::new);
+        if(isNotAuthor(userId, board)){
+            throw new AccessDeniedException();
+        }
+        board.update(request.getTitle(), request.getContent());
     }
 
     private static boolean isNotAuthor(Long userId, FreeBoardEntity board) {
         return !board.getUser().getId().equals(userId);
     }
 
+    @Transactional(readOnly = true)
     public List<FreeBoardEntity> findAll() {
         //TODO 임시
         return freeBoardRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public FreeBoardResponse findById(Long id){
+        FreeBoardEntity board = freeBoardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        return FreeBoardResponse.from(board);
     }
 }

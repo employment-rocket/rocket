@@ -29,6 +29,17 @@ const deleteFreeBoard = async ({ boardId }) => {
 	}
 };
 
+const patchFreeBoard = async ({ boardId, data }) => {
+	console.log("boardId = ", boardId);
+	console.log("data = ", data);
+	try {
+		const response = await api.patch(`/board/free/${boardId}`, data);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}`, error);
+	}
+};
+
 const createFreeBoard = async (title, content) => {
 	const body = {
 		title: title,
@@ -42,4 +53,10 @@ const createFreeBoard = async (title, content) => {
 	}
 };
 
-export { getFreeBoardList, getFreeBoard, deleteFreeBoard, createFreeBoard };
+export {
+	getFreeBoardList,
+	getFreeBoard,
+	deleteFreeBoard,
+	createFreeBoard,
+	patchFreeBoard,
+};
