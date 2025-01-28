@@ -7,23 +7,19 @@ import { useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
 const FreeBoardView = () => {
+	const boardId = useParams("boardId").boardId;
+	const { data, isPending } = useQuery({
+		queryKey: ["freeItem"],
+		queryFn: () => getFreeBoard({ boardId }),
+	});
+
 	let userId;
 	const token = localStorage.getItem("AccessToken");
 
 	if (token) userId = jwtDecode(token).userId;
 
-	const boardId = useParams("boardId").boardId;
-	const { data, isLoading } = useQuery({
-		queryKey: ["freeItem"],
-		queryFn: getFreeBoard({ boardId }),
-	});
-	if (isLoading) return <div>Loading...</div>;
-	const mock = {
-		title: "나 취업할 수 있을까?",
-		author: "청년 백수",
-		content: "어림도 없지 ",
-		post_date: "2025-01-20",
-	};
+	if (isPending) return <div>Loading...</div>;
+
 	const img = `${
 		import.meta.env.VITE_API_BASE_URL
 	}/board/free/temp/default.png`;
@@ -34,7 +30,7 @@ const FreeBoardView = () => {
 			style={{ fontFamily: "CookieRegular" }}
 		>
 			<div className="flex justify-between items-center">
-				<div style={{ fontSize: "1.3rem" }}>{mock.title}</div>
+				<div style={{ fontSize: "1.3rem" }}>{data.title}</div>
 				<div className="flex gap-2 items-center">
 					{userId && (
 						<>
@@ -50,14 +46,14 @@ const FreeBoardView = () => {
 			</div>
 			<div className="flex justify-between">
 				<div className="flex items-center gap-1">
-					<img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" />
-					{mock.author}
+					{/* <img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" /> */}
+					{data.author}
 				</div>
-				<div className="text-gray-500">{mock.post_date}</div>
+				<div className="text-gray-500">{data.post_date}</div>
 			</div>
 
 			<hr />
-			<div className="min-h-[16rem]">{mock.content}</div>
+			<div className="min-h-[16rem]">{data.content}</div>
 			<div className="flex gap-2 items-center">
 				<img
 					src={comment}

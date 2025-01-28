@@ -13,6 +13,7 @@ const getFreeBoardList = async () => {
 const getFreeBoard = async ({ boardId }) => {
 	try {
 		const response = await api.get(`/board/free/${boardId}`);
+		console.log("여기 ", response);
 		return response.data;
 	} catch (error) {
 		console.error(`/board/free/${boardId}`, error);
