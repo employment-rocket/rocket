@@ -10,6 +10,41 @@ const getFreeBoardList = async () => {
 	}
 };
 
+const getFreeBoard = async ({ boardId }) => {
+	try {
+		const response = await api.get(`/board/free/${boardId}`);
+		console.log(response);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}`, error);
+		if (error.status === 404) {
+			alert("존재하지 않는 게시물입니다.");
+			return error.status;
+		}
+	}
+};
+
+const deleteFreeBoard = async ({ boardId }) => {
+	try {
+		const response = await api.delete(`/board/free/${boardId}`);
+		console.log(response);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}`, error);
+	}
+};
+
+const patchFreeBoard = async ({ boardId, data }) => {
+	console.log("boardId = ", boardId);
+	console.log("data = ", data);
+	try {
+		const response = await api.patch(`/board/free/${boardId}`, data);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}`, error);
+	}
+};
+
 const createFreeBoard = async (title, content) => {
 	const body = {
 		title: title,
@@ -34,4 +69,11 @@ const createComment = async ({ boardId, content }) => {
 	}
 };
 
-export { getFreeBoardList, createFreeBoard };
+export {
+	getFreeBoardList,
+	getFreeBoard,
+	deleteFreeBoard,
+	createFreeBoard,
+	patchFreeBoard,
+	createComment,
+};

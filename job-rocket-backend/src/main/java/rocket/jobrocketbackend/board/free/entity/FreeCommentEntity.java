@@ -1,11 +1,17 @@
 package rocket.jobrocketbackend.board.free.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Entity(name = "free_comment")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FreeCommentEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

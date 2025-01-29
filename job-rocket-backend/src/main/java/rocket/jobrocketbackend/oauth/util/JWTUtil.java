@@ -25,18 +25,20 @@ public class JWTUtil {
     @Value("${spring.jwt.expiration}")
     private Long expiration;
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(String email, Long userId) {
 
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    public String createRefreshToken(String email) {
+    public String createRefreshToken(String email, Long userId) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId",userId)
                 .setExpiration(new Date(System.currentTimeMillis() + (expiration * 168)))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
@@ -47,9 +49,9 @@ public class JWTUtil {
         if(isExpired(refreshToken)){
             throw new RuntimeException("Refresh token has expired");
         }
-        String email = getMemberEmail(refreshToken, secretKey);
+        JWTCreateDto jwtCreateDto = getMemberEmailAndId(refreshToken, secretKey);
 
-        return createAccessToken(email);
+        return createAccessToken(jwtCreateDto.email(), jwtCreateDto.userId());
     }
 
 
@@ -65,15 +67,19 @@ public class JWTUtil {
     }
 
     public UserDTO getUserDto(String jwtToken){
-        String email = getMemberEmail(jwtToken,secretKey);
+        JWTCreateDto jwtCreateDto = getMemberEmailAndId(jwtToken, secretKey);
+        String email = jwtCreateDto.email();
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException());
         return UserDTO.from(userEntity);
     }
 
-    public static String getMemberEmail(String token, String secretKey) {
-
-        return Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token)
-                .getBody().get("sub", String.class);
+    public static JWTCreateDto getMemberEmailAndId(String token, String secretKey) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return new JWTCreateDto(claims.getSubject(), claims.get("userId", Long.class));
     }
 }
 
