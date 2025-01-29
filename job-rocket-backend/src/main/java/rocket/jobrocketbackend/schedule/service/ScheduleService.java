@@ -1,13 +1,17 @@
 package rocket.jobrocketbackend.schedule.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.alarm.service.AlarmService;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleTypeModifyDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
+import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.schedule.entity.ScheduleType;
 import rocket.jobrocketbackend.schedule.exception.ScheduleNotFoundException;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
@@ -15,6 +19,7 @@ import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +28,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class ScheduleService {
 
+    private final AlarmService alarmService;
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
 
@@ -60,5 +67,19 @@ public class ScheduleService {
     public void modify(final ScheduleModifyDTO dto){
         ScheduleEntity schedule = scheduleRepository.findById(dto.getId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
         schedule.modify(dto);
+    }
+
+    //자정마다
+    @Scheduled(cron="0 0 0 * * *")
+    public void checkScheduleDeadlines(){
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        List<ScheduleEntity> schedules = scheduleRepository.findByStateAndDueDate(ScheduleState.Ongoing, tomorrow);
+
+        for (ScheduleEntity schedule : schedules) {
+            Long userId = schedule.getUser().getId();
+            String message = "📅 '" + schedule.getTitle() + "' 일정이 하루 남았습니다!";
+            alarmService.sendAlarm(userId, message);
+            log.info("알림 전송: userId={}, message={}", userId, message);
+        }
     }
 }

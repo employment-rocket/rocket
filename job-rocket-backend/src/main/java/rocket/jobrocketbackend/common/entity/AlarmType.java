@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AlarmType {
-    NOTE("NOTE"),
     SCHEDULE("SCHEDULE"),
     COMMENT("COMMENT");
 

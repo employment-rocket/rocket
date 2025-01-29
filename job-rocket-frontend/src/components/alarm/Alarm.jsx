@@ -1,33 +1,15 @@
 import React from "react";
 import del from "../../assets/delete.png";
-import { getAlarms } from "../../api/alarm/AlarmApi";
-import { useState, useEffect } from "react";
-import note from "../../assets/note.png";
-import schedule from "../../assets/schedule.png";
+import useSSE from "../../api/alarm/AlarmApi"; // 변경된 부분
 import comment from "../../assets/comment.png";
-
+import schedule from "../../assets/schedule.png";
 
 const Alarm = ({ onClose }) => {
-
-  const [alarms, setAlarms] = useState([]);
-  const [isChatOpen, setChatOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchAlarms = async () => {
-      try {
-        const data = await getAlarms();
-        setAlarms(data);
-      } catch (error) {
-        console.error("Failed to fetch alarms:", error);
-      }
-    };
-
-    fetchAlarms();
-  }, []);
+  const alarms = useSSE(); // SSE에서 데이터를 실시간으로 가져옴
 
   return (
     <div
-      className="absolute right-2 top-12 mt-2 w-72 bg-white shadow-lg rounded-md z-10 rounded-2xl border border-gray-300 "
+      className="absolute right-2 top-12 mt-2 w-72 bg-white shadow-lg rounded-md z-10 rounded-2xl border border-gray-300"
       style={{ scrollbarWidth: "thin", scrollbarColor: "#c1c1c1 #f5f5f5" }}
     >
       <div className="flex justify-between items-center px-4 py-2 border-b border-gray-300">
@@ -41,21 +23,22 @@ const Alarm = ({ onClose }) => {
       </div>
       <div className="max-h-80 overflow-y-auto">
         {alarms.length > 0 ? (
-          alarms.map((data) => (
+          alarms.map((data, index) => ( // key값을 id에서 index로 변경 (SSE는 id가 없을 수 있음)
             <div
-              key={data.id}
+              key={index}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
               <div className="flex items-center space-x-3">
                 <img
-                  src={data.type === 'NOTE' ? note : data.type === 'SCHEDULE' ? schedule : comment}
+                  src={data.type === 'COMMENT' ? comment : schedule}
                   alt="알림 아이콘"
                   className="h-7 w-7"
                 />
                 <div>
-
                   <div className="text-sm text-gray-600">{data.content}</div>
-                  <div className="text-xs text-gray-400">{`${data.time[0]}-${String(data.time[1]).padStart(2, '0')}-${String(data.time[2]).padStart(2, '0')}`}</div>
+                  <div className="text-xs text-gray-400">
+                    {`${data.time[0]}-${String(data.time[1]).padStart(2, '0')}-${String(data.time[2]).padStart(2, '0')}`}
+                  </div>
                 </div>
               </div>
             </div>

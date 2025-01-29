@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
+import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
@@ -28,4 +30,11 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
             " s.type = rocket.jobrocketbackend.schedule.entity.ScheduleType.Document and" +
             " s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.Fail")
     Long findByUserAndTypeDocumentAndStateFailCount(@Param("user") UserEntity user);
+
+
+    @Query("SELECT s FROM schedule s WHERE s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.Ongoing " +
+            "AND s.dueDate = :dueDate")
+    List<ScheduleEntity> findByStateAndDueDate(@Param("state") ScheduleState ongoing, @Param("dueDate") LocalDate dueDate);
+
+
 }
