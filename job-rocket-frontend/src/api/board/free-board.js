@@ -23,4 +23,15 @@ const createFreeBoard = async (title, content) => {
 	}
 };
 
+const createComment = async ({ boardId, content }) => {
+	const body = {
+		content: content,
+	};
+	try {
+		await api.post(`/board/free/${boardId}/comment`, body);
+	} catch (error) {
+		console.error(`/board/free/${boardId}/comment api post error`, error);
+	}
+};
+
 export { getFreeBoardList, createFreeBoard };
