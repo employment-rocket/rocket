@@ -1,11 +1,11 @@
 import React from "react";
 import del from "../../assets/delete.png";
-import useSSE from "../../api/alarm/AlarmApi"; // 변경된 부분
+import useSSE from "../../api/alarm/AlarmApi"; 
 import comment from "../../assets/comment.png";
 import schedule from "../../assets/schedule.png";
 
 const Alarm = ({ onClose }) => {
-  const alarms = useSSE(); // SSE에서 데이터를 실시간으로 가져옴
+  const alarms = useSSE(); 
 
   return (
     <div
@@ -23,7 +23,7 @@ const Alarm = ({ onClose }) => {
       </div>
       <div className="max-h-80 overflow-y-auto">
         {alarms.length > 0 ? (
-          alarms.map((data, index) => ( // key값을 id에서 index로 변경 (SSE는 id가 없을 수 있음)
+          alarms.map((data, index) => ( 
             <div
               key={index}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
