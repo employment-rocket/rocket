@@ -18,7 +18,7 @@ const FreeBoardView = () => {
 	});
 
 	if (isPending) return <div>Loading...</div>;
-
+	if (data === 404) navigate("/board/free");
 	const token = localStorage.getItem("AccessToken");
 	if (token) {
 		const userInfo = jwtDecode(token);

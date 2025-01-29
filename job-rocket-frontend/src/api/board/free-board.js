@@ -13,9 +13,14 @@ const getFreeBoardList = async () => {
 const getFreeBoard = async ({ boardId }) => {
 	try {
 		const response = await api.get(`/board/free/${boardId}`);
+		console.log(response);
 		return response.data;
 	} catch (error) {
 		console.error(`/board/free/${boardId}`, error);
+		if (error.status === 404) {
+			alert("존재하지 않는 게시물입니다.");
+			return error.status;
+		}
 	}
 };
 
