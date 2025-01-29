@@ -14,6 +14,7 @@ const Free = () => {
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
+
 	return (
 		<div
 			className="flex flex-col space-y-3 h-[80vh]"
