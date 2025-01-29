@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import FreeComment from "./comment/FreeComment";
-import comment from "../../../assets/comment.png";
-import { deleteFreeBoard, getFreeBoard } from "../../../api/board/free-board";
+import commentPng from "../../../assets/comment.png";
+import {
+	createComment,
+	deleteFreeBoard,
+	getFreeBoard,
+} from "../../../api/board/free-board";
 import { useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
+import FreeCommentList from "./comment/FreeCommentList";
 
 const FreeBoardView = () => {
+	const [comment, setComment] = useState("");
 	const boardId = useParams("boardId").boardId;
 	const navigate = useNavigate();
 
@@ -74,7 +80,7 @@ const FreeBoardView = () => {
 			<div className="min-h-[16rem]">{data.content}</div>
 			<div className="flex gap-2 items-center">
 				<img
-					src={comment}
+					src={commentPng}
 					alt="댓글 아이콘"
 					className="h-[32px] w-[32px]"
 				/>
@@ -86,12 +92,17 @@ const FreeBoardView = () => {
 					type="text"
 					placeholder="댓글을 달아주세요"
 					className="grow"
+					value={comment}
+					onChange={(e) => setComment(e.target.value)}
 				/>
-				<div className="bg-blue-500 text-white rounded-lg p-2 px-6">
+				<div
+					className="bg-blue-500 text-white rounded-lg p-2 px-6"
+					onClick={() => createComment({ boardId, content: comment })}
+				>
 					등록
 				</div>
 			</div>
-			<FreeComment />
+			<FreeCommentList boardId={boardId} />
 		</div>
 	);
 };

@@ -1,3 +1,4 @@
+import { Typography } from "antd";
 import api from "../api";
 
 const getFreeBoardList = async () => {
@@ -7,6 +8,15 @@ const getFreeBoardList = async () => {
 	} catch (error) {
 		console.error("/board/free api get error", error);
 		throw error;
+	}
+};
+
+const getFreeCommentList = async ({ boardId }) => {
+	try {
+		const response = await api.get(`/board/free/${boardId}/comment`);
+		return response.data;
+	} catch (error) {
+		console.log(`/board/free/${boardId}/comment`, error);
 	}
 };
 
@@ -71,6 +81,7 @@ const createComment = async ({ boardId, content }) => {
 
 export {
 	getFreeBoardList,
+	getFreeCommentList,
 	getFreeBoard,
 	deleteFreeBoard,
 	createFreeBoard,

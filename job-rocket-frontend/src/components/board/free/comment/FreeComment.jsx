@@ -1,6 +1,6 @@
 import React from "react";
 
-const FreeComment = () => {
+const FreeComment = ({ item }) => {
 	const img = `${
 		import.meta.env.VITE_API_BASE_URL
 	}/board/free/temp/default.png`;
