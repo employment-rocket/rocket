@@ -7,12 +7,13 @@ import {
 	deleteFreeBoard,
 	getFreeBoard,
 } from "../../../api/board/free-board";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import FreeCommentList from "./comment/FreeCommentList";
 
 const FreeBoardView = () => {
 	const [comment, setComment] = useState("");
+	const queryClient = useQueryClient();
 	const boardId = useParams("boardId").boardId;
 	const navigate = useNavigate();
 
@@ -32,6 +33,17 @@ const FreeBoardView = () => {
 			isAuthor = true;
 		}
 	}
+
+	const handleCreateComment = async () => {
+		try {
+			await createComment({ boardId, content: comment });
+			// 등록 성공하면 댓글 리스트 다시 가져오기
+			queryClient.invalidateQueries(["freeCommentList"]);
+			setComment(""); // 인풋 초기화
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	const img = `${
 		import.meta.env.VITE_API_BASE_URL
@@ -90,14 +102,17 @@ const FreeBoardView = () => {
 			<div className="flex border rounded-lg p-3 space-x-3 w-full">
 				<input
 					type="text"
-					placeholder="댓글을 달아주세요"
+					placeholder={
+						token ? "댓글을 달아주세요." : "로그인이 필요합니다."
+					}
 					className="grow"
 					value={comment}
 					onChange={(e) => setComment(e.target.value)}
+					disabled={!token}
 				/>
 				<div
 					className="bg-blue-500 text-white rounded-lg p-2 px-6"
-					onClick={() => createComment({ boardId, content: comment })}
+					onClick={handleCreateComment}
 				>
 					등록
 				</div>

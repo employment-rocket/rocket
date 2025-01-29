@@ -13,7 +13,7 @@ const FreeCommentList = ({ boardId }) => {
 	if (isPending) return <div>Loading...</div>;
 
 	return (
-		<div>
+		<div className="flex flex-col gap-3">
 			{data.map((item) => (
 				<FreeComment item={item} key={item.id} />
 			))}
