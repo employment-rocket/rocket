@@ -24,10 +24,10 @@ public class FreeCommentService {
     private final FreeCommentRepository freeCommentRepository;
     private final UserRepository userRepository;
 
-    public void create(final FreeCreateCommentRequest request, final Long boardId, final Long userId){
+    public FreeCommentEntity create(final FreeCreateCommentRequest request, final Long boardId, final Long userId){
         UserEntity user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         FreeBoardEntity board = freeBoardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        FreeCommentEntity comment = FreeCommentEntity.builder().author(user).board(board).content(request.getContent()).postDate(LocalDate.now()).build();
-        freeCommentRepository.save(comment);
+        FreeCommentEntity comment = FreeCommentEntity.create(user, board, request.getContent(), LocalDate.now());
+        return freeCommentRepository.save(comment);
     }
 }
