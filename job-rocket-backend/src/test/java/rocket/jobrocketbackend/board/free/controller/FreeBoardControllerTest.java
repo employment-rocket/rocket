@@ -1,5 +1,6 @@
 package rocket.jobrocketbackend.board.free.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
+import rocket.jobrocketbackend.board.free.dto.request.FreeBoardUpdateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.service.FreeBoardService;
 import rocket.jobrocketbackend.common.entity.Role;
@@ -23,9 +25,10 @@ import rocket.jobrocketbackend.user.service.UserService;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,5 +96,23 @@ class FreeBoardControllerTest {
                 .andExpect(jsonPath("$.content").value("내용"))
                 .andExpect(jsonPath("$.nickName").value("닉네임"))
                 .andExpect(jsonPath("$.id").value(1L));
+    }
+
+    @Test
+    void patchFreeBoard() throws Exception {
+        // given
+        FreeBoardUpdateRequest request = FreeBoardUpdateRequest.builder().id(1L).content("수정할 내용").title("수정할 제목").build();
+
+        // when
+        // then
+        mockMvc.perform(
+                patch("/board/free/1")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+        ).andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(freeBoardService).update(request,1L);
     }
 }

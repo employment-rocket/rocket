@@ -1,9 +1,6 @@
 package rocket.jobrocketbackend.board.free.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
@@ -13,6 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode
 public class FreeBoardUpdateRequest {
     private Long id;
     private String title;
