@@ -1,14 +1,13 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import FreeComment from "./comment/FreeComment";
-import commentPng from "../../../assets/comment.png";
 import {
 	createComment,
 	deleteFreeBoard,
 	getFreeBoard,
 } from "../../../api/board/free-board";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { jwtDecode } from "jwt-decode";
+import commentPng from "../../../assets/comment.png";
+import { isAuthor } from "../Common";
 import FreeCommentList from "./comment/FreeCommentList";
 
 const FreeBoardView = () => {
@@ -16,8 +15,6 @@ const FreeBoardView = () => {
 	const queryClient = useQueryClient();
 	const boardId = useParams("boardId").boardId;
 	const navigate = useNavigate();
-
-	let isAuthor = false;
 
 	const { data, isPending } = useQuery({
 		queryKey: ["freeItem"],
@@ -27,12 +24,7 @@ const FreeBoardView = () => {
 	if (isPending) return <div>Loading...</div>;
 	if (data === 404) navigate("/board/free");
 	const token = localStorage.getItem("AccessToken");
-	if (token) {
-		const userInfo = jwtDecode(token);
-		if (userInfo.userId === data.userId) {
-			isAuthor = true;
-		}
-	}
+	let author = isAuthor(data.userId);
 
 	const handleCreateComment = async () => {
 		try {
@@ -57,7 +49,7 @@ const FreeBoardView = () => {
 			<div className="flex justify-between items-center">
 				<div style={{ fontSize: "1.3rem" }}>{data.title}</div>
 				<div className="flex gap-2 items-center">
-					{isAuthor && (
+					{author && (
 						<>
 							<div
 								className="bg-blue-500 text-white p-2 px-6 rounded-lg cursor-pointer"

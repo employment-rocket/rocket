@@ -1,6 +1,8 @@
 import React from "react";
+import { isAuthor } from "../../Common";
 
 const FreeComment = ({ item }) => {
+	const author = isAuthor(item.userId);
 	const img = `${import.meta.env.VITE_API_BASE_URL}/board/free/temp/${
 		item.profile
 	}`;
@@ -16,7 +18,14 @@ const FreeComment = ({ item }) => {
 			<div>
 				<hr />
 			</div>
-			<div>{item.content}</div>
+			<div className="flex justify-between">
+				<div>{item.content}</div>
+				{author && (
+					<div className="border text-red-500 p-2 px-6 rounded-lg cursor-pointer">
+						{"삭제"}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
