@@ -27,6 +27,7 @@ const FreeBoardView = () => {
 	let author = isAuthor(data.userId);
 
 	const handleCreateComment = async () => {
+		if (!comment) alert("댓글을 입력해주세요");
 		try {
 			await createFreeComment({ boardId, content: comment });
 			// 등록 성공하면 댓글 리스트 다시 가져오기
