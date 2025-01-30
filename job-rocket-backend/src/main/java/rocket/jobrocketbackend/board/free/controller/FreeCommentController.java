@@ -12,13 +12,13 @@ import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import java.util.List;
 
 @RestController
-@RequestMapping("/board/free")
+@RequestMapping("/board/free/{boardId}/comment")
 @RequiredArgsConstructor
 public class FreeCommentController {
 
     private final FreeCommentService freeCommentService;
 
-    @PostMapping("/{boardId}/comment")
+    @PostMapping
     public ResponseEntity<Void> createComment(@PathVariable("boardId")Long boardId
             , @RequestBody FreeCreateCommentRequest request
             , @AuthenticationPrincipal CustomOAuth2User user){
@@ -26,9 +26,15 @@ public class FreeCommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{boardId}/comment")
+    @GetMapping
     public ResponseEntity<List<FreeCommentResponse>> getCommentList(@PathVariable("boardId")Long boradId){
         List<FreeCommentResponse> result = freeCommentService.tempFindBoard(boradId);
         return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId")Long commentId, @AuthenticationPrincipal CustomOAuth2User user){
+        freeCommentService.delete(commentId, user.getId());
+        return ResponseEntity.noContent().build();
     }
 }

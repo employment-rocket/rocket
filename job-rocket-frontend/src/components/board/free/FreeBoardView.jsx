@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import {
-	createComment,
+	createFreeComment,
 	deleteFreeBoard,
 	getFreeBoard,
 } from "../../../api/board/free-board";
@@ -28,7 +28,7 @@ const FreeBoardView = () => {
 
 	const handleCreateComment = async () => {
 		try {
-			await createComment({ boardId, content: comment });
+			await createFreeComment({ boardId, content: comment });
 			// 등록 성공하면 댓글 리스트 다시 가져오기
 			queryClient.invalidateQueries(["freeCommentList"]);
 			setComment(""); // 인풋 초기화

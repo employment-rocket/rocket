@@ -9,13 +9,14 @@ const FreeCommentList = ({ boardId }) => {
 		queryKey: ["freeCommentList"],
 		queryFn: () => getFreeCommentList({ boardId }),
 	});
+	useEffect(() => {}, [data]);
 
 	if (isPending) return <div>Loading...</div>;
 
 	return (
 		<div className="flex flex-col gap-3">
 			{data.map((item) => (
-				<FreeComment item={item} key={item.id} />
+				<FreeComment item={item} key={item.id} boardId={boardId} />
 			))}
 		</div>
 	);

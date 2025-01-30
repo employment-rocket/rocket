@@ -44,6 +44,17 @@ const deleteFreeBoard = async ({ boardId }) => {
 	}
 };
 
+const deleteFreeComment = async ({ boardId, commentId }) => {
+	try {
+		const response = await api.delete(
+			`/board/free/${boardId}/comment/${commentId}`
+		);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}/comment`, error);
+	}
+};
+
 const patchFreeBoard = async ({ boardId, data }) => {
 	try {
 		const response = await api.patch(`/board/free/${boardId}`, data);
@@ -66,7 +77,7 @@ const createFreeBoard = async (title, content) => {
 	}
 };
 
-const createComment = async ({ boardId, content }) => {
+const createFreeComment = async ({ boardId, content }) => {
 	const body = {
 		content: content,
 	};
@@ -82,7 +93,8 @@ export {
 	getFreeCommentList,
 	getFreeBoard,
 	deleteFreeBoard,
+	deleteFreeComment,
 	createFreeBoard,
 	patchFreeBoard,
-	createComment,
+	createFreeComment,
 };
