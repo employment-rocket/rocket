@@ -30,15 +30,8 @@ public class UserController {
 
         Long memberId = customOAuth2User.getId();
 
-            Map<String, Object> userProfile = userService.getUserProfileById(memberId);
+            Map<String, Object> userProfile = userService.getUserProfile(memberId);
             return ResponseEntity.ok(userProfile);
-    }
-
-    @GetMapping("/mypage/{userId}")
-    public ResponseEntity<?> getUserProfile(@PathVariable("userId") Long id) {
-
-            Map<String, Object> getMypageUserProfile = userService.getUserProfile(id);
-            return ResponseEntity.ok(getMypageUserProfile);
     }
 
 

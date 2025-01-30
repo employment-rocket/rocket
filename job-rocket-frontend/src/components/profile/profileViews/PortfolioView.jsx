@@ -1,43 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { getProfile } from "../../../api/profile/ProfileAPI";
+import { usePortfolio } from "./../profileForms/usePortfolio";
+import { fetchFile } from "../../../api/profile/ProfileAPI";
 
-const PortfolioView = () => {
-  const [urls, setUrls] = useState([]);
-  const [files, setFiles] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const PortfolioView = ({ order }) => {
+  const { items, isLoading, fetchPortfolio } = usePortfolio(order);
+
+  const [fileUrls, setFileUrls] = useState({});
 
   useEffect(() => {
-    const fetchPortfolio = async () => {
-      try {
-        const profileData = await getProfile();
-        const portfolioSection = profileData.sections.find(
-          (section) => section.type === "PORTFOLIO"
-        );
+    fetchPortfolio(); // 초기 로드
+  }, []);
 
-        if (portfolioSection) {
-          setUrls(portfolioSection.data.urls || []);
-          setFiles(
-            (portfolioSection.data.files || []).filter(
-              (file) => typeof file === "string" && file.trim() !== ""
-            )
-          );
-        } else {
-          setUrls([]);
-          setFiles([]);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
+  useEffect(() => {
+    const fetchFiles = async () => {
+      const urls = {};
+      await Promise.all(
+        items.map(async (item) => {
+          if (item.type === "file" || item.type === "image") {
+            try {
+              const fileUrl = await fetchFile(item.value, "FILEUPLOAD");
+              urls[item.id] = fileUrl;
+            } catch (error) {
+              console.error(`파일 로드 실패: ${item.name}`, error);
+              urls[item.id] = null; // 실패한 경우 null 처리
+            }
+          }
+        })
+      );
+      setFileUrls(urls);
     };
 
-    fetchPortfolio();
-  }, []);
+    if (items.length > 0) {
+      fetchFiles();
+    }
+  }, [items]);
 
   if (isLoading) {
     return <p className="text-gray-500">로딩 중...</p>;
   }
+
+  const urls = items.filter((item) => item.type === "url");
+  const files = items.filter((item) => item.type === "file");
+  const images = items.filter((item) => item.type === "image");
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
@@ -45,36 +49,72 @@ const PortfolioView = () => {
         <h3 className="text-md font-semibold mb-4 text-left">URL</h3>
         {urls.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {urls.map((url, index) => (
-              <a
-                key={index}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block p-4 bg-indigo-50 text-indigo-600 rounded-lg shadow hover:bg-indigo-100 transition"
+            {urls.map((url) => (
+              <div
+                key={url.id}
+                className="p-4 bg-indigo-50 text-indigo-600 rounded-lg shadow hover:bg-indigo-100 transition flex flex-col items-start space-y-2"
               >
-                {decodeURIComponent(url.split("/").pop()) || "URL 링크"}
-              </a>
+                <a
+                  href={url.value}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="truncate max-w-[200px] block"
+                  title={decodeURIComponent(url.value.split("/").pop()) || "URL 링크"}
+                >
+                  {decodeURIComponent(url.value.split("/").pop()) || "URL 링크"}
+                </a>
+              </div>
             ))}
           </div>
         ) : (
           <p className="text-gray-500 text-left">저장된 URL이 없습니다.</p>
         )}
       </div>
+
       <div className="border-l-4 border-green-500 pl-4">
-        <h3 className="text-md font-semibold mb-4 text-left">파일</h3>
-        {files.length > 0 ? (
+        <h3 className="text-md font-semibold mb-4 text-left">파일 및 이미지</h3>
+        {files.length > 0 || images.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {files.map((file, index) => (
-              <a
-                key={index}
-                href={file}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block p-4 bg-green-50 text-green-600 rounded-lg shadow hover:bg-green-100 transition"
+            {[...files, ...images].map((item) => (
+              <div
+                key={item.id}
+                className="p-4 bg-green-50 text-green-600 rounded-lg shadow hover:bg-green-100 transition flex flex-col items-start space-y-2"
               >
-                {decodeURIComponent(file.split("/").pop()) || "파일 다운로드"}
-              </a>
+                {item.type === "file" ? (
+                  <>
+                    <a
+                      href={fileUrls[item.id]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate max-w-[200px] block"
+                      title={item.name || "파일 다운로드"}
+                    >
+                      {item.name || "파일 다운로드"}
+                    </a>
+                    <div className="flex space-x-2">
+                      <button
+                        className="text-sm bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition"
+                        onClick={() => window.open(fileUrls[item.id], "_blank")}
+                      >
+                        미리보기
+                      </button>
+                      <a
+                        href={fileUrls[item.id]}
+                        download={item.name}
+                        className="text-sm bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 transition"
+                      >
+                        다운로드
+                      </a>
+                    </div>
+                  </>
+                ) : (
+                  <img
+                    src={fileUrls[item.id]}
+                    alt={item.name || "이미지"}
+                    className="max-w-full h-auto rounded-lg shadow"
+                  />
+                )}
+              </div>
             ))}
           </div>
         ) : (

@@ -4,13 +4,20 @@ const PDFSectionToggleList = ({ sections, setSections }) => {
   const toggleSection = (sectionName) => {
     setSections((prev) =>
       prev.map((section) =>
-        section.name === sectionName ? { ...section, visible: !section.visible } : section
+        section.name === sectionName
+          ? { ...section, visible: !section.visible }
+          : section
       )
     );
   };
 
   const filteredSections = sections
-    .filter((section) => section.name !== "BASICINFO" && section.name !== "TAGSSELECTION" && section.name !== "INTERESTFIELD")
+    .filter(
+      (section) =>
+        section.name !== "BASICINFO" &&
+        section.name !== "TAGSSELECTION" &&
+        section.name !== "INTERESTFIELD"
+    )
     .sort((a, b) => a.order - b.order);
 
   return (

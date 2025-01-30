@@ -26,7 +26,7 @@ const Profile = () => {
     { key: "PORTFOLIO", label: "포트폴리오", component: <PortfolioForm />, icon: "📁", active: false },
     { key: "EDUCATION", label: "교육", component: <EducationForm />, icon: "🎓", active: false },
     { key: "ACTIVITY", label: "대외활동", component: <ActivityForm />, icon: "🏆", active: false },
-    { key: "CERTIFICATIONS", label: "자격증", component: <CertificationForm />, icon: "📜", active: false },
+    { key: "CERTIFICATION", label: "자격증", component: <CertificationForm />, icon: "📜", active: false },
     { key: "LANGUAGES", label: "외국어", component: <LanguageForm />, icon: "🌐", active: false },
     { key: "SELFINTRO", label: "자기소개", component: <SelfIntroductionForm />, icon: "💬", active: false },
   ]);

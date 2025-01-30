@@ -11,7 +11,7 @@ const SidebarToggle = ({ label }) => {
         const profile = await getProfile();
         setIsActive(profile?.public ?? false);
       } catch (error) {
-        console.error("프로필 상태를 가져오는 데 실패했습니다:", error.message);
+       
       }
     };
 

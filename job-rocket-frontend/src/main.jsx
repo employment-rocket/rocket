@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
@@ -11,7 +10,7 @@ import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import "./index.css";
 import Board from "./pages/Board.jsx";
 import Career from "./pages/Career.jsx";
-import MyPage from "./pages/MyPage";
+import MyPage from "./components/common/MyPage.jsx";
 import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
@@ -21,49 +20,54 @@ import Review from "./components/board/review/Review.jsx";
 import Qa from "./components/board/question/Qa.jsx";
 import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
 import Free from "./components/board/free/Free.jsx";
+import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
 import Profile from "./pages/Profile.jsx";
-import { AuthProvider } from "./context/auth/AuthContext";
+import FreeBoardUpdate from "./components/board/free/FreeBoardUpdate.jsx";
 
 const queryClient = new QueryClient();
-
 createRoot(document.getElementById("root")).render(
 	<BrowserRouter>
 		<QueryClientProvider client={queryClient}>
-			<AuthProvider>
-				<Header />
-				<Routes>
-					<Route
-						path="/login/oauth2/callback/kakao"
-						element={<KakaoLogin />}
-					/>
-					<Route
-						path="/login/oauth2/code/naver"
-						element={<NaverLogin />}
-					/>
-					<Route path="/" element={<Navigate to="/board" replace />} />
-					<Route path="/board" element={<Board />}>
-						<Route index element={<Notice />} />
-						<Route path="free" element={<Free />} />
-						<Route element={<PrivateRoute />}>
-							<Route path="free/form" element={<FreeBoardForm />} />
-						</Route>
-						<Route path="qa" element={<Qa />} />
-						<Route path="review" element={<Review />} />
-					</Route>
+			<Header />
+			<Routes>
+				<Route
+					path="/login/oauth2/callback/kakao"
+					element={<KakaoLogin />}
+				/>
+				<Route
+					path="/login/oauth2/code/naver"
+					element={<NaverLogin />}
+				/>
+				<Route path="/" element={<Navigate to="/board" replace />} />
+				<Route path="/board" element={<Board />}>
+					<Route index element={<Notice />} />
+					<Route path="free" element={<Free />} />
+					<Route path="free/:boardId" element={<FreeBoardView />} />
 					<Route element={<PrivateRoute />}>
-						<Route path="/schedule" element={<Schedule />}>
-							<Route index element={<ScheduleHome />} />
-							<Route path="statistics" element={<Statistics />} />
-						</Route>
-						<Route path="/member/mypage/:userId" element={<MyPage />} />
-						<Route path="/retrospect" element={<Retrospect />} />
-						<Route path="/question" element={<Question />} />
-						<Route path="/profile" element={<Profile />} />
-						<Route path="/career" element={<Career />} />
+						<Route path="free/form" element={<FreeBoardForm />} />
+						<Route
+							path="free/form/:boardId"
+							element={<FreeBoardUpdate />}
+						/>
 					</Route>
-					<Route path="/site" element={<Site />} />
-				</Routes>
-			</AuthProvider>
+					<Route path="qa" element={<Qa />} />
+					<Route path="review" element={<Review />} />
+				</Route>
+				<Route element={<PrivateRoute />}>
+					<Route path="/schedule" element={<Schedule />}>
+						<Route index element={<ScheduleHome />} />
+						<Route path="statistics" element={<Statistics />} />
+					</Route>
+
+					<Route path="/retrospect" element={<Retrospect />} />
+					<Route path="/question" element={<Question />} />
+
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/career" element={<Career />} />
+				</Route>
+
+				<Route path="/site" element={<Site />} />
+			</Routes>
 		</QueryClientProvider>
 	</BrowserRouter>
 );

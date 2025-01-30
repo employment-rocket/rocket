@@ -1,10 +1,18 @@
 package rocket.jobrocketbackend.profile.profile.service;
 
 import java.io.IOException;
-import java.util.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,8 +49,20 @@ public class ProfileService {
 		ProfileEntity profile = profileRepository.findByMemberId(memberId)
 			.orElseThrow(() -> new ProfileNotFoundException("회원 ID: " + memberId + "의 프로필을 찾을 수 없습니다."));
 
+		if (!isValidProfile(profile)) {
+			throw new IllegalArgumentException("프로필 조회에 실패했습니다.");
+		}
+
 		List<Section> sortedSections = sortSectionsByOrder(profile.getSections());
 		return mapToResponse(profile, sortedSections);
+	}
+
+	private boolean isValidProfile(ProfileEntity profile) {
+		if (profile.getSections() == null || profile.getSections().isEmpty()) {
+			return false;
+		}
+		return profile.getSections().stream()
+			.anyMatch(section -> section.getType() == SectionType.BASICINFO);
 	}
 
 	public ProfileResponseDto addSection(Long memberId, ProfileRequestDto request) {
@@ -128,14 +148,57 @@ public class ProfileService {
 		return mapToResponse(profile, sortSectionsByOrder(profile.getSections()));
 	}
 
-	public String uploadFile(MultipartFile file, Long memberId, SectionType sectionType) throws IOException {
-		String fileName = profileFileService.uploadFile(file, sectionType);
-		profileFileService.saveFileToProfile(memberId, fileName, sectionType, profileRepository);
-		return sectionType == SectionType.PROFILE_IMAGE ? "프로필 이미지 업로드 성공" : "파일 업로드 성공";
+	public Map<String, String> uploadFileWithResponse(MultipartFile file, SectionType sectionType, Long memberId) throws IOException {
+		String savedFileName = profileFileService.uploadFile(file, sectionType);
+		String originalFileName = file.getOriginalFilename();
+
+		if (isInvalidFileName(savedFileName, originalFileName)) {
+			throw new IllegalStateException("업로드된 파일 이름이 유효하지 않습니다.");
+		}
+
+		ProfileEntity profile = profileRepository.findByMemberId(memberId)
+			.orElse(ProfileEntity.createWithMemberId(memberId));
+
+		updateFileSections(profile.getSections(), savedFileName, sectionType);
+
+		profileRepository.save(profile);
+
+		assert originalFileName != null;
+		return Map.of(
+			"savedFileName", savedFileName,
+			"originalFileName", originalFileName
+		);
+	}
+
+	private boolean isInvalidFileName(String... fileNames) {
+		for (String fileName : fileNames) {
+			if (fileName == null || fileName.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public ResponseEntity<byte[]> getFileResponse(String fileName, SectionType sectionType) throws IOException {
-		return profileFileService.getFileResponse(fileName, sectionType);
+		Map<String, Object> fileAndMediaType = profileFileService.getFileAndMediaType(fileName, sectionType);
+
+		String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
+		return ResponseEntity.ok()
+			.contentType((MediaType) fileAndMediaType.get("mediaType"))
+			.header("Content-Disposition", "inline; filename*=UTF-8''" + encodedFileName)
+			.body((byte[]) fileAndMediaType.get("fileBytes"));
+	}
+
+	private void updateFileSections(List<Section> sections, String fileName, SectionType sectionType) {
+		if (sectionType == SectionType.PROFILE_IMAGE) {
+			sections.removeIf(section -> section.getType() == SectionType.PROFILE_IMAGE);
+
+			sections.add(Section.builder()
+				.type(SectionType.PROFILE_IMAGE)
+				.data(Map.of("profileImage", fileName))
+				.build());
+		}
 	}
 
 	private List<Section> updateSections(ProfileEntity profileEntity, ProfileRequestDto request) {

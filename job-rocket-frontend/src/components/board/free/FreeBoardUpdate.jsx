@@ -1,25 +1,47 @@
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { React, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { createFreeBoard } from "../../../api/board/free-board";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { getFreeBoard, patchFreeBoard } from "../../../api/board/free-board";
 
-const FreeBoardForm = () => {
+const FreeBoardUpdate = () => {
 	const navigate = useNavigate();
+	const boardId = useParams("boardId").boardId;
+
+	const { data, isPending } = useQuery({
+		queryKey: ["freeItem"],
+		queryFn: () => getFreeBoard({ boardId }),
+	});
+
 	const {
 		register,
 		handleSubmit,
 		watch,
+		reset,
 		formState: { errors },
 	} = useForm();
 
+	useEffect(() => {
+		if (data) {
+			reset({
+				id: data.id,
+				title: data.title,
+				content: data.content,
+			});
+		}
+	}, [data, reset]);
+
+	if (isPending) return <div>Loading...</div>;
+
 	const onSubmit = async (data) => {
-		await createFreeBoard(data.title, data.content);
+		await patchFreeBoard({ boardId, data });
 		navigate("/board/free");
 	};
 
 	return (
 		<div className="border rounded-lg ">
 			<form onSubmit={handleSubmit(onSubmit)}>
+				<input type="hidden" value={data.id} />
 				<div className="flex flex-col gap-5 p-3 items-center ">
 					{errors.title && (
 						<span className="text-red-600">
@@ -49,4 +71,4 @@ const FreeBoardForm = () => {
 	);
 };
 
-export default FreeBoardForm;
+export default FreeBoardUpdate;

@@ -2,6 +2,7 @@ package rocket.jobrocketbackend.profile.profile.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -83,21 +84,20 @@ public class ProfileController {
 	}
 
 	@PostMapping("/upload")
-	public ResponseEntity<String> uploadFile(
-		@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+	public ResponseEntity<Map<String, String>> uploadFile(
 		@RequestParam MultipartFile file,
-		@RequestParam SectionType sectionType) throws IOException {
-
+		@RequestParam SectionType sectionType,
+		@AuthenticationPrincipal CustomOAuth2User customOAuth2User) throws IOException {
 		Long memberId = customOAuth2User.getId();
-		String resultMessage = profileService.uploadFile(file, memberId, sectionType);
-		return ResponseEntity.ok(resultMessage);
+		Map<String, String> response = profileService.uploadFileWithResponse(file, sectionType, memberId);
+
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/file/{fileName}")
 	public ResponseEntity<byte[]> getFile(
 		@PathVariable String fileName,
 		@RequestParam SectionType sectionType) throws IOException {
-
 		return profileService.getFileResponse(fileName, sectionType);
 	}
 
