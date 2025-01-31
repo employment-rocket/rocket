@@ -1,33 +1,43 @@
 import React, { useEffect, useState } from "react";
 import TalentPoolLayout from "../components/talentPool/talentPoolLayout/TalentPoolLayout";
-import { getPublicProfiles } from "./../api/profile/ProfileAPI";
-import TalentCategory from "../components/talentPool/talentPoolComponents/TalentCategory";
+import { getPublicProfiles } from "../api/profile/ProfileAPI";
+import { filterProfilesBySearch } from "../components/talentPool/filterProfiles";
 
 const TalentPool = () => {
   const [profiles, setProfiles] = useState([]);
+  const [filteredProfiles, setFilteredProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    skill: "",
-    tenure: [
-      { label: "1~3년", value: "1-3", checked: false },
-      { label: "4~6년", value: "4-6", checked: false },
-      { label: "7~10년", value: "7-10", checked: false },
-    ],
+    skill: [],
+    tenure: [],
+    careerState: [],
   });
 
   const handleFilterChange = (type, value) => {
-    if (type === "skill") {
-      setFilters({ ...filters, skill: value });
-    } else if (type === "tenure") {
-      setFilters({
-        ...filters,
-        tenure: filters.tenure.map((option) =>
-          option.value === value
-            ? { ...option, checked: !option.checked }
-            : option
-        ),
-      });
-    }
+    setFilters((prevFilters) => {
+      if (type === "skillSearch") {
+        return {
+          ...prevFilters,
+          skillSearch: value,
+        };
+      } else if (type === "skill") {
+        const updatedSkills = prevFilters.skill.includes(value)
+          ? prevFilters.skill.filter((skill) => skill !== value)
+          : [...prevFilters.skill, value];
+        return {
+          ...prevFilters,
+          skill: updatedSkills,
+        };
+      } else if (type === "tenure" || type === "careerState") {
+        return {
+          ...prevFilters,
+          [type]: prevFilters[type].includes(value)
+            ? prevFilters[type].filter((item) => item !== value)
+            : [...prevFilters[type], value],
+        };
+      }
+      return prevFilters;
+    });
   };
 
   useEffect(() => {
@@ -35,8 +45,9 @@ const TalentPool = () => {
       try {
         const fetchedProfiles = await getPublicProfiles();
         setProfiles(fetchedProfiles.filter((profile) => profile.public));
+        setFilteredProfiles(fetchedProfiles.filter((profile) => profile.public));
       } catch (error) {
-        console.error("프로필 데이터를 가져오는 데 실패했습니다.", error);
+        console.error("Failed to fetch profiles:", error);
       } finally {
         setLoading(false);
       }
@@ -45,17 +56,24 @@ const TalentPool = () => {
     fetchProfiles();
   }, []);
 
+  useEffect(() => {
+    profiles.forEach((profile) => {
+      const skills = profile.sections.find((section) => section.type === "SKILLS")?.data || {};
+      console.log("Profile Skills:", Object.values(skills).flat());
+    });
+    const filtered = filterProfilesBySearch(profiles, "", filters);
+    setFilteredProfiles(filtered);
+  }, [profiles, filters]);
+
   if (loading) return <div>로딩 중...</div>;
 
   return (
     <div>
-      <TalentCategory />
-    
-    <TalentPoolLayout
-      profiles={profiles}
-      filters={filters}
-      onFilterChange={handleFilterChange}
-    />
+      <TalentPoolLayout
+        profiles={filteredProfiles}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
     </div>
   );
 };

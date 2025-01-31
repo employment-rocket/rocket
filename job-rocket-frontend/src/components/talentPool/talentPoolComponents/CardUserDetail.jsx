@@ -24,6 +24,10 @@ const CardUserDetail = () => {
     CERTIFICATION: "자격증",
   };
 
+  const filteredSections = sections.filter(
+    (section) => section.name !== "PROFILE_IMAGE" && section.visible
+  );
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -78,22 +82,18 @@ const CardUserDetail = () => {
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full h-full px-4 space-y-4">
-   
       <div className="flex flex-row w-full max-w-6xl items-start justify-between">
-      
         <div className="flex flex-col w-3/4 max-w-4xl py-8 px-6 bg-white shadow-md rounded-lg">
           <CareerSection
             profile={profile}
-            sections={sections}
+            sections={filteredSections} 
             profileRef={profileRef}
-            sectionRefs={sectionRefs} 
+            sectionRefs={sectionRefs}
           />
         </div>
 
-
         <div className="flex flex-col sticky top-0 ml-6 w-1/4 space-y-2 py-8 px-6">
           <div className="bg-white shadow-md rounded-lg p-4">
-          
             <div className="flex justify-between w-full max-w-6xl">
               <button
                 className="bg-gray-200 text-gray-800 px-2 py-2 rounded-md shadow-md hover:bg-gray-300 transition"
@@ -111,7 +111,6 @@ const CardUserDetail = () => {
 
             <h3 className="text-lg font-bold text-gray-800 mb-4 mt-10">섹션 이동</h3>
             <ul className="space-y-2">
-            
               <li>
                 <button
                   className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
@@ -120,23 +119,19 @@ const CardUserDetail = () => {
                   프로필
                 </button>
               </li>
-              {sections
-                .filter((section) => section.visible)
-                .map((section) => (
-                  <li key={section.name}>
-                    <button
-                      className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
-                      onClick={() => scrollToSection(section.name)}
-                    >
-                      {section.label}
-                    </button>
-                  </li>
-                ))}
+              {filteredSections.map((section) => (
+                <li key={section.name}>
+                  <button
+                    className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
+                    onClick={() => scrollToSection(section.name)}
+                  >
+                    {section.label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-
-
       </div>
     </div>
   );
