@@ -1,3 +1,4 @@
+import { Typography } from "antd";
 import api from "../api";
 
 const getFreeBoardList = async () => {
@@ -10,10 +11,19 @@ const getFreeBoardList = async () => {
 	}
 };
 
+const getFreeCommentList = async ({ boardId }) => {
+	try {
+		const response = await api.get(`/board/free/${boardId}/comment`);
+		return response.data;
+	} catch (error) {
+		console.log(`/board/free/${boardId}/comment`, error);
+	}
+};
+
 const getFreeBoard = async ({ boardId }) => {
 	try {
 		const response = await api.get(`/board/free/${boardId}`);
-		console.log(response);
+
 		return response.data;
 	} catch (error) {
 		console.error(`/board/free/${boardId}`, error);
@@ -27,16 +37,25 @@ const getFreeBoard = async ({ boardId }) => {
 const deleteFreeBoard = async ({ boardId }) => {
 	try {
 		const response = await api.delete(`/board/free/${boardId}`);
-		console.log(response);
+
 		return response.data;
 	} catch (error) {
 		console.error(`/board/free/${boardId}`, error);
 	}
 };
 
+const deleteFreeComment = async ({ boardId, commentId }) => {
+	try {
+		const response = await api.delete(
+			`/board/free/${boardId}/comment/${commentId}`
+		);
+		return response.data;
+	} catch (error) {
+		console.error(`/board/free/${boardId}/comment`, error);
+	}
+};
+
 const patchFreeBoard = async ({ boardId, data }) => {
-	console.log("boardId = ", boardId);
-	console.log("data = ", data);
 	try {
 		const response = await api.patch(`/board/free/${boardId}`, data);
 		return response.data;
@@ -58,10 +77,24 @@ const createFreeBoard = async (title, content) => {
 	}
 };
 
+const createFreeComment = async ({ boardId, content }) => {
+	const body = {
+		content: content,
+	};
+	try {
+		await api.post(`/board/free/${boardId}/comment`, body);
+	} catch (error) {
+		console.error(`/board/free/${boardId}/comment api post error`, error);
+	}
+};
+
 export {
 	getFreeBoardList,
+	getFreeCommentList,
 	getFreeBoard,
 	deleteFreeBoard,
+	deleteFreeComment,
 	createFreeBoard,
 	patchFreeBoard,
+	createFreeComment,
 };
