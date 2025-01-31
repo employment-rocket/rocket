@@ -10,7 +10,6 @@ import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import "./index.css";
 import Board from "./pages/Board.jsx";
 import Career from "./pages/Career.jsx";
-import MyPage from "./components/common/MyPage.jsx";
 import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
@@ -22,6 +21,10 @@ import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
 import Free from "./components/board/free/Free.jsx";
 import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
 import Profile from "./pages/Profile.jsx";
+import FreeBoardUpdate from "./components/board/free/FreeBoardUpdate.jsx";
+import TalentPool from "./pages/TalentPool.jsx";
+import CardUserDetail from "./components/talentPool/talentPoolComponents/CardUserDetail.jsx"
+
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
