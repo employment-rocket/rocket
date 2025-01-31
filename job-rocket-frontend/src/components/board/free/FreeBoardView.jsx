@@ -1,19 +1,35 @@
-import React from "react";
-import { useParams } from "react-router";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import FreeComment from "./comment/FreeComment";
 import comment from "../../../assets/comment.png";
+import { deleteFreeBoard, getFreeBoard } from "../../../api/board/free-board";
+import { useQuery } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
 
 const FreeBoardView = () => {
-	const mock = {
-		title: "나 취업할 수 있을까?",
-		author: "청년 백수",
-		content: "어림도 없지 ",
-		post_date: "2025-01-20",
-	};
+	const boardId = useParams("boardId").boardId;
+	const navigate = useNavigate();
+
+	let isAuthor = false;
+
+	const { data, isPending } = useQuery({
+		queryKey: ["freeItem"],
+		queryFn: () => getFreeBoard({ boardId }),
+	});
+
+	if (isPending) return <div>Loading...</div>;
+	if (data === 404) navigate("/board/free");
+	const token = localStorage.getItem("AccessToken");
+	if (token) {
+		const userInfo = jwtDecode(token);
+		if (userInfo.userId === data.userId) {
+			isAuthor = true;
+		}
+	}
+
 	const img = `${
 		import.meta.env.VITE_API_BASE_URL
 	}/board/free/temp/default.png`;
-	const boardId = useParams("boardId");
 
 	return (
 		<div
@@ -21,26 +37,41 @@ const FreeBoardView = () => {
 			style={{ fontFamily: "CookieRegular" }}
 		>
 			<div className="flex justify-between items-center">
-				<div style={{ fontSize: "1.3rem" }}>{mock.title}</div>
+				<div style={{ fontSize: "1.3rem" }}>{data.title}</div>
 				<div className="flex gap-2 items-center">
-					<div className="bg-blue-500 text-white p-2 px-6 rounded-lg">
-						수정
-					</div>
-					<div className="border text-red-500 p-2 px-6 rounded-lg">
-						삭제
-					</div>
+					{isAuthor && (
+						<>
+							<div
+								className="bg-blue-500 text-white p-2 px-6 rounded-lg cursor-pointer"
+								onClick={() =>
+									navigate(`/board/free/form/${boardId}`)
+								}
+							>
+								수정
+							</div>
+							<div
+								className="border text-red-500 p-2 px-6 rounded-lg cursor-pointer"
+								onClick={() => {
+									deleteFreeBoard({ boardId });
+									navigate("/board/free");
+								}}
+							>
+								삭제
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 			<div className="flex justify-between">
 				<div className="flex items-center gap-1">
-					<img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" />
-					{mock.author}
+					{/* <img src={img} alt="" className="w-[1.5rem] h-[1.5rem]" /> */}
+					{data.author}
 				</div>
-				<div className="text-gray-500">{mock.post_date}</div>
+				<div className="text-gray-500">{data.post_date}</div>
 			</div>
 
 			<hr />
-			<div className="min-h-[16rem]">{mock.content}</div>
+			<div className="min-h-[16rem]">{data.content}</div>
 			<div className="flex gap-2 items-center">
 				<img
 					src={comment}

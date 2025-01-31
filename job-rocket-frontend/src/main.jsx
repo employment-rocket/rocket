@@ -22,8 +22,6 @@ import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
 import Free from "./components/board/free/Free.jsx";
 import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
 import Profile from "./pages/Profile.jsx";
-import TalentPool from "./pages/TalentPool.jsx";
-import CardUserDetail from "./components/talentPool/talentPoolComponents/CardUserDetail.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -46,6 +44,10 @@ createRoot(document.getElementById("root")).render(
 					<Route path="free/:boardId" element={<FreeBoardView />} />
 					<Route element={<PrivateRoute />}>
 						<Route path="free/form" element={<FreeBoardForm />} />
+						<Route
+							path="free/form/:boardId"
+							element={<FreeBoardUpdate />}
+						/>
 					</Route>
 					<Route path="qa" element={<Qa />} />
 					<Route path="review" element={<Review />} />
