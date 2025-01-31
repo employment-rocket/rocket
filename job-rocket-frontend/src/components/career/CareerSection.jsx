@@ -82,10 +82,8 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
           </div>
         </div>
       ) : (
-        <div
-          className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none"
-        >
-          <div className="text-center max-w-xl p-6 pointer-events-auto">
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+          <div className="text-center max-w-xl p-6">
             <img
               src={logo}
               alt="Logo"
