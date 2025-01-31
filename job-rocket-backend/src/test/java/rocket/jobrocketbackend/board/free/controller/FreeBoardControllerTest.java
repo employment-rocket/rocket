@@ -1,9 +1,9 @@
 package rocket.jobrocketbackend.board.free.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -25,10 +25,10 @@ import rocket.jobrocketbackend.user.service.UserService;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,6 +96,8 @@ class FreeBoardControllerTest {
                 .andExpect(jsonPath("$.content").value("내용"))
                 .andExpect(jsonPath("$.nickName").value("닉네임"))
                 .andExpect(jsonPath("$.id").value(1L));
+
+        Mockito.verify(freeBoardService).create(any(FreeBoardCreateRequest.class), any(String.class), any(LocalDate.class));
     }
 
     @Test
@@ -113,6 +115,6 @@ class FreeBoardControllerTest {
         ).andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(freeBoardService).update(request,1L);
+        Mockito.verify(freeBoardService).update(request,1L);
     }
 }
