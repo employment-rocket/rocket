@@ -1,21 +1,28 @@
+
 import api from "../api";
 
 import { useEffect, useState } from "react";
 
-// SSE 연결을 위한 커스텀 훅
+
 const useSSE = () => {
     const [messages, setMessages] = useState([]);
-  
+    const accessToken = localStorage.getItem('AccessToken');
+
+    if(accessToken){
     useEffect(() => {
-      const eventSource = new EventSource(`${import.meta.env.VITE_API_BASE_URL}/sse/alarm`,  {
-        withCredentials: true
-      });
-  
+      const eventSource = new EventSource(`${import.meta.env.VITE_API_BASE_URL}/alarm/sse?token=${accessToken}`,{
+        withCredentials:true
+      }
+      );
+      
+      console.log("eventSource: ", eventSource);
+
       eventSource.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data); // JSON 파싱 추가
+          const data = JSON.parse(event.data); 
           setMessages((prev) => [...prev, data]);
-          console.log("받아온 데이터: ", data);
+          console.log("받아온 메시지: ", messages);
+
         } catch (error) {
           console.error("Error parsing SSE message:", error);
         }
@@ -31,5 +38,5 @@ const useSSE = () => {
   
     return messages;
   };
-  
+}
   export default useSSE;

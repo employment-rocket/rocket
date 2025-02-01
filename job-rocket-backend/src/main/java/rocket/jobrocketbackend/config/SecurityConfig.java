@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.GET,"/board/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/sse/**").authenticated()
+                        .requestMatchers("/sse/**").permitAll()
 //                        .anyRequest().authenticated())
                         .anyRequest().permitAll())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))

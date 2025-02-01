@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import del from "../../assets/delete.png";
 import useSSE from "../../api/alarm/AlarmApi"; 
 import comment from "../../assets/comment.png";
 import schedule from "../../assets/schedule.png";
+import {alarmList} from "../../api/alarm/AlarmList";
 
 const Alarm = ({ onClose }) => {
   const alarms = useSSE(); 
+
+  const [alarm, setAlarm] = useState([]);
+
+  useEffect(()=>{
+    const fetchAlarms = async ()=>{
+        try{
+            const data = await alarmList();
+            console.log("알람 데이터: ", data);
+            setAlarm(data);
+        }catch(error){
+            console.error("알람 로딩에 실패했습니다", error);
+        }
+    }
+    fetchAlarms();
+  },[]);
 
   return (
     <div
@@ -22,10 +38,10 @@ const Alarm = ({ onClose }) => {
         />
       </div>
       <div className="max-h-80 overflow-y-auto">
-        {alarms.length > 0 ? (
-          alarms.map((data, index) => ( 
+        {alarm.length > 0 ? (
+          alarm.map((data) => ( 
             <div
-              key={index}
+              key={data.id}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
               <div className="flex items-center space-x-3">
@@ -37,7 +53,7 @@ const Alarm = ({ onClose }) => {
                 <div>
                   <div className="text-sm text-gray-600">{data.content}</div>
                   <div className="text-xs text-gray-400">
-                    {`${data.time[0]}-${String(data.time[1]).padStart(2, '0')}-${String(data.time[2]).padStart(2, '0')}`}
+                    {`${data.alarmDate[0]}-${String(data.alarmDate[1]).padStart(2, '0')}-${String(data.alarmDate[2]).padStart(2, '0')}`}
                   </div>
                 </div>
               </div>

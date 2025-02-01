@@ -2,6 +2,7 @@ package rocket.jobrocketbackend.schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@EnableScheduling
 @Slf4j
 public class ScheduleService {
 
@@ -70,14 +72,15 @@ public class ScheduleService {
     }
 
     //자정마다
-    @Scheduled(cron="0 0 0 * * *")
+    @Scheduled(cron="0 13 17 * * *")
     public void checkScheduleDeadlines(){
+        log.info("확인중");
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         List<ScheduleEntity> schedules = scheduleRepository.findByStateAndDueDate(ScheduleState.Ongoing, tomorrow);
 
         for (ScheduleEntity schedule : schedules) {
             Long userId = schedule.getUser().getId();
-            String message = "📅 '" + schedule.getTitle() + "' 일정이 하루 남았습니다!";
+            String message = "'" + schedule.getTitle() + "' 일정이 하루 남았습니다!";
             alarmService.sendAlarm(userId, message);
             log.info("알림 전송: userId={}, message={}", userId, message);
         }
