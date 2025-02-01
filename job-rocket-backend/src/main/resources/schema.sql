@@ -62,7 +62,7 @@ CREATE TABLE introduce_qa (
 );
 
 CREATE TABLE free_board (
-                                   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                   free_board_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                    title VARCHAR(255) NOT NULL,
                                    content TEXT,
                                    post_date DATE,

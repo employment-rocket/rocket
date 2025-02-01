@@ -36,7 +36,7 @@ public class FreeBoardService {
         if(isNotAuthor(userId, board)){
             throw new AccessDeniedException();
         }
-        freeBoardRepository.deleteById(boardId);
+        freeBoardRepository.delete(board);
     }
 
     public void update(final FreeBoardUpdateRequest request,final Long userId) {

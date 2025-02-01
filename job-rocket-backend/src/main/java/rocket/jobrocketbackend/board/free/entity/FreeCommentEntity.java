@@ -10,29 +10,30 @@ import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 
-@Entity(name = "free_board")
+@Entity(name = "free_comment")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class FreeBoardEntity {
+public class FreeCommentEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "free_board_id")
-    private Long id;
+    private Long commentId;
 
-    private String title;
     private String content;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate postDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)// TODO 추후 변경
-    @JoinColumn(name = "member_id")
-    private UserEntity user;
+    @ManyToOne(fetch = FetchType.EAGER) //TODO 추후에 lazy로 수정하기
+    @JoinColumn(name = "free_board_id")
+    private FreeBoardEntity board;
 
-    public void update(String title, String content){
-        this.title = title;
-        this.content = content;
+    @ManyToOne(fetch = FetchType.EAGER)  //TODO 추후에 lazy로 수정하기
+    @JoinColumn(name = "member_id")
+    private UserEntity author;
+
+    public static FreeCommentEntity create(UserEntity user, FreeBoardEntity board, String content, LocalDate today){
+        return FreeCommentEntity.builder().author(user).board(board).content(content).postDate(today).build();
     }
 }
