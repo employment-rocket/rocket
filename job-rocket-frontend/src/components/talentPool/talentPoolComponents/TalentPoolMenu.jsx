@@ -2,17 +2,7 @@ import React from "react";
 
 const TalentPoolMenu = ({ filters, onFilterChange }) => {
   const isFilterSelected = (type, value) => {
-    return filters[type]?.includes(value);
-  };
-
-  const handleButtonToggle = (type, value) => {
-    const updatedFilters = {
-      ...filters,
-      [type]: isFilterSelected(type, value)
-        ? filters[type].filter((item) => item !== value)
-        : [...(filters[type] || []), value],
-    };
-    onFilterChange(type, updatedFilters[type]);
+    return Array.isArray(filters[type]) && filters[type].includes(value);
   };
 
   return (
@@ -46,7 +36,7 @@ const TalentPoolMenu = ({ filters, onFilterChange }) => {
               <button
                 key={skill}
                 className={`text-xs border rounded-full px-3 py-1 transition ${
-                  filters.skill.includes(skill)
+                  isFilterSelected("skill", skill)
                     ? "bg-blue-500 text-white border-blue-500"
                     : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-500 hover:text-white"
                 }`}
@@ -69,7 +59,7 @@ const TalentPoolMenu = ({ filters, onFilterChange }) => {
                     ? "bg-blue-500 text-white border-blue-500"
                     : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-500 hover:text-white"
                 }`}
-                onClick={() => handleButtonToggle("tenure", value)}
+                onClick={() => onFilterChange("tenure", value)}
               >
                 {value}
               </button>
@@ -80,7 +70,7 @@ const TalentPoolMenu = ({ filters, onFilterChange }) => {
         <div>
           <h3 className="text-sm font-semibold text-gray-700">커리어 상태</h3>
           <div className="mt-4 flex flex-wrap gap-2">
-            {["이직/구직 중이에요", "(신입) 구직 중이에요", "좋은 제안에 열려있어요", "프로필 피드백 원해요"].map((value) => (
+            {["(경력) 이직/구직 중이에요", "(신입) 구직 중이에요", "좋은 제안에 열려있어요", "프로필 피드백 원해요"].map((value) => (
               <button
                 key={value}
                 className={`text-xs border rounded-full px-3 py-1 transition ${
@@ -88,7 +78,7 @@ const TalentPoolMenu = ({ filters, onFilterChange }) => {
                     ? "bg-blue-500 text-white border-blue-500"
                     : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-blue-500 hover:text-white"
                 }`}
-                onClick={() => handleButtonToggle("careerState", value)}
+                onClick={() => onFilterChange("careerState", value)}
               >
                 {value}
               </button>
