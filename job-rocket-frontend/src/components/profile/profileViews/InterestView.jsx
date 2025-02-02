@@ -34,7 +34,6 @@ const InterestView = () => {
      
       {isProfileLoaded ? (
         <>
-          {/* 관심 분야 표시 */}
           <div className="mb-6">
        
             <select
@@ -50,7 +49,6 @@ const InterestView = () => {
             </select>
           </div>
 
-          {/* 선택된 직업 표시 */}
           <div className="mt-6 text-left">
             <h3 className="text-sm font-semibold mb-4">선택된 직업:</h3>
             {selectedRoles.length > 0 ? (

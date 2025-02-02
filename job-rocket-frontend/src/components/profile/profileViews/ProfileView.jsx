@@ -86,7 +86,6 @@ const ProfileView = () => {
             <label className="text-lg font-bold text-gray-700 w-32">구직상태</label>
             <span className="text-lg">{profile?.status || "구직 상태 없음"}</span>
           </div>
-          {/* 경력과 회사는 구직 상태가 (신입) 구직 중이에요가 아닌 경우에만 렌더링 */}
           {profile?.status !== "(신입) 구직 중이에요" && (
             <>
               <div className="flex items-center">
