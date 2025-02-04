@@ -17,7 +17,7 @@ const Free = () => {
 
 	return (
 		<div
-			className="flex flex-col space-y-3 h-[80vh]"
+			className="flex flex-col space-y-3 h-[80vh] m-3"
 			style={{ fontFamily: "CookieRegular" }}
 		>
 			<div className="flex justify-between">
