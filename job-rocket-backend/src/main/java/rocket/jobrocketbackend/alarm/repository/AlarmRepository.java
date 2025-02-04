@@ -13,9 +13,5 @@ import java.util.Optional;
 
 public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
 
- // @Query("SELECT a FROM alarm a JOIN FETCH a.user WHERE a.user.id = :userId")
-  //  List<AlarmEntity> findByUserId(@Param(value = "userId") Long userId);
-
-
     List<AlarmEntity> findByUserId(Long memberId);
 }

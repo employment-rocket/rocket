@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/board/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/sse/**").permitAll()
+                        .requestMatchers("/alarm/**").permitAll()
 //                        .anyRequest().authenticated())
                         .anyRequest().permitAll())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))

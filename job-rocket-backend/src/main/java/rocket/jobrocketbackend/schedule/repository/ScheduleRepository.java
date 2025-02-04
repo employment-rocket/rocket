@@ -37,4 +37,5 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     List<ScheduleEntity> findByStateAndDueDate(@Param("state") ScheduleState ongoing, @Param("dueDate") LocalDate dueDate);
 
 
+    UserEntity user(UserEntity user);
 }

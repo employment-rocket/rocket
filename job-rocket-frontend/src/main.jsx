@@ -23,6 +23,7 @@ import Free from "./components/board/free/Free.jsx";
 import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
 import Profile from "./pages/Profile.jsx";
 import FreeBoardUpdate from "./components/board/free/FreeBoardUpdate.jsx";
+import NotificationHandler from "./components/alarm/NotificationHandler.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(

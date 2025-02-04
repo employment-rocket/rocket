@@ -1,8 +1,8 @@
 
 -- member 테이블 INSERT
-INSERT INTO member (email, role, nickname, profile, allow_email, allow_alarm ,refresh_token)
-VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, false, 'refreshtoken'),
-('woneveryday@naver.com', 'MEMBER', '위험한 흰색 토끼', 'default.png', true, false, '');
+INSERT INTO member (email, role, nickname, profile, allow_email,social_type,refresh_token)
+VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, 'KAKAO', 'refreshtoken'),
+('woneveryy@naver.com', 'MEMBER', '위험한 흰색 토끼', 'default.png', true, 'NAVER', '');
 
 
 -- cs 테이블 INSERT

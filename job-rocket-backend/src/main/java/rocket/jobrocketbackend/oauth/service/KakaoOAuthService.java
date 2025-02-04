@@ -135,7 +135,6 @@ public class KakaoOAuthService {
                     .socialType(SocialType.KAKAO)
                     .role(Role.MEMBER)
                     .allowEmail(true)
-                    .allowAlarm(false)
                     .build();
             return userRepository.save(newUser);
         }

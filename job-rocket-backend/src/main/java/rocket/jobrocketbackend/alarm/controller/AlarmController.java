@@ -1,24 +1,25 @@
 package rocket.jobrocketbackend.alarm.controller;
 
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import rocket.jobrocketbackend.alarm.dto.AlarmDTO;
-import rocket.jobrocketbackend.alarm.entity.AlarmEntity;
 import rocket.jobrocketbackend.alarm.repository.AlarmRepository;
 import rocket.jobrocketbackend.alarm.service.AlarmService;
+import rocket.jobrocketbackend.alarm.util.CustomSubscription;
+import rocket.jobrocketbackend.common.entity.AlarmType;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
+import rocket.jobrocketbackend.user.service.UserService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -31,6 +32,7 @@ public class AlarmController {
     private final AlarmService alarmService;
     private final JWTUtil jwtUtil;
     private final AlarmRepository alarmRepository;
+    private final UserService userService;
 
     @GetMapping(path = "/sse",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@RequestParam("token") String token) {
@@ -48,4 +50,15 @@ public class AlarmController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(alarms);
     }
+
+    @PostMapping("/subscribe")
+    public ResponseEntity<Void> subscribeToPush(@RequestBody CustomSubscription subscription,
+                                            @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        log.info("받은 구독: {}", subscription);
+        alarmService.saveSubscription(customOAuth2User.getId(), subscription);
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }

@@ -17,7 +17,6 @@ const MyPage = ({onClose, onNavigate}) => {
 	const [userId, setUserId] = useState();
 	const [email, setEmail] = useState();
 	const [allowEmail, setAllowEmail] = useState();
-	const [allowAlarm, setAllowAlarm] = useState();
 	const [nickname, setNickname] = useState();
 	const [profile, setProfile] = useState();
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
@@ -30,7 +29,6 @@ const MyPage = ({onClose, onNavigate}) => {
 				const data = await getUserProfile();
 				setUserId(data.id);
 				setAllowEmail(data.allowEmail);
-				setAllowAlarm(data.allowAlarm);
 				setNickname(data.nickname);
 				setEmail(data.email);
 				setProfile(data.profile);
@@ -80,15 +78,6 @@ const MyPage = ({onClose, onNavigate}) => {
 		}
 	};
 
-	const handleAllowAlarmChange = async () => {
-		const updateAllowAlarm = !allowAlarm;
-		setAllowAlarm(updateAllowAlarm);
-		try {
-			await updatedAllowAlarm(userId, updateAllowAlarm);
-		} catch (error) {
-			console.error("알람 설정 업데이트 중 오류 발생");
-		}
-	};
 
 	const handleFileUpload = async (file) => {
 		try {
@@ -136,8 +125,6 @@ const MyPage = ({onClose, onNavigate}) => {
   			onClick={() => document.getElementById("profile-upload").click()}
 		  />
 
-
-		
         </div>
 
         <div className="flex items-center mb-3 w-full px-6">
@@ -150,24 +137,6 @@ const MyPage = ({onClose, onNavigate}) => {
         <div className="flex items-center mb-8 w-full px-6">
           <div className="flex-1 text-xl text-gray-500 ml-4 text-center">
             {email}
-          </div>
-        </div>
-
-        <div className="flex items-center mb-3 w-full px-6">
-          <div className="w-[130px] h-[40px] ml-6 text-l text-black border border-gray-300 text-center rounded-lg flex items-center justify-center">
-            알람 수신 동의
-          </div>
-          <div className="ml-4">
-            <label className="relative inline-flex items-center cursor-pointer mt-1">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={allowAlarm}
-                onChange={handleAllowAlarmChange}
-              />
-              <div className="w-16 h-8 bg-gray-300 rounded-full peer-checked:bg-blue-500 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 transition duration-200"></div>
-              <span className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full peer-checked:translate-x-7 transform transition duration-200"></span>
-            </label>
           </div>
         </div>
 

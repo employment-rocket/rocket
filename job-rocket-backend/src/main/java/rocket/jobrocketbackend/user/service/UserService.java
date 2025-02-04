@@ -36,7 +36,6 @@ public class UserService {
                 "email", member.getEmail(),
                 "nickname", member.getNickname(),
                 "allowEmail", member.getAllowEmail(),
-                "allowAlarm", member.getAllowAlarm(),
                 "profile", member.getProfile()
         );
     }
@@ -87,10 +86,5 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateAllowAlarm(Long userId, Boolean allowAlarm) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
-        user.updateAllowAlarm(allowAlarm);
-        userRepository.save(user);
-    }
+
 }

@@ -4,11 +4,13 @@ import useSSE from "../../api/alarm/AlarmApi";
 import comment from "../../assets/comment.png";
 import schedule from "../../assets/schedule.png";
 import {alarmList} from "../../api/alarm/AlarmList";
+import { useNavigate } from "react-router";
 
 const Alarm = ({ onClose }) => {
   const alarms = useSSE(); 
 
   const [alarm, setAlarm] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     const fetchAlarms = async ()=>{
@@ -22,6 +24,13 @@ const Alarm = ({ onClose }) => {
     }
     fetchAlarms();
   },[]);
+
+  const handleAlarmClick = ()=>{
+    if(data.type=='SCHEDULE'){
+        navigate("/schedule");
+    }
+  }
+  
 
   return (
     <div
@@ -44,7 +53,7 @@ const Alarm = ({ onClose }) => {
               key={data.id}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3" onClick={handleAlarmClick}>
                 <img
                   src={data.type === 'COMMENT' ? comment : schedule}
                   alt="알림 아이콘"

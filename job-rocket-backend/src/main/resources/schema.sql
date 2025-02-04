@@ -7,7 +7,6 @@ CREATE TABLE member (
                         profile VARCHAR(255),
                         social_type varchar(255),
                         allow_email BOOLEAN,
-                        allow_alarm BOOLEAN,
                         refresh_token VARCHAR(255)
 );
 
