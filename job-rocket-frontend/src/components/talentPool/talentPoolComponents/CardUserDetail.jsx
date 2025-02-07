@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
 import { getPublicProfileById } from "../../../api/profile/ProfileAPI";
 import CareerSection from "../../career/CareerSection";
-import CardUserDetail2 from "./CadrUserDetail2";
+// import CardUserDetail2 from "./CadrUserDetail2";
 
 const CardUserDetail = ({ onThemeChange }) => {
   const { memberId } = useParams();
