@@ -33,7 +33,6 @@ const TalentPool = () => {
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
-    
   };
 
   useEffect(() => {
@@ -42,7 +41,9 @@ const TalentPool = () => {
         const fetchedProfiles = await getPublicProfiles();
         const publicProfiles = fetchedProfiles.filter((profile) => profile.public);
         setProfiles(publicProfiles);
-        setFilteredProfiles(filterProfilesBySearch(publicProfiles, "", filters));
+        setFilteredProfiles(
+          filterProfilesBySearch(publicProfiles, "", filters, selectedTab)
+        );
       } catch (error) {
         console.error("Failed to fetch profiles:", error);
       } finally {
@@ -54,33 +55,23 @@ const TalentPool = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredProfiles(filterProfilesBySearch(profiles, "", filters));
-  }, [profiles, filters]);
+    setFilteredProfiles(filterProfilesBySearch(profiles, "", filters, selectedTab));
+  }, [profiles, filters, selectedTab]);
 
   if (loading) return <div>로딩 중...</div>;
 
   return (
-    <div>
-      <div className="tabs-container flex items-center gap-4 border-b border-gray-300 pb-4 mb-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            className={`text-sm px-4 py-2 rounded-full ${
-              selectedTab === tab
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white"
-            }`}
-            onClick={() => handleTabChange(tab)}
-          >
-            {tab}
-          </button>
-        ))}
+    <div className="flex flex-col items-center bg-gray-100">
+      <div className="w-full lg:w-[85%]">
+        <TalentPoolLayout
+          profiles={filteredProfiles}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          tabs={tabs}
+          selectedTab={selectedTab}
+          onTabChange={handleTabChange}
+        />
       </div>
-      <TalentPoolLayout
-        profiles={filteredProfiles}
-        filters={filters}
-        onFilterChange={handleFilterChange}
-      />
     </div>
   );
 };

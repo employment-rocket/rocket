@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
 import { getPublicProfileById } from "../../../api/profile/ProfileAPI";
 import CareerSection from "../../career/CareerSection";
+import CardUserDetail2 from "./CadrUserDetail2";
 
-const CardUserDetail = () => {
+const CardUserDetail = ({ onThemeChange }) => {
   const { memberId } = useParams();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
@@ -11,6 +12,7 @@ const CardUserDetail = () => {
   const [sections, setSections] = useState([]);
   const profileRef = useRef();
   const sectionRefs = useRef({});
+  const [theme, setTheme] = useState(1);
 
   const sectionLabels = {
     SKILLS: "기술 스택",
@@ -35,7 +37,11 @@ const CardUserDetail = () => {
         if (response) {
           setProfile(response);
 
-          const excludedSections = ["BASICINFO", "TAGSSELECTION", "INTERESTFIELD"];
+          const excludedSections = [
+            "BASICINFO",
+            "TAGSSELECTION",
+            "INTERESTFIELD",
+          ];
           const formattedSections = response.sections.map((section, index) => ({
             name: section.type,
             label: sectionLabels[section.type] || section.type,
@@ -52,7 +58,10 @@ const CardUserDetail = () => {
           setProfile(null);
         }
       } catch (error) {
-        console.error("사용자 데이터를 가져오는 데 실패했습니다:", error.message);
+        console.error(
+          "사용자 데이터를 가져오는 데 실패했습니다:",
+          error.message
+        );
       } finally {
         setLoading(false);
       }
@@ -68,6 +77,10 @@ const CardUserDetail = () => {
     }
   };
 
+  if (theme === 2) {
+    return <CardUserDetail2 setTheme={setTheme} />;
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -77,7 +90,11 @@ const CardUserDetail = () => {
   }
 
   if (!profile) {
-    return <div className="text-center text-red-500">사용자 정보를 찾을 수 없습니다.</div>;
+    return (
+      <div className="text-center text-red-500">
+        사용자 정보를 찾을 수 없습니다.
+      </div>
+    );
   }
 
   return (
@@ -86,51 +103,55 @@ const CardUserDetail = () => {
         <div className="flex flex-col w-3/4 max-w-4xl py-8 px-6 bg-white shadow-md rounded-lg">
           <CareerSection
             profile={profile}
-            sections={filteredSections} 
+            sections={filteredSections}
             profileRef={profileRef}
             sectionRefs={sectionRefs}
           />
         </div>
 
-        <div className="flex flex-col sticky top-0 ml-6 w-1/4 space-y-2 py-8 px-6">
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <div className="flex justify-between w-full max-w-6xl">
-              <button
-                className="bg-gray-200 text-gray-800 px-2 py-2 rounded-md shadow-md hover:bg-gray-300 transition"
-                onClick={() => navigate("/talent")}
-              >
-                뒤로가기
-              </button>
-              <button
-                className="bg-blue-500 text-white px-2 py-2 rounded-md shadow-md hover:bg-blue-600 transition"
-                onClick={() => alert("쪽지 보내기 기능은 준비 중입니다.")}
-              >
-                쪽지 보내기
-              </button>
-            </div>
+        <div className="flex flex-col sticky top-4 ml-6 w-1/5 bg-white shadow-md rounded-lg p-4">
+          <div className="flex flex-col space-y-2 mb-4">
+            <button
+              className="text-sm px-3 py-2 rounded-md bg-gray-100 text-gray-600 border border-gray-200 shadow-sm hover:bg-gray-200 hover:text-gray-800 transition"
+              onClick={() => navigate("/talent")}
+            >
+              뒤로가기
+            </button>
+            <button
+              className="text-sm px-3 py-2 rounded-md bg-blue-500 text-white shadow-sm hover:bg-blue-600 transition"
+              onClick={() => alert("쪽지 보내기 기능은 준비 중입니다.")}
+            >
+              쪽지 보내기
+            </button>
+            <button
+              className="text-sm px-3 py-2 rounded-md bg-green-500 text-white shadow-sm hover:bg-green-600 transition"
+              onClick={() => setTheme(2)}
+            >
+              테마 변경
+            </button>
+          </div>
 
-            <h3 className="text-lg font-bold text-gray-800 mb-4 mt-10">섹션 이동</h3>
-            <ul className="space-y-2">
-              <li>
+          <h3 className="text-lg font-bold text-gray-800 mb-4">섹션 이동</h3>
+          <ul className="space-y-3">
+            <li>
+              <button
+                className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
+                프로필
+              </button>
+            </li>
+            {filteredSections.map((section) => (
+              <li key={section.name}>
                 <button
                   className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  onClick={() => scrollToSection(section.name)}
                 >
-                  프로필
+                  {section.label}
                 </button>
               </li>
-              {filteredSections.map((section) => (
-                <li key={section.name}>
-                  <button
-                    className="w-full text-left px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-green-500 hover:text-white transition"
-                    onClick={() => scrollToSection(section.name)}
-                  >
-                    {section.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

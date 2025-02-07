@@ -47,18 +47,18 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
       {profile && Object.keys(profile).length > 0 ? (
         <div ref={profileRef} className="space-y-16">
 
-          <div className="border-b pb-8">
+          <div className="pb-8">
 
             <ProfileView />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
+            <div className="bg-gray-50 p-6 rounded-lg">
               <h3 className="text-xl font-bold text-gray-800 mb-4">관심 분야</h3>
               <InterestView />
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
+            <div className="bg-gray-50 p-6 rounded-lg">
               <h3 className="text-xl font-bold text-gray-800 mb-4">저장된 태그</h3>
               <TagsView />
             </div>
@@ -73,7 +73,7 @@ const CareerSection = ({ profile, sections, profileRef, sectionRefs, handleCreat
                 <div
                   key={section.name}
                   ref={sectionRefs.current[section.name]}
-                  className="bg-gray-50 p-6 rounded-lg shadow"
+                  className="bg-gray-50 p-6 rounded-lg"
                 >
                   <h3 className="text-xl font-bold mb-4">{section.label}</h3>
                   {renderSection(section)}

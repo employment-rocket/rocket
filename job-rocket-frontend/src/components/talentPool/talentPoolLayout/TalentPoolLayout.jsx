@@ -34,7 +34,7 @@ const extractProfileData = async (profile) => {
   };
 };
 
-const TalentPoolLayout = ({ profiles = [], filters, onFilterChange }) => {
+const TalentPoolLayout = ({ profiles = [], filters, onFilterChange, tabs, selectedTab, onTabChange }) => {
   const [processedProfiles, setProcessedProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,19 +58,44 @@ const TalentPoolLayout = ({ profiles = [], filters, onFilterChange }) => {
   }
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-100 p-6">
-      <div className="flex w-full max-w-screen-xl">
-        <main className="w-3/4 p-6">
-          <h1 className="text-2xl font-bold mb-6 text-gray-800">Talent Pool</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {processedProfiles.map((profile, index) => (
-              <ProfileCard key={index} profile={profile} />
+    <div className="flex min-h-screen bg-gray-100">
+
+    <div className="lg:w-[15%]"></div>
+
+    <main className="w-full lg:w-[85%] p-6 flex">
+   
+      <div className="flex-1 border-l border-gray-300 pl-6">
+
+        <div className="flex justify-start mb-4">
+          <div className="tabs-container flex items-center gap-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                className={`text-sm px-4 py-2 rounded-full ${
+                  selectedTab === tab
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white"
+                }`}
+                onClick={() => onTabChange(tab)}
+              >
+                {tab}
+              </button>
             ))}
           </div>
-        </main>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {processedProfiles.map((profile, index) => (
+            <ProfileCard key={index} profile={profile} />
+          ))}
+        </div>
+      </div>
+
+      <div className="w-[300px] p-10 border-l border-gray-300">
         <TalentPoolMenu filters={filters} onFilterChange={onFilterChange} />
       </div>
-    </div>
+    </main>
+  </div>
   );
 };
 

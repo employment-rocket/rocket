@@ -12,17 +12,21 @@ const ProfileCard = ({ profile }) => {
 
   return (
     <div
-      className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 cursor-pointer w-60"
+      className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 cursor-pointer"
+      style={{ width: "200px", height: "320px" }}
       onClick={handleCardClick}
     >
-      <div className="relative h-36">
+      <div
+        className="w-full h-1/2 bg-gray-100 relative"
+        style={{ height: "50%" }}
+      >
         <img
-          src={profileImage || "https://via.placeholder.com/150"}
+          src={profileImage || "https://via.placeholder.com/200"}
           alt={name || "프로필 이미지"}
           className="w-full h-full object-cover"
         />
-        <div className="absolute bottom-0 left-0 w-full text-white px-2 py-1 flex items-center justify-between">
-          <div className="text-xs font-bold">{status || "구직 상태 없음"}</div>
+        <div className="absolute bottom-0 left-0 w-full text-white px-3 py-1 bg-black bg-opacity-50 flex items-center justify-between">
+          <div className="text-[10px] font-bold">{status || "구직 상태 없음"}</div>
           <div
             className="bg-black bg-opacity-70 text-white p-1 rounded-full cursor-pointer hover:bg-opacity-90"
             onClick={(e) => {
@@ -32,8 +36,8 @@ const ProfileCard = ({ profile }) => {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               fill="currentColor"
               viewBox="0 0 50 50"
             >
@@ -42,21 +46,24 @@ const ProfileCard = ({ profile }) => {
           </div>
         </div>
       </div>
-      <div className="p-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-800 truncate">{job}</h2>
+
+      <div className="w-full h-1/2 p-2 flex flex-col justify-between">
+        <div>
+          <h2 className="text-md font-semibold text-gray-800 truncate">{job || "직업 정보 없음"}</h2>
+          <p className="text-[12px] text-gray-500 mt-1">
+            {yearsOfExperience && currentCompany
+              ? `${yearsOfExperience}년차 • ${currentCompany}`
+              : "신입"}
+          </p>
         </div>
-        <p className="text-sm font-semibold text-gray-600 mt-2 line-clamp-3">
-          {yearsOfExperience && currentCompany
-            ? `${yearsOfExperience}년차 • ${currentCompany}`
-            : "신입"}
+        <p className="text-[10px] text-gray-600 -mt-2 line-clamp-4">
+          {shortIntroduction || "소개 정보 없음"}
         </p>
-        <p className="text-sm text-gray-600 mt-2 line-clamp-3">{shortIntroduction}</p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {tags?.map((tag, index) => (
+        <div className="mt-1 flex flex-wrap gap-1">
+          {tags?.slice(0, 3).map((tag, index) => (
             <span
               key={index}
-              className="text-xs bg-gray-100 text-gray-600 border border-gray-300 rounded-full px-2 py-1"
+              className="text-[9px] bg-gray-100 text-gray-600 border border-gray-300 rounded-full px-1 py-0.5"
             >
               {tag}
             </span>

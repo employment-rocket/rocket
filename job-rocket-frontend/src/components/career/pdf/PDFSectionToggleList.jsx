@@ -16,7 +16,8 @@ const PDFSectionToggleList = ({ sections, setSections }) => {
       (section) =>
         section.name !== "BASICINFO" &&
         section.name !== "TAGSSELECTION" &&
-        section.name !== "INTERESTFIELD"
+        section.name !== "INTERESTFIELD" &&
+        section.name !== "PROFILE_IMAGE"
     )
     .sort((a, b) => a.order - b.order);
 

@@ -1,4 +1,4 @@
-export const filterProfilesBySearch = (profiles, searchQuery, filters) => {
+export const filterProfilesBySearch = (profiles, searchQuery, filters, selectedTab) => {
   if (!filters || !profiles) return [];
 
   const lowercasedQuery = searchQuery.toLowerCase();
@@ -6,6 +6,9 @@ export const filterProfilesBySearch = (profiles, searchQuery, filters) => {
   return profiles.filter((profile) => {
     const basicInfo = profile.sections.find((section) => section.type === "BASICINFO")?.data || {};
     const skillsSection = profile.sections.find((section) => section.type === "SKILLS")?.data || {};
+    const interestFieldSection =
+      profile.sections.find((section) => section.type === "INTERESTFIELD")?.data || {};
+    const interestField = interestFieldSection.interestField || "";
     const skills = Object.values(skillsSection).flat();
 
     const allData = [...Object.values(basicInfo), ...skills];
@@ -15,13 +18,16 @@ export const filterProfilesBySearch = (profiles, searchQuery, filters) => {
       return false;
     });
 
-    const matchesFilters = applyFilters(profile, filters, skills, basicInfo);
+    const matchesFilters = applyFilters(profile, filters, skills, basicInfo, selectedTab);
 
-    return matchesSearchQuery && matchesFilters;
+    const matchesTab =
+      selectedTab === "전체" || interestField.toLowerCase() === selectedTab.toLowerCase();
+
+    return matchesSearchQuery && matchesFilters && matchesTab;
   });
 };
 
-export const applyFilters = (profile, filters, skills, basicInfo) => {
+export const applyFilters = (profile, filters, skills, basicInfo, selectedTab) => {
   const matchesSearch =
     !filters.skillSearch ||
     skills.some(
@@ -56,5 +62,10 @@ export const applyFilters = (profile, filters, skills, basicInfo) => {
     filters.careerState.length === 0 ||
     filters.careerState.some((state) => basicInfo.status === state);
 
-  return matchesSearch && matchesSelectedSkills && matchesTenure && matchesCareerState;
+  return (
+    matchesSearch &&
+    matchesSelectedSkills &&
+    matchesTenure &&
+    matchesCareerState
+  );
 };
