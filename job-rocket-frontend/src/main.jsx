@@ -2,6 +2,14 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import Free from "./components/board/free/Free.jsx";
+import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
+import FreeBoardUpdate from "./components/board/free/FreeBoardUpdate.jsx";
+import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
+import MainBoard from "./components/board/main/MainBoard.jsx";
+import Notice from "./components/board/notice/Notice.jsx";
+import Qa from "./components/board/question/Qa.jsx";
+import Review from "./components/board/review/Review.jsx";
 import { AuthProvider } from "./context/auth/AuthContext.jsx";
 import Header from "./components/common/Header.jsx";
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -12,18 +20,11 @@ import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import "./index.css";
 import Board from "./pages/Board.jsx";
 import Career from "./pages/Career.jsx";
+import Profile from "./pages/Profile.jsx";
 import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
 import Site from "./pages/Site.jsx";
-import Notice from "./components/board/notice/Notice.jsx";
-import Review from "./components/board/review/Review.jsx";
-import Qa from "./components/board/question/Qa.jsx";
-import FreeBoardForm from "./components/board/free/FreeBoardForm.jsx";
-import Free from "./components/board/free/Free.jsx";
-import FreeBoardView from "./components/board/free/FreeBoardView.jsx";
-import Profile from "./pages/Profile.jsx";
-import FreeBoardUpdate from "./components/board/free/FreeBoardUpdate.jsx";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +38,8 @@ createRoot(document.getElementById("root")).render(
 					<Route path="/login/oauth2/code/naver" element={<NaverLogin />} />
 					<Route path="/" element={<Navigate to="/board" replace />} />
 					<Route path="/board" element={<Board />}>
-						<Route index element={<Notice />} />
+						<Route index element={<MainBoard />} />
+						<Route path="notice" element={<Notice />} />
 						<Route path="free" element={<Free />} />
 						<Route path="free/:boardId" element={<FreeBoardView />} />
 						<Route element={<PrivateRoute />}>
