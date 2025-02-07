@@ -44,7 +44,7 @@ const FreeBoardView = () => {
 
 	return (
 		<div
-			className="flex flex-col p-3 border rounded-lg space-y-3"
+			className="flex flex-col p-3 border rounded-lg space-y-3 mt-3"
 			style={{ fontFamily: "CookieRegular" }}
 		>
 			<div className="flex justify-between items-center">
