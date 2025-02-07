@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.service;
+package rocket.jobrocketbackend.profile.service;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -17,14 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
-import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
-import rocket.jobrocketbackend.profile.profile.entity.ProfileEntity;
-import rocket.jobrocketbackend.profile.profile.entity.Section;
-import rocket.jobrocketbackend.profile.profile.entity.SectionType;
-import rocket.jobrocketbackend.profile.profile.exception.ProfileNotFoundException;
-import rocket.jobrocketbackend.profile.profile.exception.ProfileNotPublicException;
-import rocket.jobrocketbackend.profile.profile.repository.ProfileRepository;
+import rocket.jobrocketbackend.profile.dto.ProfileRequestDto;
+import rocket.jobrocketbackend.profile.dto.ProfileResponseDto;
+import rocket.jobrocketbackend.profile.entity.ProfileEntity;
+import rocket.jobrocketbackend.profile.entity.Section;
+import rocket.jobrocketbackend.profile.entity.SectionType;
+import rocket.jobrocketbackend.profile.exception.ProfileNotFoundException;
+import rocket.jobrocketbackend.profile.exception.ProfileNotPublicException;
+import rocket.jobrocketbackend.profile.repository.ProfileRepository;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
 

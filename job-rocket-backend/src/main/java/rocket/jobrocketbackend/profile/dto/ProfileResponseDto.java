@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.dto;
+package rocket.jobrocketbackend.profile.dto;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import rocket.jobrocketbackend.profile.profile.entity.Section;
+import rocket.jobrocketbackend.profile.entity.Section;
 
 @Getter
 @Builder
