@@ -3,8 +3,10 @@ import FreeBoardItem from "./FreeBoardItem";
 import { useQuery } from "@tanstack/react-query";
 import { getFreeBoardList } from "../../../api/board/free-board";
 import { useNavigate } from "react-router";
+import { useHeaderHeightStore } from "../../../store/headerHeightStore";
 
 const Free = () => {
+	const headerHeight = useHeaderHeightStore((state) => state.headerHeight);
 	const navigate = useNavigate();
 	const { data, isLoading } = useQuery({
 		queryKey: ["free"],
@@ -17,8 +19,11 @@ const Free = () => {
 
 	return (
 		<div
-			className="flex flex-col space-y-3 h-[80vh]"
-			style={{ fontFamily: "CookieRegular" }}
+			className="flex flex-col space-y-3 p-3"
+			style={{
+				fontFamily: "CookieRegular",
+				height: `calc(100dvh - ${headerHeight}px)`,
+			}}
 		>
 			<div className="flex justify-between">
 				<div>
