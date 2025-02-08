@@ -143,3 +143,15 @@ export const fetchFile = async (fileName, sectionType) => {
     return null;
   }
 };
+
+export const getPublicProfilesPaginated = async (page = 0, size = 20) => {
+  try {
+    const response = await api.get("/profiles/public/paginated", {
+      params: { page, size }, 
+    });
+    return response.data;
+  } catch (error) {
+    console.error("getPublicProfilesPaginated API error:", error);
+    throw new Error("페이징된 공개 프로필 조회 실패");
+  }
+};

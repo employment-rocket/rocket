@@ -159,6 +159,16 @@ const Header = () => {
 				>
 					커리어
 				</div>
+				<div
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/talent")
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
+					}`}
+					onClick={() => navigate("/talent")}
+				>
+					인재풀
+				</div>
 			</div>
 
 			<div className="flex items-center space-x-4 ml-auto">

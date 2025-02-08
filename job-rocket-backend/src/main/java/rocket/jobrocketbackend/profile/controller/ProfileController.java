@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.controller;
+package rocket.jobrocketbackend.profile.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import rocket.jobrocketbackend.common.dto.PageDto;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
-import rocket.jobrocketbackend.profile.profile.dto.ProfileRequestDto;
-import rocket.jobrocketbackend.profile.profile.dto.ProfileResponseDto;
-import rocket.jobrocketbackend.profile.profile.entity.Section;
-import rocket.jobrocketbackend.profile.profile.entity.SectionType;
-import rocket.jobrocketbackend.profile.profile.service.ProfileService;
+import rocket.jobrocketbackend.profile.dto.ProfileRequestDto;
+import rocket.jobrocketbackend.profile.dto.ProfileResponseDto;
+import rocket.jobrocketbackend.profile.entity.Section;
+import rocket.jobrocketbackend.profile.entity.SectionType;
+import rocket.jobrocketbackend.profile.service.ProfileService;
 
 @RestController
 @RequestMapping("/profiles")
@@ -100,6 +101,15 @@ public class ProfileController {
 		@PathVariable String fileName,
 		@RequestParam SectionType sectionType) throws IOException {
 		return profileService.getFileResponse(fileName, sectionType);
+	}
+
+	@GetMapping("/public/paginated")
+	public ResponseEntity<PageDto<ProfileResponseDto>> getPublicProfilesPaginated(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "20") int size) {
+
+		PageDto<ProfileResponseDto> profiles = profileService.getPublicProfilesPaginated(page, size);
+		return ResponseEntity.ok(profiles);
 	}
 
 }

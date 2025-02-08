@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.entity;
+package rocket.jobrocketbackend.profile.entity;
 
 public enum SectionType {
 	BASICINFO("기본정보"),
