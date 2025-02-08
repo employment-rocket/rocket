@@ -17,7 +17,7 @@ ChartJS.register(
 	Tooltip,
 	Legend,
 	CategoryScale,
-	LinearScale, // 여기서 등록합니다.
+	LinearScale,
 	BarElement
 );
 
@@ -87,13 +87,12 @@ const Statistics = () => {
 		],
 	};
 
-	// 두번째 차트: 임시 데이터로 전형별 통과율(%) 세로 막대 그래프
 	const passRateData = {
 		labels: ["서류전형", "1차면접", "2차면접", "최종전형"],
 		datasets: [
 			{
 				label: "전형별 통과율(%)",
-				data: [75, 60, 45, 30], // 임시 통과율 데이터 (예시)
+				data: [75, 60, 45, 30], // mock data
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.6)",
 					"rgba(255, 206, 86, 0.6)",
@@ -117,8 +116,8 @@ const Statistics = () => {
 			legend: {
 				display: true,
 				labels: {
-					boxWidth: 10, // 아이콘 크기 조정
-					padding: 20, // 아이템 간격 조정
+					boxWidth: 10,
+					padding: 20,
 				},
 			},
 		},
