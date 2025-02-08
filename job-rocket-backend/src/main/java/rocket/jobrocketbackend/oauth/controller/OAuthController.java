@@ -31,12 +31,15 @@ public class OAuthController {
     //refreshToken으로 AccessToken 재발급
     @PostMapping("/auth/refresh")
     public ResponseEntity<Map<String,String>> refreshAccessToken(@RequestHeader("Authorization-refresh") String refreshToken){
+        log.info("토큰 재발급 시도");
         try {
             String newAccessToken = jwtUtil.newAccessToken(refreshToken);
+            log.info("토큰 재발급 성공");
             return ResponseEntity.ok()
                     .header("Authorization",newAccessToken)
                     .build();
         } catch (RuntimeException e) {
+            log.info("토큰 재발급 실패");
             return ResponseEntity.status(401).body(Map.of("error", "Refresh token invalid or expired"));
         }
     }

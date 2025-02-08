@@ -106,21 +106,19 @@ export default function ScheduleMain() {
 	return (
 		<>
 			<div className="flex flex-col space-y-4 h-full w-full">
-				<div className="w-full h-full rounded-[20px] p-3 border-2 border-blue-300 bg-gray-300">
-					<DragDropContext onDragEnd={handleDragEnd}>
-						<div className="grid grid-cols-2 grid-rows-2 gap-2 h-full w-full place-items-center">
-							{typeList.map((droppableId) => (
-								<DroppableArea
-									key={droppableId}
-									droppableId={droppableId}
-									items={getListByDroppableId(droppableId)}
-									handleDelete={handleDelete}
-									setModalOpen={setModalOpen}
-								/>
-							))}
-						</div>
-					</DragDropContext>
-				</div>
+				<DragDropContext onDragEnd={handleDragEnd}>
+					<div className="grid grid-cols-2 grid-rows-2 gap-2 h-full w-full place-items-center">
+						{typeList.map((droppableId) => (
+							<DroppableArea
+								key={droppableId}
+								droppableId={droppableId}
+								items={getListByDroppableId(droppableId)}
+								handleDelete={handleDelete}
+								setModalOpen={setModalOpen}
+							/>
+						))}
+					</div>
+				</DragDropContext>
 			</div>
 
 			<CreateModal
@@ -138,21 +136,19 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 	const showAddButton = droppableId === "서류전형";
 
 	return (
-		<div className="bg-white h-[90%] w-[80%] flex flex-col  items-center space-y-2 rounded-2xl border-2 border-blue-500">
-			<div className="pt-6 px-3 capitalize flex w-full  border-b-2 pb-2">
+		<div className="bg-white h-[90%] w-[80%] flex flex-col  items-center space-y-2 rounded-2xl border-2 border-gray-300">
+			<div className="pt-2 px-3 capitalize flex w-full  border-b-2 pb-2">
 				<div className="w-[20px] h-[20px]" />
 				<div className="grow flex justify-center items-center">
 					<div>{droppableId}</div>
 				</div>
 
-				{showAddButton && (
-					<img
-						src={addIcon}
-						alt="추가 버튼"
-						className="w-[20px] h-[20px] self-center cursor-pointer"
-						onClick={() => setModalOpen(true)}
-					/>
-				)}
+				<img
+					src={addIcon}
+					alt="추가 버튼"
+					className="w-[20px] h-[20px] self-center cursor-pointer"
+					onClick={() => setModalOpen(true)}
+				/>
 			</div>
 
 			<Droppable droppableId={droppableId}>
@@ -173,7 +169,7 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
 										ref={provided.innerRef}
-										className="p-2 rounded-md w-full bg-blue-300"
+										className="p-2 rounded-md w-full bg-gray-300"
 									>
 										<ScheduleItem
 											item={item}
