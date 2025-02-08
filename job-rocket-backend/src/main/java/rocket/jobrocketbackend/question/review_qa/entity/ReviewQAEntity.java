@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 
 @Getter
 @Builder
@@ -19,4 +20,8 @@ public class ReviewQAEntity {
     private Long qid;
 
     private String question;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private ScheduleEntity schedule;
 }
