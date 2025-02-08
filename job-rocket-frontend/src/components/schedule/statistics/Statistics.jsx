@@ -1,10 +1,25 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie } from "react-chartjs-2";
+import {
+	Chart as ChartJS,
+	ArcElement,
+	Tooltip,
+	Legend,
+	LinearScale,
+	CategoryScale,
+	BarElement,
+} from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
 import { getStatisticsSchedule } from "../../../api/schedule/schedule";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+	ArcElement,
+	Tooltip,
+	Legend,
+	CategoryScale,
+	LinearScale, // 여기서 등록합니다.
+	BarElement
+);
 
 const Statistics = () => {
 	const [document, setDocument] = useState(0);
@@ -34,10 +49,6 @@ const Statistics = () => {
 		}
 	}, [data]);
 
-	const documentPassed = useMemo(
-		() => first + second + final,
-		[first, second, final]
-	);
 	const totalApplications = useMemo(
 		() => document + first + second + final,
 		[document, first, second, final]
@@ -76,31 +87,32 @@ const Statistics = () => {
 		],
 	};
 
-	const documentStatis = {
-		labels: [
-			`서류탈락 (${getPercentage(
-				documentFail,
-				documentPassed + documentFail
-			)}%)`,
-			`서류통과 (${getPercentage(
-				documentPassed,
-				documentPassed + documentFail
-			)}%)`,
-		],
+	// 두번째 차트: 임시 데이터로 전형별 통과율(%) 세로 막대 그래프
+	const passRateData = {
+		labels: ["서류전형", "1차면접", "2차면접", "최종전형"],
 		datasets: [
 			{
-				data: [documentFail, documentPassed],
+				label: "전형별 통과율(%)",
+				data: [75, 60, 45, 30], // 임시 통과율 데이터 (예시)
 				backgroundColor: [
-					"rgba(255, 99, 132, 0.6)",
+					"rgba(75, 192, 192, 0.6)",
 					"rgba(54, 162, 235, 0.6)",
+					"rgba(255, 206, 86, 0.6)",
+					"rgba(255, 99, 132, 0.6)",
 				],
-				borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
+				borderColor: [
+					"rgba(75, 192, 192, 1)",
+					"rgba(54, 162, 235, 1)",
+					"rgba(255, 206, 86, 1)",
+					"rgba(255, 99, 132, 1)",
+				],
 				borderWidth: 1,
 			},
 		],
 	};
 
 	const options = {
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
 				display: true,
@@ -118,68 +130,64 @@ const Statistics = () => {
 		},
 	};
 
+	const barOptions = {
+		maintainAspectRatio: false,
+		scales: {
+			y: {
+				beginAtZero: true,
+				max: 100,
+				ticks: {
+					stepSize: 10,
+				},
+			},
+		},
+		plugins: {
+			legend: {
+				display: true,
+				position: "top",
+			},
+		},
+	};
+
 	if (isLoading) {
 		return <div>로딩중..</div>;
 	}
 
 	return (
-		<div
-			className="flex flex-col w-full  items-center p-3 space-y-5"
-			style={{ fontFamily: "CookieRegular" }}
-		>
-			<div className="flex flex-col bg-blue-300 w-2/3 items-center rounded-lg space-x-5 p-3">
-				<div className="flex justify-around w-full">
-					<div className="flex flex-col items-center space-y-4">
-						<div>지원횟수</div>
-						<div>{totalApplications}</div>
-					</div>
-					<div className="flex flex-col items-center space-y-4">
-						<div>서류전형</div>
-						<div>{document}</div>
-					</div>
-					<div className="flex flex-col items-center space-y-4">
-						<div>1차면접</div>
-						<div>{first}</div>
-					</div>
-					<div className="flex flex-col items-center space-y-4">
-						<div>2차면접</div>
-						<div>{second}</div>
-					</div>
-					<div className="flex flex-col items-center space-y-4">
-						<div>최종</div>
-						<div>{final}</div>
-					</div>
-				</div>
-			</div>
-
-			<div className="flex space-x-5">
-				<div className="flex flex-col items-center">
-					<div>전형별 통계</div>
-					<div>
+		<div className="flex flex-col w-full h-full p-2 space-y-3">
+			<div className="flex flex-col space-y-1 items-center w-full h-full border border-gray-300 p-3 rounded-lg">
+				<div>전형별 비율</div>
+				<hr className="w-full" />
+				<div className=" flex justify-around items-center w-full h-full">
+					<div className="w-full h-full">
 						<Pie data={scheduleStatis} options={options} />
 					</div>
-				</div>
-				<div className="flex flex-col items-center">
-					<div>서류 통과율</div>
-					<div>
-						<Pie data={documentStatis} options={options} />
+					<div className="flex flex-col justify-around items-center w-full h-full border rounded-lg">
+						<div className="flex w-full justify-around">
+							<div>서류전형</div>
+							<div>{document}</div>
+						</div>
+						<div className="flex w-full justify-around">
+							<div>1차면접</div>
+							<div>{first}</div>
+						</div>
+						<div className="flex w-full justify-around">
+							<div>2차면접</div>
+							<div>{second}</div>
+						</div>
+						<div className="flex w-full justify-around">
+							<div>최종전형</div>
+							<div>{final}</div>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<div className="flex flex-col bg-blue-300 w-2/3 items-center rounded-lg space-x-5 p-3">
-				<div className="flex justify-around w-full">
-					<div className="flex flex-col items-center space-y-4">
-						<div>진행중</div>
-						<div>{ongoing}</div>
-					</div>
-					<div className="flex flex-col items-center space-y-4">
-						<div>최종합격</div>
-						<div>{passed}</div>
-					</div>
-					<div className="flex flex-col items-center space-y-4">
-						<div>탈락</div>
-						<div>{fail}</div>
+			<div className="flex flex-col space-y-1 items-center w-full h-full border border-gray-300 p-3 rounded-lg">
+				<div>전형별 비율</div>
+				<hr className="w-full" />
+				<div className="flex justify-around items-center w-full h-full">
+					<div className="w-full h-full">
+						<Bar data={passRateData} options={barOptions} />
 					</div>
 				</div>
 			</div>

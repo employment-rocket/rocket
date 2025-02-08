@@ -40,14 +40,13 @@ const Schedule = () => {
 						</div>
 					</div>
 					<hr className="w-full border" />
-					{/* <Outlet /> */}
+
 					<Outlet />
 				</div>
 				<div className="w-[60%] h-full">
 					<Calendar />
 				</div>
 			</div>
-			);
 		</div>
 	);
 };
