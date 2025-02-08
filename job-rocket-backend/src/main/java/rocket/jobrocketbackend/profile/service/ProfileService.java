@@ -12,11 +12,15 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import rocket.jobrocketbackend.common.dto.PageDto;
 import rocket.jobrocketbackend.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.dto.ProfileResponseDto;
 import rocket.jobrocketbackend.profile.entity.ProfileEntity;
@@ -41,6 +45,21 @@ public class ProfileService {
 		this.userRepository = userRepository;
 		this.profileFileService = profileFileService;
 	}
+
+	public PageDto<ProfileResponseDto> getPublicProfilesPaginated(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<ProfileEntity> profilesPage = profileRepository.findAllByIsPublic(true, pageable);
+
+		Page<ProfileResponseDto> profileDtoPage = profilesPage.map(profile -> ProfileResponseDto.builder()
+			.memberId(profile.getMemberId())
+			.sections(profile.getSections())
+			.isPublic(profile.isPublic())
+			.build()
+		);
+
+		return PageDto.of(profileDtoPage);
+	}
+
 
 	public ProfileResponseDto getProfile(Long memberId) {
 		userRepository.findById(memberId)

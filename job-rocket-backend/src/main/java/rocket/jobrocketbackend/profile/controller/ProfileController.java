@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import rocket.jobrocketbackend.common.dto.PageDto;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.profile.dto.ProfileRequestDto;
 import rocket.jobrocketbackend.profile.dto.ProfileResponseDto;
@@ -100,6 +101,15 @@ public class ProfileController {
 		@PathVariable String fileName,
 		@RequestParam SectionType sectionType) throws IOException {
 		return profileService.getFileResponse(fileName, sectionType);
+	}
+
+	@GetMapping("/public/paginated")
+	public ResponseEntity<PageDto<ProfileResponseDto>> getPublicProfilesPaginated(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "20") int size) {
+
+		PageDto<ProfileResponseDto> profiles = profileService.getPublicProfilesPaginated(page, size);
+		return ResponseEntity.ok(profiles);
 	}
 
 }
