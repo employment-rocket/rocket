@@ -4,11 +4,19 @@ import TalentPoolMenu from "./../talentPoolComponents/TalentPoolMenu";
 import { fetchFile } from "../../../api/profile/ProfileAPI";
 
 const extractProfileData = async (profile) => {
-  const basicInfo = profile.sections.find((section) => section.type === "BASICINFO")?.data || {};
-  const interestField = profile.sections.find((section) => section.type === "INTERESTFIELD")?.data || {};
-  const tags = profile.sections.find((section) => section.type === "TAGSSELECTION")?.data.tags || [];
+  const basicInfo =
+    profile.sections.find((section) => section.type === "BASICINFO")?.data ||
+    {};
+  const interestField =
+    profile.sections.find((section) => section.type === "INTERESTFIELD")
+      ?.data || {};
+  const tags =
+    profile.sections.find((section) => section.type === "TAGSSELECTION")?.data
+      .tags || [];
 
-  const profileImageFileName = profile.sections.find((section) => section.type === "PROFILE_IMAGE")?.data?.profileImage;
+  const profileImageFileName = profile.sections.find(
+    (section) => section.type === "PROFILE_IMAGE"
+  )?.data?.profileImage;
   let profileImage = "https://via.placeholder.com/150";
 
   if (profileImageFileName) {
@@ -34,14 +42,23 @@ const extractProfileData = async (profile) => {
   };
 };
 
-const TalentPoolLayout = ({ profiles = [], filters, onFilterChange, tabs, selectedTab, onTabChange }) => {
+const TalentPoolLayout = ({
+  profiles = [],
+  filters,
+  onFilterChange,
+  tabs,
+  selectedTab,
+  onTabChange,
+}) => {
   const [processedProfiles, setProcessedProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const processProfiles = async () => {
       try {
-        const profilesWithImages = await Promise.all(profiles.map((profile) => extractProfileData(profile)));
+        const profilesWithImages = await Promise.all(
+          profiles.map((profile) => extractProfileData(profile))
+        );
         setProcessedProfiles(profilesWithImages);
       } catch (error) {
         console.error("프로필 처리 중 오류 발생:", error);
@@ -54,48 +71,60 @@ const TalentPoolLayout = ({ profiles = [], filters, onFilterChange, tabs, select
   }, [profiles]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        로딩 중...
+      </div>
+    );
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-white-100">
+      <div className="lg:w-[15%]"></div>
 
-    <div className="lg:w-[15%]"></div>
+      <main className="w-full lg:w-[85%] p-6 flex">
+        <div className="flex-1 border-l border-gray-300 pl-5">
+          <div className="flex justify-start mb-4 ml-4">
+            <div className="tabs-container flex items-center gap-3">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  className={`text-sm px-4 py-2 rounded-full ${
+                    selectedTab === tab
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white"
+                  }`}
+                  onClick={() => onTabChange(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
 
-    <main className="w-full lg:w-[85%] p-6 flex">
-   
-      <div className="flex-1 border-l border-gray-300 pl-6">
-
-        <div className="flex justify-start mb-4">
-          <div className="tabs-container flex items-center gap-4">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                className={`text-sm px-4 py-2 rounded-full ${
-                  selectedTab === tab
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white"
-                }`}
-                onClick={() => onTabChange(tab)}
-              >
-                {tab}
-              </button>
+          <div
+            className="grid gap-y-6"
+            style={{
+              display: "grid",
+              marginRight: "20px",
+              gridTemplateColumns: "repeat(auto-fit, 200px)",
+              columnGap: "30px",
+              justifyContent: "center", 
+            }}
+          >
+            {processedProfiles.map((profile, index) => (
+              <ProfileCard key={index} profile={profile} />
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {processedProfiles.map((profile, index) => (
-            <ProfileCard key={index} profile={profile} />
-          ))}
+        <div className="w-[350px] p-10 border-l border-gray-300">
+          <div className="sticky top-10">
+            <TalentPoolMenu filters={filters} onFilterChange={onFilterChange} />
+          </div>
         </div>
-      </div>
-
-      <div className="w-[300px] p-10 border-l border-gray-300">
-        <TalentPoolMenu filters={filters} onFilterChange={onFilterChange} />
-      </div>
-    </main>
-  </div>
+      </main>
+    </div>
   );
 };
 

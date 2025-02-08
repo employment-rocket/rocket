@@ -23,6 +23,9 @@ import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
 import Site from "./pages/Site.jsx";
+import TalentPool from './pages/TalentPool.jsx'
+import CardUserDetail from "./components/talentPool/talentPoolComponents/CardUserDetail.jsx";
+
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -65,6 +68,9 @@ createRoot(document.getElementById("root")).render(
 
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/career" element={<Career />} />
+          <Route path="/talent" element={<TalentPool />} />
+          <Route path="/card/:memberId" element={<CardUserDetail />} />
+          
 				</Route>
 
 				<Route path="/site" element={<Site />} />

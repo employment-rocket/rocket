@@ -13,11 +13,11 @@ const ProfileCard = ({ profile }) => {
   return (
     <div
       className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 cursor-pointer"
-      style={{ width: "200px", height: "320px" }}
+      style={{ width: "200px", height: "320px", margin: "0"  }}
       onClick={handleCardClick}
     >
       <div
-        className="w-full h-1/2 bg-gray-100 relative"
+        className="w-full h-1/2 bg-white-100 relative p-2"
         style={{ height: "50%" }}
       >
         <img

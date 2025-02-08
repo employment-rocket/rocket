@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import TalentPoolLayout from "../components/talentPool/talentPoolLayout/TalentPoolLayout";
-import { getPublicProfiles } from "../api/profile/ProfileAPI";
+import { getPublicProfilesPaginated } from "../api/profile/ProfileAPI";
 import { filterProfilesBySearch } from "../components/talentPool/filterProfiles";
 
 const tabs = ["전체", "개발", "게임개발", "기획", "마케팅"];
 
 const TalentPool = () => {
-  const [profiles, setProfiles] = useState([]);
   const [filteredProfiles, setFilteredProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -16,6 +15,10 @@ const TalentPool = () => {
     skillSearch: "",
   });
   const [selectedTab, setSelectedTab] = useState("전체");
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleFilterChange = (type, value) => {
     setFilters((prevFilters) => {
@@ -38,30 +41,25 @@ const TalentPool = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const fetchedProfiles = await getPublicProfiles();
-        const publicProfiles = fetchedProfiles.filter((profile) => profile.public);
-        setProfiles(publicProfiles);
+        const response = await getPublicProfilesPaginated(currentPage, pageSize);
         setFilteredProfiles(
-          filterProfilesBySearch(publicProfiles, "", filters, selectedTab)
+          filterProfilesBySearch(response.content, "", filters, selectedTab)
         );
+        setTotalPages(response.totalPages);
       } catch (error) {
-        console.error("Failed to fetch profiles:", error);
+        console.error("Failed to fetch paginated profiles:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfiles();
-  }, []);
-
-  useEffect(() => {
-    setFilteredProfiles(filterProfilesBySearch(profiles, "", filters, selectedTab));
-  }, [profiles, filters, selectedTab]);
+  }, [currentPage, filters, selectedTab]);
 
   if (loading) return <div>로딩 중...</div>;
 
   return (
-    <div className="flex flex-col items-center bg-gray-100">
+    <div className="flex flex-col items-center bg-white-100">
       <div className="w-full lg:w-[85%]">
         <TalentPoolLayout
           profiles={filteredProfiles}
@@ -71,6 +69,31 @@ const TalentPool = () => {
           selectedTab={selectedTab}
           onTabChange={handleTabChange}
         />
+        <div className="flex justify-center mt-6">
+          <button
+            disabled={currentPage === 0}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            className={`px-4 py-2 border rounded-l ${
+              currentPage === 0 ? "bg-gray-200 cursor-not-allowed" : "bg-white"
+            }`}
+          >
+            이전
+          </button>
+          <span className="px-4 py-2 border-t border-b">
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            disabled={currentPage + 1 === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            className={`px-4 py-2 border rounded-r ${
+              currentPage + 1 === totalPages
+                ? "bg-gray-200 cursor-not-allowed"
+                : "bg-white"
+            }`}
+          >
+            다음
+          </button>
+        </div>
       </div>
     </div>
   );
