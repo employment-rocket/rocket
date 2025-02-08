@@ -13,7 +13,7 @@ const Schedule = () => {
 				height: `calc(100dvh - ${headerHeight}px)`,
 			}}
 		>
-			<Category />
+			{/* <Category /> */}
 
 			<Outlet />
 		</div>

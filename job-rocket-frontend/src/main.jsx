@@ -57,7 +57,8 @@ createRoot(document.getElementById("root")).render(
 				<Route element={<PrivateRoute />}>
 					<Route path="/schedule" element={<Schedule />}>
 						<Route index element={<ScheduleHome />} />
-						<Route path="statistics" element={<Statistics />} />
+
+						{/*TODO <Route path="statistics" element={<Statistics />} /> */}
 					</Route>
 
 					<Route path="/retrospect" element={<Retrospect />} />

@@ -20,7 +20,7 @@ const ScheduleItem = ({ item, droppableId, handleDelete }) => {
 							src={menu}
 							alt="메뉴"
 							onClick={() => setIsOpen(true)}
-							className="cursor-pointer w-[20px] h-[20px]"
+							className="cursor-pointer max-h-[20px]"
 						/>
 						{isOpen && (
 							<KebabMenu
