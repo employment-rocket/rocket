@@ -13,18 +13,22 @@ const ProfileCard = ({ profile }) => {
   return (
     <div
       className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 cursor-pointer"
-      style={{ width: "200px", height: "320px", margin: "0"  }}
+      style={{ width: "200px", height: "320px", margin: "0" }}
       onClick={handleCardClick}
     >
       <div
-        className="w-full h-1/2 bg-white-100 relative p-2"
+        className="w-full h-1/2 bg-white-100 relative p-2 flex items-center justify-center"
         style={{ height: "50%" }}
       >
-        <img
-          src={profileImage || "https://via.placeholder.com/200"}
-          alt={name || "프로필 이미지"}
-          className="w-full h-full object-cover"
-        />
+        {profileImage ? (
+          <img
+            src={profileImage}
+            alt={name || "프로필 이미지"}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-gray-500 text-sm">이미지 없음</div>
+        )}
         <div className="absolute bottom-0 left-0 w-full text-white px-3 py-1 bg-black bg-opacity-50 flex items-center justify-between">
           <div className="text-[10px] font-bold">{status || "구직 상태 없음"}</div>
           <div

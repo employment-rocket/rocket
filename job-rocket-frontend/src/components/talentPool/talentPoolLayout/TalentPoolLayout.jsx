@@ -17,7 +17,8 @@ const extractProfileData = async (profile) => {
   const profileImageFileName = profile.sections.find(
     (section) => section.type === "PROFILE_IMAGE"
   )?.data?.profileImage;
-  let profileImage = "https://via.placeholder.com/150";
+
+  let profileImage = null;
 
   if (profileImageFileName) {
     try {
@@ -106,10 +107,9 @@ const TalentPoolLayout = ({
             className="grid gap-y-6"
             style={{
               display: "grid",
-              marginRight: "20px",
+              marginLeft: "25px",
               gridTemplateColumns: "repeat(auto-fit, 200px)",
               columnGap: "30px",
-              justifyContent: "center", 
             }}
           >
             {processedProfiles.map((profile, index) => (
