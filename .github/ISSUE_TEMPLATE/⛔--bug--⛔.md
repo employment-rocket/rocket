@@ -1,7 +1,7 @@
 ---
 name: "⛔[ Bug ]⛔"
 about: Bug(오류) 작업 사항에 대해 기록합니다.
-title: ''
+title: "[Bug]"
 labels: ''
 assignees: ''
 

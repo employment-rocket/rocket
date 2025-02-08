@@ -1,7 +1,7 @@
 ---
 name: "✅[ Feature ]✅"
 about: Feature(기능) 작업 사항에 대해 기록합니다.
-title: ''
+title: "[Feature]"
 labels: ''
 assignees: ''
 
