@@ -13,7 +13,7 @@ import Header from "./components/common/Header.jsx";
 import PrivateRoute from "./components/common/PrivateRoute";
 import KakaoLogin from "./components/oauth/KakaoLogin";
 import NaverLogin from "./components/oauth/NaverLogin";
-import ScheduleHome from "./components/schedule/ScheduleHome.jsx";
+import ScheduleMain from "./components/schedule/schedule/ScheduleMain.jsx";
 import Statistics from "./components/schedule/statistics/Statistics.jsx";
 import "./index.css";
 import Board from "./pages/Board.jsx";
@@ -56,9 +56,8 @@ createRoot(document.getElementById("root")).render(
 				</Route>
 				<Route element={<PrivateRoute />}>
 					<Route path="/schedule" element={<Schedule />}>
-						<Route index element={<ScheduleHome />} />
-
-						{/*TODO <Route path="statistics" element={<Statistics />} /> */}
+						<Route index element={<ScheduleMain />} />
+						<Route path="statistics" element={<Statistics />} />
 					</Route>
 
 					<Route path="/retrospect" element={<Retrospect />} />
