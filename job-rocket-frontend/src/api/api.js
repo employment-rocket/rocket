@@ -38,7 +38,6 @@ api.interceptors.response.use(
 			const refreshToken = localStorage.getItem("RefreshToken");
 			if (refreshToken) {
 				try {
-
 					const response = await axios.post(
 						`${
 							import.meta.env.VITE_API_BASE_URL
@@ -54,7 +53,6 @@ api.interceptors.response.use(
 					const newAccessToken = response.headers["authorization"];
 
 					localStorage.setItem("AccessToken", newAccessToken);
-
 
 					originalRequest.headers[
 						"Authorization"

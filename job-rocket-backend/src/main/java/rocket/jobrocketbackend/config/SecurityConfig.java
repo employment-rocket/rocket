@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import rocket.jobrocketbackend.oauth.util.JWTExceptionFilter;
 import rocket.jobrocketbackend.oauth.util.JWTFilter;
 import rocket.jobrocketbackend.oauth.util.JWTUtil;
 
@@ -35,6 +36,7 @@ public class SecurityConfig {
                 .formLogin((auth) -> auth.disable())
                 .httpBasic((auth) -> auth.disable())
                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTExceptionFilter(), JWTFilter.class)
 //                .oauth2Login((oauth2) -> oauth2
 //                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
 //                                .userService(customOAuth2UserService))
@@ -42,11 +44,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/").permitAll()
  //                       .requestMatchers("/schedule").authenticated()
+                        .requestMatchers("/login/**").permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.GET,"/board/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
-//                        .anyRequest().authenticated())
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
+//                        .anyRequest().permitAll())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
