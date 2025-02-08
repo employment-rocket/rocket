@@ -95,16 +95,16 @@ const Statistics = () => {
 				label: "전형별 통과율(%)",
 				data: [75, 60, 45, 30], // 임시 통과율 데이터 (예시)
 				backgroundColor: [
+					"rgba(255, 99, 132, 0.6)",
+					"rgba(255, 206, 86, 0.6)",
 					"rgba(75, 192, 192, 0.6)",
 					"rgba(54, 162, 235, 0.6)",
-					"rgba(255, 206, 86, 0.6)",
-					"rgba(255, 99, 132, 0.6)",
 				],
 				borderColor: [
+					"rgba(255, 99, 132, 1)",
+					"rgba(255, 206, 86, 1)",
 					"rgba(75, 192, 192, 1)",
 					"rgba(54, 162, 235, 1)",
-					"rgba(255, 206, 86, 1)",
-					"rgba(255, 99, 132, 1)",
 				],
 				borderWidth: 1,
 			},
@@ -183,7 +183,7 @@ const Statistics = () => {
 				</div>
 			</div>
 			<div className="flex flex-col space-y-1 items-center w-full h-full border border-gray-300 p-3 rounded-lg">
-				<div>전형별 비율</div>
+				<div>전형별 통과율(%)</div>
 				<hr className="w-full" />
 				<div className="flex justify-around items-center w-full h-full">
 					<div className="w-full h-full">
