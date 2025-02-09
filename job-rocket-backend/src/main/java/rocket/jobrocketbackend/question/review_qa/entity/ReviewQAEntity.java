@@ -24,4 +24,8 @@ public class ReviewQAEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", nullable = false)
     private ScheduleEntity schedule;
+
+    public void updateQuestion(String newQuestion) {
+        this.question = newQuestion;
+    }
 }

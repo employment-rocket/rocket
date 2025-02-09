@@ -61,7 +61,7 @@ public class ScheduleEntity {
                 .dueDate(dto.getDueDate())
                 .memo(dto.getMemo())
                 .state(ScheduleState.from(dto.getState()))
-                .questions(new ArrayList<>())
+                .questions(null)
                 .build();
     }
 }

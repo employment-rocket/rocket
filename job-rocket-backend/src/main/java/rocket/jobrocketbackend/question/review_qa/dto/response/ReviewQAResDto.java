@@ -11,6 +11,5 @@ public class ReviewQAResDto {
     private Long qid;
     private Long answerId;
     private String question;
-    private String answer;
     private boolean isIn;
 }
