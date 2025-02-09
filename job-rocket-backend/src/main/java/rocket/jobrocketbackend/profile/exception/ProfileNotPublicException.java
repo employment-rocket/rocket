@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.exception;
+package rocket.jobrocketbackend.profile.exception;
 
 import rocket.jobrocketbackend.common.exception.RocketException;
 

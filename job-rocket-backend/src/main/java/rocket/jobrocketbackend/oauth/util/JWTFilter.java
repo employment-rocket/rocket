@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
+import rocket.jobrocketbackend.oauth.exception.JwtExpireException;
 import rocket.jobrocketbackend.user.dto.UserDTO;
 
 import java.io.IOException;
@@ -38,9 +39,7 @@ public class JWTFilter extends OncePerRequestFilter {
         // 토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
             log.info("token expired");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "token expired");
-            filterChain.doFilter(request, response);
-            return; // 조건이 해당되면 메소드 종료 (필수)
+            throw new JwtExpireException("token expired");
         }
 
 

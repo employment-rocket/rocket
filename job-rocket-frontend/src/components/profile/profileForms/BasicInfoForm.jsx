@@ -44,8 +44,11 @@ const BasicInfoForm = ({
               <option value="default">선택</option>
               <option value="(신입) 구직 중이에요">(신입) 구직 중이에요</option>
               <option value="(경력) 이직/구직 중이에요">(경력) 이직/구직 중이에요</option>
-              <option value="피드백 원해요">피드백 원해요</option>
-              <option value="신부감 원해요">신부감 원해요</option>
+              <option value="스터디 구해요">스터디 구해요</option>
+              <option value="좋은 제안에 열려있어요">좋은 제안에 열려있어요</option>
+              <option value="피드백 원해요">프로필 피드백 원해요</option>
+              <option value="프로젝트 구해요">프로젝트 구해요</option>
+              
             </select>
           </div>
         </div>
