@@ -8,7 +8,7 @@ const PortfolioView = ({ order }) => {
   const [fileUrls, setFileUrls] = useState({});
 
   useEffect(() => {
-    fetchPortfolio(); // 초기 로드
+    fetchPortfolio(); 
   }, []);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const PortfolioView = ({ order }) => {
               urls[item.id] = fileUrl;
             } catch (error) {
               console.error(`파일 로드 실패: ${item.name}`, error);
-              urls[item.id] = null; // 실패한 경우 null 처리
+              urls[item.id] = null; 
             }
           }
         })

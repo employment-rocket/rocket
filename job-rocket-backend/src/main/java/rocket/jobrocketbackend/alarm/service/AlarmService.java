@@ -58,12 +58,12 @@ public class AlarmService {
     }
 
     @Transactional
-    public void sendAlarm(Long userId, String message, AlarmType type) {
+    public void sendScheduleAlarm(Long userId, String message, AlarmType type) {
 
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(()-> new UserNotFoundException("해당 id의 사용자를 찾을 수 없습니다: "+userId));
 
-        if(type.equals(AlarmType.SCHEDULE)) {
+
             AlarmEntity alarmEntity = AlarmEntity.builder()
                     .content(message)
                     .type(AlarmType.SCHEDULE)
@@ -77,7 +77,8 @@ public class AlarmService {
 
             alarmSubscriptionRepository.findByUserId(userId).ifPresent(subscription->
                     pushAlarmService.sendPushNotification(subscription.getWebPushSubscription(), "일정 마감 알림", message, alarmEntity.getUrl()));
-        }
+
+
         SseEmitter emitter = emitters.get(userId);
 
         Map<String, String> data = new HashMap<>();
@@ -93,6 +94,47 @@ public class AlarmService {
         }
 
     }
+
+    @Transactional
+    public void sendCommentAlarm(Long userId, String message, AlarmType type, Long boardId) {
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException("해당 id의 사용자를 찾을 수 없습니다: "+userId));
+        String url = "/board/free/" + boardId;
+
+        AlarmEntity alarmEntity = AlarmEntity.builder()
+                .content(message)
+                .type(AlarmType.COMMENT)
+                .alarmDate(LocalDate.now())
+                .user(user)
+                .url(url)
+                .build();
+
+        alarmRepository.save(alarmEntity);
+        log.info("넣은 알람데이터 내용: {} {}", alarmEntity.getContent(), alarmEntity.getUser());
+
+        alarmSubscriptionRepository.findByUserId(userId).ifPresent(subscription->
+                pushAlarmService.sendPushNotification(subscription.getWebPushSubscription(), "댓글 알림", message, alarmEntity.getUrl()));
+
+
+        SseEmitter emitter = emitters.get(userId);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("content", message);
+        data.put("type", String.valueOf(type));
+
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name("alarm").data(new ObjectMapper().writeValueAsString(data)));
+            } catch (IOException e) {
+                emitters.remove(userId);
+            }
+        }
+
+    }
+
+
+
 
     @Transactional
     public void saveSubscription(Long userId, Subscription subscription) {

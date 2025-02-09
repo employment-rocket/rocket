@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.service;
+package rocket.jobrocketbackend.profile.service;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import rocket.jobrocketbackend.profile.profile.entity.SectionType;
+import rocket.jobrocketbackend.profile.entity.SectionType;
 
 @Service
 public class ProfileFileService {

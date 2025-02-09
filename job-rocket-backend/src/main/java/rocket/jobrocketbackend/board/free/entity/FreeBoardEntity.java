@@ -18,6 +18,7 @@ import java.time.LocalDate;
 public class FreeBoardEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "free_board_id")
     private Long id;
 
     private String title;

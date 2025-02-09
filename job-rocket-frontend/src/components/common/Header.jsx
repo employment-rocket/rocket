@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import logo from "../../assets/logo.png";
 import bell from "../../assets/icon-notification.png";
 import chat from "../../assets/chat.png";
@@ -10,6 +10,7 @@ import useProfileStore from "../../store/profileImageStore";
 import Alarm from "../alarm/Alarm";
 import ChatModal from "../note/ChatModal";
 import MyPage from "./MyPage";
+import { useHeaderHeightStore } from "../../store/headerHeightStore";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -21,6 +22,10 @@ const Header = () => {
 	const setProfileImage = useProfileStore((state) => state.setProfileImage);
 	const [isAlarmOpen, setAlarmOpen] = useState(false);
 	const [isChatOpen, setChatOpen] = useState(false);
+	const headerRef = useRef(null);
+	const setHeaderHeight = useHeaderHeightStore(
+		(state) => state.setHeaderHeight
+	);
 
 	useEffect(() => {
 		const token = localStorage.getItem("AccessToken");
@@ -40,6 +45,12 @@ const Header = () => {
 			setProfileImage("default");
 		}
 	}, [location, setProfileImage, isMyPageOpen]);
+
+	useLayoutEffect(() => {
+		if (headerRef.current) {
+			setHeaderHeight(headerRef.current.offsetHeight);
+		}
+	}, [setHeaderHeight]);
 
 	const handleLogout = () => {
 		localStorage.removeItem("AccessToken");
@@ -81,7 +92,9 @@ const Header = () => {
 	return (
 		<div
 			className="flex items-center w-full top-0 h-[60px] px-6 border-b border-gray-300"
+			id="header"
 			style={{ fontFamily: "CookieBold" }}
+			ref={headerRef}
 		>
 			<div
 				className="flex items-center cursor-pointer border-r border-gray-300 pr-6"
@@ -145,6 +158,16 @@ const Header = () => {
 					onClick={() => navigate("/career")}
 				>
 					커리어
+				</div>
+				<div
+					className={`cursor-pointer ${
+						location.pathname.startsWith("/talent")
+							? "text-blue-500 font-semibold"
+							: "text-gray-700"
+					}`}
+					onClick={() => navigate("/talent")}
+				>
+					인재풀
 				</div>
 			</div>
 

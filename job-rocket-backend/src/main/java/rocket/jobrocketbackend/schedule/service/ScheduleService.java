@@ -75,7 +75,7 @@ public class ScheduleService {
     }
 
     //자정마다
-    @Scheduled(cron="0 5 16 * * *")
+    @Scheduled(cron="0 05 21 * * *")
     public void checkScheduleDeadlines(){
         log.info("확인중");
         LocalDate tomorrow = LocalDate.now().plusDays(1);
@@ -86,7 +86,7 @@ public class ScheduleService {
             Long userId = schedule.getUser().getId();
             String message = "'" + schedule.getTitle() + "' 일정이 하루 남았습니다!";
 
-            alarmService.sendAlarm(userId, message, AlarmType.SCHEDULE);
+            alarmService.sendScheduleAlarm(userId, message, AlarmType.SCHEDULE);
             log.info("알림 전송: userId={}, message={}", userId, message);
         }
     }

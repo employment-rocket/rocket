@@ -12,7 +12,7 @@ import {
 import useProfileStore from "../../store/profileImageStore";
 import camera from "../../assets/camera.png";
 
-const MyPage = ({onClose, onNavigate}) => {
+const MyPage = ({ onClose, onNavigate }) => {
 	const navigate = useNavigate();
 	const [userId, setUserId] = useState();
 	const [email, setEmail] = useState();
@@ -23,7 +23,6 @@ const MyPage = ({onClose, onNavigate}) => {
 	const myPageRef = useRef();
 
 	useEffect(() => {
-
 		const fetchUserProfile = async () => {
 			try {
 				const data = await getUserProfile();
@@ -55,18 +54,20 @@ const MyPage = ({onClose, onNavigate}) => {
 
 		const handleClickOutside = (event) => {
 			const profileImage = document.querySelector(".profile-image");
-			if (myPageRef.current && !myPageRef.current.contains(event.target)&&
-			(!profileImage || !profileImage.contains(event.target))) {
+			if (
+				myPageRef.current &&
+				!myPageRef.current.contains(event.target) &&
+				(!profileImage || !profileImage.contains(event.target))
+			) {
 				onClose();
 			}
-		  };
-	  
-		  document.addEventListener("mousedown", handleClickOutside);
-		  return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		  };
-		}, [onClose]);
+		};
 
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [onClose]);
 
 	const handleAllowEmailChange = async () => {
 		const updateAllowEmail = !allowEmail;

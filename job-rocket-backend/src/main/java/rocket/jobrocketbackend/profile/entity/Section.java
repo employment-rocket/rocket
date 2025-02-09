@@ -1,4 +1,4 @@
-package rocket.jobrocketbackend.profile.profile.entity;
+package rocket.jobrocketbackend.profile.entity;
 
 import java.util.Map;
 
