@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
+import { useAuth } from "../../context/auth/AuthContext";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("AccessToken");
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    if (!accessToken) {
+    if (!isAuthenticated) {
       alert("로그인이 필요합니다!");
       navigate("/board", { replace: true });
     }
-  }, [accessToken, navigate]);
+  }, [isAuthenticated, navigate]);
 
-  if (!accessToken) {
+  if (!isAuthenticated) {
     return null;
   }
 
