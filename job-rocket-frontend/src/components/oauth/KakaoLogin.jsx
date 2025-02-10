@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useAuth } from "../../context/auth/AuthContext"; // ✅ AuthContext 추가
+import { useAuth } from "../../context/auth/AuthContext";
 import api from "../../api/api";
 
 const KakaoLogin = () => {
 	const navigate = useNavigate();
-	const { login } = useAuth(); // ✅ 로그인 상태 업데이트를 위한 함수 가져오기
+	const { login } = useAuth();
 
 	const code = new URL(window.location.href).searchParams.get("code");
 	console.log("code =", code);
@@ -25,11 +25,11 @@ const KakaoLogin = () => {
 				localStorage.setItem("AccessToken", accessToken);
 				localStorage.setItem("RefreshToken", refreshToken);
 
-				login(); // ✅ AuthProvider의 isAuthenticated를 true로 변경
+				login();
 
 				setTimeout(() => {
 					navigate("/career");
-				}, 100); // ✅ 상태 반영을 위해 약간의 지연 추가
+				}, 100);
 			} catch (error) {
 				console.error("Kakao Login Failed:", error);
 			}
