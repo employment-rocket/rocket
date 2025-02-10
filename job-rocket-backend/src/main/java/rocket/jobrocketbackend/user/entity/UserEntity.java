@@ -48,7 +48,7 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean allowAlarm = false;
 
-    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConversationEntity> conversations = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)

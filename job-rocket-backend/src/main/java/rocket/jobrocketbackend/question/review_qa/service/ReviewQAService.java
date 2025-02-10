@@ -27,7 +27,6 @@ public class ReviewQAService {
 
     public List<ReviewQAResDto> getQuestionsByScheduleId(Long scheduleId, Long memberId) {
         List<ReviewQAEntity> questions = reviewQAJpaRepository.findBySchedule_Id(scheduleId);
-        log.info("📌 scheduleId: {}, Found {} questions", scheduleId, questions.size());
         return questions.stream()
                 .map(question -> convertToDto(question, memberId))
                 .toList();

@@ -1,5 +1,6 @@
 package rocket.jobrocketbackend.note.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +19,6 @@ import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,16 +28,14 @@ public class NoteService {
     private final ConversationJpaRepository conversationRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public Long sendMessage(Long senderId, String receiverName, String content) {
         UserEntity sender = findUserById(senderId);
         UserEntity receiver = findUserByNickname(receiverName);
-
         ConversationEntity conversation = findOrCreateConversation(sender, receiver);
         NoteEntity note = saveNote(conversation, sender, receiver, content);
-
         conversation.updateLastMessage(content, note.getCreatedAt());
         conversationRepository.save(conversation);
-
         return note.getId();
     }
 
@@ -45,8 +43,8 @@ public class NoteService {
         return conversationRepository.findByUsers(sender, receiver)
                 .orElseGet(() -> conversationRepository.save(
                         ConversationEntity.builder()
-                                .user1(sender)
-                                .user2(receiver)
+                                .sender(sender)
+                                .receiver(receiver)
                                 .lastMessage("")
                                 .lastMessageTime(LocalDateTime.now())
                                 .build()
@@ -76,19 +74,17 @@ public class NoteService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with nickname: " + nickname));
     }
 
+    @Transactional(readOnly = true)
     public List<ConversationResDto> getConversations(Long userId) {
         UserEntity user = findUserById(userId);
-
         return conversationRepository.findByUser(user).stream()
                 .map(conversation -> {
-                    UserEntity otherUser = conversation.getUser1().equals(user)
-                            ? conversation.getUser2()
-                            : conversation.getUser1();
-
+                    UserEntity otherUser = conversation.getSender().equals(user)
+                            ? conversation.getReceiver()
+                            : conversation.getSender();
                     long unreadMessageCount = conversation.getNotes().stream()
                             .filter(note -> !note.isRead() && note.getReceiver().equals(user))
                             .count();
-
                     return ConversationResDto.builder()
                             .conversationId(conversation.getId())
                             .lastMessage(conversation.getLastMessage())
@@ -98,15 +94,14 @@ public class NoteService {
                             .unreadMessageCount((int) unreadMessageCount)
                             .build();
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<NoteResDto> getMessages(Long conversationId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         ConversationEntity conversation = findConversationById(conversationId);
-
         Page<NoteEntity> notesPage = noteRepository.findByConversation(conversation, pageable);
-
         return notesPage.stream()
                 .map(note -> NoteResDto.builder()
                         .id(note.getId())
@@ -116,9 +111,10 @@ public class NoteService {
                         .createdAt(note.getCreatedAt())
                         .isRead(note.isRead())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    @Transactional(readOnly = true)
     public NoteResDto getMessageById(Long noteId) {
         NoteEntity note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new IllegalArgumentException("Note not found"));
@@ -132,6 +128,7 @@ public class NoteService {
                 .build();
     }
 
+    @Transactional
     public void markMessageAsRead(Long noteId) {
         NoteEntity note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new IllegalArgumentException("Note not found"));

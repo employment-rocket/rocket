@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "note")
 public class NoteEntity {
 
     @Id

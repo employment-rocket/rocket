@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "conversation")
 public class ConversationEntity {
 
     @Id
@@ -23,12 +24,12 @@ public class ConversationEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user1_id", nullable = false)
-    private UserEntity user1;
+    @JoinColumn(name = "sender_id", nullable = false)
+    private UserEntity sender;
 
     @ManyToOne
-    @JoinColumn(name = "user2_id", nullable = false)
-    private UserEntity user2;
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private UserEntity receiver;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NoteEntity> notes = new ArrayList<>();
