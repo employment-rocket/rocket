@@ -11,8 +11,10 @@ import Alarm from "../alarm/Alarm";
 import ChatModal from "../note/ChatModal";
 import MyPage from "./MyPage";
 import { useHeaderHeightStore } from "../../store/headerHeightStore";
+import { useAuth } from "../../context/auth/AuthContext";
 
 const Header = () => {
+	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [isModalOpen, setModalOpen] = useState(false);
@@ -58,6 +60,7 @@ const Header = () => {
 		setLogin(false);
 		setMyPageOpen(false);
 		setProfileImage("default");
+		logout();
 		navigate("/");
 	};
 
