@@ -100,7 +100,7 @@ public class ScheduleService {
     }
 
 //자정마다
-    @Scheduled(cron="0 30 20 * * *")
+    @Scheduled(cron="0 00 00 * * *")
     public void checkScheduleDeadlines(){
         LocalDate tomorrow = LocalDate.now().plusDays(1);
 

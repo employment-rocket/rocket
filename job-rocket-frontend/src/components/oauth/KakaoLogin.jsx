@@ -30,6 +30,7 @@ const KakaoLogin = () => {
 
 				setTimeout(() => {
 					navigate("/career");
+          subscribeToPushNotifications();
 				}, 100);
 			} catch (error) {
 				console.error("Kakao Login Failed:", error);
@@ -38,8 +39,8 @@ const KakaoLogin = () => {
 
 		if (code) {
 			kakaoLogin();
-		} // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [code, navigate]);
+		}
+	}, [code, navigate, login]);
 
 	return (
 		<div className="LoginHandler">
