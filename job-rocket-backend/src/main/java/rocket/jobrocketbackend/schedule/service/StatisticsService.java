@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleRateDto;
 import rocket.jobrocketbackend.schedule.repository.ScheduleRepository;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
@@ -23,13 +24,11 @@ public class StatisticsService {
 
     public Map<String, Long> getStatisticsByStateAndType(Long userId){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보가 없습니다."));
-        List<ScheduleGroupDTO> list = scheduleRepository.findByUserAndGroupByState(user);
-        list.addAll(scheduleRepository.findByUserAndGroupByType(user));
+        List<ScheduleGroupDTO> list = scheduleRepository.findByUserAndGroupByType(user);
         return list.stream().collect(Collectors.toMap(ScheduleGroupDTO::getKey, ScheduleGroupDTO::getCount));
     }
 
-    public Long getDocumentFailCount(Long userId){
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보가 없습니다."));
-        return scheduleRepository.findByUserAndTypeDocumentAndStateFailCount(user);
+    public ScheduleRateDto getPassRate(Long userId){
+        return scheduleRepository.findScheduleRateByMemberId(userId);
     }
 }

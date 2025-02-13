@@ -20,7 +20,8 @@ class ScheduleDTOTest {
         //given
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder().memo("메모입니다")
                 .title("제목입니다")
-                .state("Ongoing")
+                .state("진행중")
+                .type("서류전형")
                 .dueDate(LocalDate.of(2024, 12, 23))
                 .build();
         //when
@@ -29,8 +30,8 @@ class ScheduleDTOTest {
         assertThat(newScheduleEntity.getTitle()).isEqualTo("제목입니다");
         assertThat(newScheduleEntity.getMemo()).isEqualTo("메모입니다");
         assertThat(newScheduleEntity.getDueDate()).isEqualTo(LocalDate.of(2024, 12, 23));
-        assertThat(newScheduleEntity.getType()).isEqualTo(ScheduleType.Document);
-        assertThat(newScheduleEntity.getState()).isEqualTo(ScheduleState.Ongoing);
+        assertThat(newScheduleEntity.getType()).isEqualTo(ScheduleType.DOCUMENT);
+        assertThat(newScheduleEntity.getState()).isEqualTo(ScheduleState.ONGOING);
     }
 
     @Test
@@ -40,8 +41,8 @@ class ScheduleDTOTest {
         ScheduleEntity entity = ScheduleEntity.builder()
                 .id(1L)
                 .dueDate(LocalDate.of(2024, 12, 23))
-                .type(ScheduleType.Document)
-                .state(ScheduleState.Ongoing)
+                .type(ScheduleType.DOCUMENT)
+                .state(ScheduleState.ONGOING)
                 .memo("메모입니다")
                 .title("제목입니다.")
                 .build();

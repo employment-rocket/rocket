@@ -6,8 +6,8 @@ const TYPE_MAP = {
 };
 
 const State_MAP = {
-	진행중: "Ongoing",
-	탈락: "Fail",
-	최종합격: "Passed",
+	진행중: "진행중",
+	탈락: "탈락",
+	최종합격: "최종합격",
 };
 export { TYPE_MAP, State_MAP };

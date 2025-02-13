@@ -3,7 +3,7 @@ package rocket.jobrocketbackend.schedule.entity;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleTypeException;
 
 public enum ScheduleType {
-    Document("서류전형"), First("1차면접"), Second("2차면접"), Final("최종");
+    DOCUMENT("서류전형"), FIRST("1차면접"), SECOND("2차면접"), FINAL("최종");
 
     private String text;
 
@@ -17,7 +17,7 @@ public enum ScheduleType {
 
     public static ScheduleType from(String value) {
         for (ScheduleType type : ScheduleType.values()) {
-            if (type.name().equals(value)) {
+            if (type.getText().equals(value)) {
                 return type;
             }
         }

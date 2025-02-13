@@ -17,5 +17,5 @@ public class ScheduleCreateDTO {
     private LocalDate dueDate;
     private String memo;
     private String state;
-
+    private String type;
 }

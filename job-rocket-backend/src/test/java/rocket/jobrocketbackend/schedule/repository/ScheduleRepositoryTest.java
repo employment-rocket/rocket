@@ -43,13 +43,13 @@ class ScheduleRepositoryTest {
         UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).allowAlarm(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
         userId = user.getId();
-        ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity3 = ScheduleEntity.builder().title("제목3").memo("메모3").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity4 = ScheduleEntity.builder().title("제목4").memo("메모4").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.First).user(user).build();
-        ScheduleEntity entity5 = ScheduleEntity.builder().title("제목5").memo("메모5").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.First).user(user).build();
-        ScheduleEntity entity6 = ScheduleEntity.builder().title("제목6").memo("메모6").dueDate(date).state(ScheduleState.Passed).type(ScheduleType.Second).user(user).build();
-        ScheduleEntity entity7 = ScheduleEntity.builder().title("제목7").memo("메모7").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity3 = ScheduleEntity.builder().title("제목3").memo("메모3").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity4 = ScheduleEntity.builder().title("제목4").memo("메모4").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FIRST).user(user).build();
+        ScheduleEntity entity5 = ScheduleEntity.builder().title("제목5").memo("메모5").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FIRST).user(user).build();
+        ScheduleEntity entity6 = ScheduleEntity.builder().title("제목6").memo("메모6").dueDate(date).state(ScheduleState.PASSED).type(ScheduleType.SECOND).user(user).build();
+        ScheduleEntity entity7 = ScheduleEntity.builder().title("제목7").memo("메모7").dueDate(date).state(ScheduleState.FAIL).type(ScheduleType.FINAL).user(user).build();
 
         scheduleRepository.save(entity1);
         scheduleRepository.save(entity2);
@@ -69,9 +69,9 @@ class ScheduleRepositoryTest {
         ScheduleEntity newSchedule = ScheduleEntity.builder()
                 .title("삼성전자")
                 .user(user)
-                .state(ScheduleState.Ongoing)
+                .state(ScheduleState.ONGOING)
                 .memo("메모입니다.")
-                .type(ScheduleType.Document)
+                .type(ScheduleType.DOCUMENT)
                 .dueDate(LocalDate.of(2024, 12, 23))
                 .build();
 
@@ -86,8 +86,8 @@ class ScheduleRepositoryTest {
         assertThat(result.getTitle()).isEqualTo("삼성전자");
         assertThat(result.getMemo()).isEqualTo("메모입니다.");
         assertThat(result.getDueDate()).isEqualTo(LocalDate.of(2024,12,23));
-        assertThat(result.getType()).isEqualTo(ScheduleType.Document);
-        assertThat(result.getState()).isEqualTo(ScheduleState.Ongoing);
+        assertThat(result.getType()).isEqualTo(ScheduleType.DOCUMENT);
+        assertThat(result.getState()).isEqualTo(ScheduleState.ONGOING);
         assertThat(result.getId()).isEqualTo(id);
     }
 
@@ -107,7 +107,7 @@ class ScheduleRepositoryTest {
         // given
         UserEntity user = UserEntity.builder().nickname("test").role(Role.MEMBER).allowAlarm(false).allowEmail(false).build();
         userRepository.save(user);
-        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.ONGOING).type(ScheduleType.FINAL).user(user).build();
         scheduleRepository.save(entity);
         List<ScheduleEntity> list = scheduleRepository.findAll();
         int count = list.size();
@@ -141,28 +141,13 @@ class ScheduleRepositoryTest {
         assertThat(result).hasSize(4)
                 .extracting("key","count")
                 .containsExactlyInAnyOrder(
-                        tuple(ScheduleType.Document.name(),3L),
-                        tuple(ScheduleType.First.name(),2L),
-                        tuple(ScheduleType.Second.name(),1L),
-                        tuple(ScheduleType.Final.name(),1L)
+                        tuple(ScheduleType.DOCUMENT.name(),3L),
+                        tuple(ScheduleType.FIRST.name(),2L),
+                        tuple(ScheduleType.SECOND.name(),1L),
+                        tuple(ScheduleType.FINAL.name(),1L)
                 );
     }
-    @Test
-    @DisplayName("해당 유저가 가지고있는 일정관리를 ScheduleState 당 몇개가있는지 반환")
-    void findByUserAndGroupByState() {
-        // given
-        UserEntity user = userRepository.findById(userId).get();
-        // when
-        List<ScheduleGroupDTO> result = scheduleRepository.findByUserAndGroupByState(user);
-        // then
-        assertThat(result).hasSize(3)
-                .extracting("key","count")
-                .containsExactlyInAnyOrder(
-                        tuple(ScheduleState.Ongoing.name(),5L),
-                        tuple(ScheduleState.Fail.name(),1L),
-                        tuple(ScheduleState.Passed.name(),1L)
-                );
-    }
+
 
     @Test
     @DisplayName("해당 유저의 타입이 서류이고 상태가 탈락인 개수를 가져온다.")
@@ -170,8 +155,8 @@ class ScheduleRepositoryTest {
         // given
         UserEntity user = userRepository.findById(userId).get();
         LocalDate date = LocalDate.of(2025, 01, 05);
-        ScheduleEntity entity = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.Fail).type(ScheduleType.Document).user(user).build();
+        ScheduleEntity entity = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.FAIL).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.FAIL).type(ScheduleType.DOCUMENT).user(user).build();
         scheduleRepository.save(entity);
         // when
         Long result = scheduleRepository.findByUserAndTypeDocumentAndStateFailCount(user);

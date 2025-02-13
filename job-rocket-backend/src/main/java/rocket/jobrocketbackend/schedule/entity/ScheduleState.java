@@ -3,7 +3,7 @@ package rocket.jobrocketbackend.schedule.entity;
 import rocket.jobrocketbackend.schedule.exception.IllegalScheduleStateException;
 
 public enum ScheduleState {
-    Ongoing("진행중"), Fail("탈락") , Passed("최종합격");
+    ONGOING("진행중"), FAIL("탈락") , PASSED("최종합격");
 
     private String text;
     ScheduleState(String text) {
@@ -16,7 +16,7 @@ public enum ScheduleState {
 
     public static ScheduleState from(String value){
         for(ScheduleState state : ScheduleState.values()) {
-            if (state.name().equals(value)) {
+            if (state.getText().equals(value)) {
                 return state;
             }
         }
