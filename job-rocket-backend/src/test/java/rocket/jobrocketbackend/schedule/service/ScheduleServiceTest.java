@@ -48,13 +48,13 @@ class ScheduleServiceTest {
         UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).allowAlarm(false).build();
         userRepository.save(user);
         LocalDate date = LocalDate.of(2024, 12, 23);
-        ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity3 = ScheduleEntity.builder().title("제목3").memo("메모3").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Document).user(user).build();
-        ScheduleEntity entity4 = ScheduleEntity.builder().title("제목4").memo("메모4").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.First).user(user).build();
-        ScheduleEntity entity5 = ScheduleEntity.builder().title("제목5").memo("메모5").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.First).user(user).build();
-        ScheduleEntity entity6 = ScheduleEntity.builder().title("제목6").memo("메모6").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Second).user(user).build();
-        ScheduleEntity entity7 = ScheduleEntity.builder().title("제목7").memo("메모7").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity2 = ScheduleEntity.builder().title("제목2").memo("메모2").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity3 = ScheduleEntity.builder().title("제목3").memo("메모3").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
+        ScheduleEntity entity4 = ScheduleEntity.builder().title("제목4").memo("메모4").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FIRST).user(user).build();
+        ScheduleEntity entity5 = ScheduleEntity.builder().title("제목5").memo("메모5").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FIRST).user(user).build();
+        ScheduleEntity entity6 = ScheduleEntity.builder().title("제목6").memo("메모6").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.SECOND).user(user).build();
+        ScheduleEntity entity7 = ScheduleEntity.builder().title("제목7").memo("메모7").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FINAL).user(user).build();
 
         scheduleRepository.save(entity1);
         scheduleRepository.save(entity2);
@@ -72,10 +72,10 @@ class ScheduleServiceTest {
         //given
         //when
         Map<String, List<ScheduleDTO>> scheduleList = scheduleService.getScheduleList(testUserId);
-        List<ScheduleDTO> documentList = scheduleList.get(ScheduleType.Document.name());
-        List<ScheduleDTO> firstList = scheduleList.get(ScheduleType.First.name());
-        List<ScheduleDTO> secondeList = scheduleList.get(ScheduleType.Second.name());
-        List<ScheduleDTO> finalList = scheduleList.get(ScheduleType.Final.name());
+        List<ScheduleDTO> documentList = scheduleList.get(ScheduleType.DOCUMENT.name());
+        List<ScheduleDTO> firstList = scheduleList.get(ScheduleType.FIRST.name());
+        List<ScheduleDTO> secondeList = scheduleList.get(ScheduleType.SECOND.name());
+        List<ScheduleDTO> finalList = scheduleList.get(ScheduleType.FINAL.name());
         //then
         assertThat(documentList).hasSize(3);
         assertThat(firstList).hasSize(2);
@@ -98,7 +98,7 @@ class ScheduleServiceTest {
         ScheduleDTO result = scheduleService.create(dto,user.getId());
         //then
         assertThat(result.getState()).isEqualTo(ScheduleState.from(dto.getState()));
-        assertThat(result.getType()).isEqualTo(ScheduleType.Document);
+        assertThat(result.getType()).isEqualTo(ScheduleType.DOCUMENT);
         assertThat(result.getTitle()).isEqualTo(dto.getTitle());
         assertThat(result.getMemo()).isEqualTo(dto.getMemo());
         assertThat(result.getDueDate()).isEqualTo(dto.getDueDate());
@@ -129,21 +129,21 @@ class ScheduleServiceTest {
         //given
         UserEntity user = createUser();
         LocalDate date = LocalDate.of(2024, 12, 22);
-        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FINAL).user(user).build();
         scheduleRepository.save(entity);
         //when
-        ScheduleTypeModifyDTO dto = ScheduleTypeModifyDTO.builder().scheduleId(entity.getId()).type(ScheduleType.Final).build();
+        ScheduleTypeModifyDTO dto = ScheduleTypeModifyDTO.builder().scheduleId(entity.getId()).type(ScheduleType.FINAL).build();
         ScheduleDTO result = scheduleService.modifyType(dto);
         //then
         assertThat(result.getId()).isEqualTo(entity.getId());
-        assertThat(result.getType()).isEqualTo(ScheduleType.Final);
+        assertThat(result.getType()).isEqualTo(ScheduleType.FINAL);
     }
 
     @Test
     @DisplayName("입력받은 id와 타입으로 해당하는 일정관리의 타입을 변경한지만 일치하는id가 없으면 예외를 던진다.")
     void modifyTypeException() {
         //given
-        ScheduleTypeModifyDTO dto = ScheduleTypeModifyDTO.builder().scheduleId(123459L).type(ScheduleType.Final).build();
+        ScheduleTypeModifyDTO dto = ScheduleTypeModifyDTO.builder().scheduleId(123459L).type(ScheduleType.FINAL).build();
         //when
         //then
         assertThatThrownBy(() -> scheduleService.modifyType(dto))
@@ -157,7 +157,7 @@ class ScheduleServiceTest {
         // given
         UserEntity user = createUser();
 
-        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(LocalDate.of(2024,12,11)).state(ScheduleState.ONGOING).type(ScheduleType.FINAL).user(user).build();
         scheduleRepository.save(entity);
         List<ScheduleEntity> list = scheduleRepository.findAll();
         int count = list.size();
@@ -175,15 +175,15 @@ class ScheduleServiceTest {
         // given
         UserEntity user = createUser();
         LocalDate date = LocalDate.of(2024, 12, 22);
-        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.Ongoing).type(ScheduleType.Final).user(user).build();
+        ScheduleEntity entity = ScheduleEntity.builder().title("test").memo("test").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.FINAL).user(user).build();
         scheduleRepository.save(entity);
-        ScheduleModifyDTO dto = ScheduleModifyDTO.builder().id(entity.getId()).state(ScheduleState.Passed).title("test2").memo("test2").dueDate(date).build();
+        ScheduleModifyDTO dto = ScheduleModifyDTO.builder().id(entity.getId()).state(ScheduleState.PASSED).title("test2").memo("test2").dueDate(date).build();
         // when
         scheduleService.modify(dto);
         // then
         assertThat(entity.getId()).isEqualTo(dto.getId());
         assertThat(entity.getMemo()).isEqualTo(dto.getMemo());
-        assertThat(entity.getType()).isEqualTo(ScheduleType.Final);
+        assertThat(entity.getType()).isEqualTo(ScheduleType.FINAL);
         assertThat(entity.getTitle()).isEqualTo(dto.getTitle());
         assertThat(entity.getDueDate()).isEqualTo(dto.getDueDate());
         assertThat(entity.getState()).isEqualTo(dto.getState());

@@ -50,10 +50,11 @@ public class ScheduleEntity {
         return ScheduleEntity.builder()
                 .title(dto.getTitle())
                 .user(user)
-                .type(ScheduleType.Document)
+                .type(ScheduleType.DOCUMENT)
                 .dueDate(dto.getDueDate())
                 .memo(dto.getMemo())
                 .state(ScheduleState.from(dto.getState()))
+                .type(ScheduleType.from(dto.getType()))
                 .build();
     }
 }

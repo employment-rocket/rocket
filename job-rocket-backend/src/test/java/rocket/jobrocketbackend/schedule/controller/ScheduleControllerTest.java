@@ -60,11 +60,11 @@ class ScheduleControllerTest {
         ScheduleModifyTypeRequest request = ScheduleModifyTypeRequest.builder().scheduleId(1L).type("First").build();
         ScheduleDTO result = ScheduleDTO.builder()
                 .id(1L)
-                .type(ScheduleType.First)
+                .type(ScheduleType.FIRST)
                 .dueDate(date)
                 .memo("메모")
                 .title("제목")
-                .state(ScheduleState.Passed)
+                .state(ScheduleState.PASSED)
                 .build();
         when(scheduleService.modifyType(any(ScheduleTypeModifyDTO.class))).thenReturn(result);
         //when
@@ -75,7 +75,7 @@ class ScheduleControllerTest {
                                 .with(csrf())
                 ).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.type").value(ScheduleType.First.getText()));
+                .andExpect(jsonPath("$.type").value(ScheduleType.FIRST.getText()));
 
     }
 
@@ -95,11 +95,11 @@ class ScheduleControllerTest {
                 .build();
         ScheduleDTO result = ScheduleDTO.builder()
                 .id(1L)
-                .type(ScheduleType.Document)
+                .type(ScheduleType.DOCUMENT)
                 .dueDate(date)
                 .memo("메모")
                 .title("제목")
-                .state(ScheduleState.Ongoing)
+                .state(ScheduleState.ONGOING)
                 .build();
         when(scheduleService.create(any(ScheduleCreateDTO.class),anyLong())).thenReturn(result);
         //when

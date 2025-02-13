@@ -21,7 +21,7 @@ export default function ScheduleMain() {
 	});
 
 	const [isModalOpen, setModalOpen] = useState(false);
-
+	const [createType, setCreateType] = useState("");
 	const [documentItems, setDocumentItems] = useState([]);
 	const [firstItems, setFirstItems] = useState([]);
 	const [secondItems, setSecondItems] = useState([]);
@@ -29,10 +29,10 @@ export default function ScheduleMain() {
 
 	useEffect(() => {
 		if (!isLoading && data) {
-			setDocumentItems(data.Document || []);
-			setFirstItems(data.First || []);
-			setSecondItems(data.Second || []);
-			setFinalItems(data.Final || []);
+			setDocumentItems(data.DOCUMENT || []);
+			setFirstItems(data.FIRST || []);
+			setSecondItems(data.SECOND || []);
+			setFinalItems(data.FINAL || []);
 		}
 	}, [isLoading, data]);
 
@@ -52,7 +52,7 @@ export default function ScheduleMain() {
 		updateListState(destination.droppableId, destList);
 
 		try {
-			const serverType = TYPE_MAP[destination.droppableId];
+			const serverType = destination.droppableId;
 			await modifyScheduleItem({ id: movedItem.id, type: serverType });
 			queryClient.invalidateQueries(["statistics"]);
 		} catch (error) {
@@ -103,6 +103,10 @@ export default function ScheduleMain() {
 		queryClient.invalidateQueries(["schedule"]);
 	};
 
+	const handleCreate = ({ type }) => {
+		setCreateType(type);
+		setModalOpen(true);
+	};
 	return (
 		<>
 			<div className="flex flex-col space-y-4 h-full w-full">
@@ -114,7 +118,7 @@ export default function ScheduleMain() {
 								droppableId={droppableId}
 								items={getListByDroppableId(droppableId)}
 								handleDelete={handleDelete}
-								setModalOpen={setModalOpen}
+								handleCreate={handleCreate}
 							/>
 						))}
 					</div>
@@ -124,6 +128,7 @@ export default function ScheduleMain() {
 			<CreateModal
 				isOpen={isModalOpen}
 				onCancel={() => setModalOpen(false)}
+				type={createType}
 			/>
 		</>
 	);
@@ -132,9 +137,7 @@ export default function ScheduleMain() {
 // ----------------------------------------------------------------
 // DroppableArea: "서류전형"만 추가 버튼 노출
 // ----------------------------------------------------------------
-function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
-	const showAddButton = droppableId === "서류전형";
-
+function DroppableArea({ droppableId, items, handleDelete, handleCreate }) {
 	return (
 		<div className="bg-white h-[90%] w-[80%] flex flex-col  items-center space-y-2 rounded-2xl border-2 border-gray-300">
 			<div className="pt-2 px-3 capitalize flex w-full  border-b-2 pb-2">
@@ -147,7 +150,7 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 					src={addIcon}
 					alt="추가 버튼"
 					className="w-[20px] h-[20px] self-center cursor-pointer"
-					onClick={() => setModalOpen(true)}
+					onClick={() => handleCreate({ type: droppableId })}
 				/>
 			</div>
 
@@ -156,7 +159,7 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 					<div
 						ref={provided.innerRef}
 						{...provided.droppableProps}
-						className="h-full w-full p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide "
+						className=" w-full h-64 p-3 flex flex-col items-center space-y-7 overflow-y-auto scrollbar-hide "
 					>
 						{items.map((item, index) => (
 							<Draggable
@@ -169,7 +172,7 @@ function DroppableArea({ droppableId, items, handleDelete, setModalOpen }) {
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
 										ref={provided.innerRef}
-										className="p-2 rounded-md w-full bg-gray-300"
+										className="p-1 rounded-md w-full bg-gray-300"
 									>
 										<ScheduleItem
 											item={item}

@@ -27,13 +27,15 @@ const getStatisticsSchedule = async () => {
 		throw error;
 	}
 };
-const createScheduleItem = async ({ title, dueDate, memo, state }) => {
+const createScheduleItem = async ({ title, dueDate, memo, state, type }) => {
 	const body = {
 		title: title,
 		dueDate: dueDate,
 		memo: memo,
 		state: state,
+		type: type,
 	};
+	console.log(body);
 	try {
 		const response = await api.post("/schedules", body);
 		if (response.status === 201) {
@@ -64,7 +66,6 @@ const modifyScheduleItem = async ({ id, type }) => {
 };
 
 const deleteScheduleItem = async ({ id }) => {
-	console.log(id);
 	try {
 		const response = await api.delete(`/schedules/${id}`);
 		if (response.status !== 204) {

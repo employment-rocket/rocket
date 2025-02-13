@@ -26,11 +26,15 @@ public class ScheduleCreateRequest {
     @NotNull(message = "상태값은 필수 입니다.")
     private String state;
 
+    @NotNull(message = "타입은 필수 입니다.")
+    private String type;
+
     public ScheduleCreateDTO toCreateDTO(){
         return ScheduleCreateDTO.builder()
                 .title(this.getTitle())
                 .dueDate(this.getDueDate())
                 .memo(this.getMemo())
-                .state(this.getState()).build();
+                .state(this.getState())
+                .type(this.getType()).build();
     }
 }
