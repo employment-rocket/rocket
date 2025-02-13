@@ -37,8 +37,8 @@ const KakaoLogin = () => {
 
 		if (code) {
 			kakaoLogin();
-		}
-	}, [code, navigate, login]);
+		} // eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [code, navigate]);
 
 	return (
 		<div className="LoginHandler">
