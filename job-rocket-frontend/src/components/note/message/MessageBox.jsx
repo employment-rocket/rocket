@@ -1,45 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import Message from "./Message";
 import door from "../../../assets/door.jpg";
+import { getMessages, sendMessageViaWebSocket } from "../../../api/note/NoteApi";
 
-const generateMessages = (startId, count) => {
-    if (startId <= 0) return [];
-    return Array.from({ length: count }, (_, index) => ({
-        id: startId + index,
-        text: `메시지 내용 ${startId + index}`,
-        time: `오후 ${6 + Math.floor((startId + index) / 10)}:${25 + ((startId + index) % 10)}`,
-        isOwn: (startId + index) % 2 === 0,
-    }));
-};
-
-const MessageBox = ({ chat, onClose }) => {
-    const [messages, setMessages] = useState(() => generateMessages(16, 15));
+const MessageBox = ({ chat, onClose, onUpdateConversations, onReceiveMessage }) => {
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
+    const [page, setPage] = useState(0);
     const scrollRef = useRef(null);
 
-    const loadPreviousMessages = () => {
+    const fetchMessages = async () => {
         if (isLoading || !hasMoreMessages) return;
-
         setIsLoading(true);
-        setTimeout(() => {
-            const firstMessageId = messages[0]?.id || 0;
-            const newMessages = generateMessages(firstMessageId - 15, 15);
 
-            if (newMessages.length > 0) {
-                setMessages((prev) => [...newMessages, ...prev]);
+        try {
+            const response = await getMessages(chat.conversationId, page, 15);
+            if (response.length > 0) {
+                setMessages((prev) => [...response.reverse(), ...prev]);
+                setPage((prev) => prev + 1);
             } else {
                 setHasMoreMessages(false);
             }
-
+        } catch (error) {
+            console.error("Failed to fetch messages:", error);
+        } finally {
             setIsLoading(false);
-        }, 1000);
+        }
     };
 
     const handleScroll = () => {
         if (scrollRef.current.scrollTop === 0 && hasMoreMessages) {
-            loadPreviousMessages();
+            fetchMessages();
         }
     };
 
@@ -51,18 +44,25 @@ const MessageBox = ({ chat, onClose }) => {
 
     const handleSendMessage = () => {
         if (newMessage.trim() === "") return;
+
+        sendMessageViaWebSocket(chat.otherUserName, newMessage);
+
         const newMsg = {
-            id: messages[messages.length - 1]?.id + 1 || 1,
+            id: Date.now(),
             text: newMessage,
             time: new Date().toLocaleTimeString("ko-KR", {
                 hour: "2-digit",
                 minute: "2-digit",
             }),
             isOwn: true,
+            isRead: false,
         };
+
         setMessages((prev) => [...prev, newMsg]);
         setNewMessage("");
         setTimeout(scrollToBottom, 0);
+
+        onUpdateConversations(chat.conversationId, newMessage);
     };
 
     const handleKeyPress = (e) => {
@@ -73,8 +73,20 @@ const MessageBox = ({ chat, onClose }) => {
     };
 
     useEffect(() => {
+        fetchMessages();
         scrollToBottom();
-    }, [messages]);
+    }, [chat]);
+
+    useEffect(() => {
+        const handleMessage = (message) => {
+            if (message.conversationId === chat.conversationId) {
+                setMessages((prev) => [...prev, message]);
+                scrollToBottom();
+            }
+        };
+
+        onReceiveMessage(handleMessage);
+    }, [chat, onReceiveMessage]);
 
     return (
         <div className="flex flex-col h-full">

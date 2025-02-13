@@ -78,6 +78,9 @@ const CsQuestion = ({
                     answerId: newAnswerId,
                     content: currentAnswer,
                 });
+
+                onRemoveCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId });
+                onAddCheckedQuestion({ qid, question, category: "CS", answerId: newAnswerId, content: currentAnswer });
                 alert("답변이 수정되었습니다.");
             }
             setIsEditing(false);

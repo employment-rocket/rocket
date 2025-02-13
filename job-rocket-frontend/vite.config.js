@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
 
 		define: {
 			__API_BASE_URL__: JSON.stringify(env.VITE_API_BASE_URL),
+			global: {},
 		},
 
 		build: {

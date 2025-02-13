@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.question.review_qa.entity.ReviewQAEntity;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "schedule")
 @Getter
@@ -36,6 +39,10 @@ public class ScheduleEntity {
     @Enumerated(EnumType.STRING)
     private ScheduleState state;
 
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ReviewQAEntity> questions = new ArrayList<>();
+
     public void modifyType(ScheduleType type){
         this.type = type;
     }
@@ -54,6 +61,7 @@ public class ScheduleEntity {
                 .dueDate(dto.getDueDate())
                 .memo(dto.getMemo())
                 .state(ScheduleState.from(dto.getState()))
+                .questions(null)
                 .build();
     }
 }

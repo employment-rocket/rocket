@@ -5,9 +5,12 @@ const Message = ({ message }) => {
                 } mb-2`}
         >
             {message.isOwn && (
-                <span className="mr-2 text-xs text-gray-600 self-end">
-                    {message.time}
-                </span>
+                <div className="flex flex-col items-end">
+                    <span className="mr-2 text-xs text-gray-600 self-end">{message.time}</span>
+                    {!message.isRead && (
+                        <span className="mr-2 text-xs text-red-500 self-end">아직 읽지 않음</span>
+                    )}
+                </div>
             )}
             <div
                 className={`p-3 rounded-lg shadow max-w-xs whitespace-pre-wrap ${message.isOwn
@@ -18,9 +21,7 @@ const Message = ({ message }) => {
                 {message.text}
             </div>
             {!message.isOwn && (
-                <span className="ml-2 text-xs text-gray-500 self-end">
-                    {message.time}
-                </span>
+                <span className="ml-2 text-xs text-gray-500 self-end">{message.time}</span>
             )}
         </div>
     );

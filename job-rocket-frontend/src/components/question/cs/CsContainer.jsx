@@ -13,7 +13,6 @@ const CsContainer = ({ checkedQuestions, setCheckedQuestions }) => {
     };
 
     const handleRemoveCheckedQuestion = (question) => {
-        console.log(question.category.toLowerCase());
         setCheckedQuestions((prev) => ({
             ...prev,
             [`${question.category.toLowerCase()}AnswerList`]: prev[`${question.category.toLowerCase()}AnswerList`].filter(
