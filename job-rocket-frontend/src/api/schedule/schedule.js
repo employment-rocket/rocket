@@ -27,6 +27,15 @@ const getStatisticsSchedule = async () => {
 		throw error;
 	}
 };
+const getStatisticsScheduleRate = async () => {
+	try {
+		const response = await api.get("/schedules/statictics/pass-rate");
+		return response.data;
+	} catch (error) {
+		console.error("/schedules/statictics api get error", error);
+		throw error;
+	}
+};
 const createScheduleItem = async ({ title, dueDate, memo, state, type }) => {
 	const body = {
 		title: title,
@@ -100,4 +109,5 @@ export {
 	updateScheduleItem,
 	getCalendarSchedule,
 	getStatisticsSchedule,
+	getStatisticsScheduleRate,
 };

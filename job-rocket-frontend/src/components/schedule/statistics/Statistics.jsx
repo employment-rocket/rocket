@@ -10,7 +10,10 @@ import {
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
-import { getStatisticsSchedule } from "../../../api/schedule/schedule";
+import {
+	getStatisticsSchedule,
+	getStatisticsScheduleRate,
+} from "../../../api/schedule/schedule";
 
 ChartJS.register(
 	ArcElement,
@@ -26,16 +29,16 @@ const Statistics = () => {
 	const [first, setFirst] = useState(0);
 	const [second, setSecond] = useState(0);
 	const [final, setFinal] = useState(0);
-	const [ongoing, setOngoing] = useState(0);
-	const [fail, setFail] = useState(0);
-	const [passed, setPassed] = useState(0);
-	const [documentFail, setDocumentFail] = useState(0);
+	const [documentPassRate, setDocumentPassRate] = useState(0);
+	const [firstPassRate, setFirstPassRate] = useState(0);
+	const [secondPassRate, setSecondPassRate] = useState(0);
+	const [finalPassRate, setFinalPassRate] = useState(0);
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["statistics"],
 		queryFn: getStatisticsSchedule,
 	});
-
+	console.log(data);
 	useEffect(() => {
 		console.log(data);
 		if (data) {
@@ -43,10 +46,10 @@ const Statistics = () => {
 			setFirst(data.FIRST || 0);
 			setSecond(data.SECOND || 0);
 			setFinal(data.FINAL || 0);
-			setOngoing(data.ONGOING || 0);
-			setFail(data.FAIL || 0);
-			setPassed(data.PASSED || 0);
-			setDocumentFail(data.DocumentFail || 0);
+			setDocumentPassRate(data.documentPassRate || 0);
+			setFirstPassRate(data.firstPassRate || 0);
+			setSecondPassRate(data.secondPassRate || 0);
+			setFinalPassRate(data.finalPassRate || 0);
 		}
 	}, [data]);
 
@@ -93,7 +96,12 @@ const Statistics = () => {
 		datasets: [
 			{
 				label: "전형별 통과율(%)",
-				data: [75, 60, 45, 30], // mock data
+				data: [
+					documentPassRate,
+					firstPassRate,
+					secondPassRate,
+					finalPassRate,
+				], // mock data
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.6)",
 					"rgba(255, 206, 86, 0.6)",

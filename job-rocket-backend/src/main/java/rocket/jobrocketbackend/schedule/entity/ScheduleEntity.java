@@ -7,10 +7,38 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleRateDto;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
 
+@SqlResultSetMapping(
+        name = "ScheduleRateMapping",
+        classes = @ConstructorResult(
+                targetClass = ScheduleRateDto.class,
+                columns = {
+                        @ColumnResult(name = "documentPassRate", type = Long.class),
+                        @ColumnResult(name = "firstPassRate", type = Long.class),
+                        @ColumnResult(name = "secondPassRate", type = Long.class),
+                        @ColumnResult(name = "finalPassRate", type = Long.class)
+                }
+        )
+)
+@NamedNativeQuery(
+        name = "Schedule.findScheduleRateByMemberId",
+        query = "SELECT " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN (type = 'DOCUMENT' AND state = 'PASSED') OR (type IN ('FIRST','SECOND','FINAL')) THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN (type = 'DOCUMENT' AND state <> 'ONGOING') OR (type IN ('FIRST','SECOND','FINAL')) THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS documentPassRate, " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN (type = 'FIRST' AND state = 'PASSED') OR (type IN ('SECOND','FINAL')) THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN (type = 'FIRST' AND state <> 'ONGOING') OR (type IN ('SECOND','FINAL')) THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS firstPassRate, " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN (type = 'SECOND' AND state = 'PASSED') OR (type = 'FINAL') THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN (type = 'SECOND' AND state <> 'ONGOING') OR (type = 'FINAL') THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS secondPassRate, " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN type = 'FINAL' AND state = 'PASSED' THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN type = 'FINAL' AND state <> 'ONGOING' THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS finalPassRate " +
+                "FROM schedule " +
+                "WHERE member_id = :userId",
+        resultSetMapping = "ScheduleRateMapping"
+)
 @Entity(name = "schedule")
 @Getter
 @Builder
