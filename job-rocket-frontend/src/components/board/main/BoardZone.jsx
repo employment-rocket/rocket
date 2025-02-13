@@ -3,7 +3,6 @@ import BoardItem from "./BoardItem";
 import { useNavigate } from "react-router";
 
 const BoardZone = ({ type }) => {
-	console.log(type);
 	const itemList = ["item1", "item2"];
 	const navigate = useNavigate();
 	return (

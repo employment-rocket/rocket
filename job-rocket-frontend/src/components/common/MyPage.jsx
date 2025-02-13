@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getUserProfile } from "../../api/user/UserApi";
 import logo from "../../assets/default-profile.png";
 import { useNavigate } from "react-router";
@@ -37,18 +36,11 @@ const MyPage = ({ onClose, onNavigate }) => {
 						try {
 							const imageUrl = await getProfileImage();
 							setProfile(imageUrl);
-						} catch (error) {
-							console.error(
-								"Failed to fetch profile image:",
-								error
-							);
-						}
+						} catch (error) { }
 					};
 					fetchImage();
 				}
-			} catch (error) {
-				console.error("유저 프로필 로드 실패:", error);
-			}
+			} catch (error) { }
 		};
 		fetchUserProfile();
 
@@ -74,23 +66,17 @@ const MyPage = ({ onClose, onNavigate }) => {
 		setAllowEmail(updateAllowEmail);
 		try {
 			await updatedAllowEmail(userId, updateAllowEmail);
-		} catch (error) {
-			console.error("이메일 알림 설정 업데이트 중 오류 발생:", error);
-		}
+		} catch (error) { }
 	};
 
 
 	const handleFileUpload = async (file) => {
 		try {
 			await uploadProfileFile(file, userId);
-
 			const imageUri = await getProfileImage(userId);
 			setProfileImage(imageUri);
 			setProfile(imageUri);
-		} catch (error) {
-			console.error("파일 업로드 실패:", error);
-			alert("파일 업로드 중 오류가 발생했습니다.");
-		}
+		} catch (error) { }
 	};
 
 	return (
@@ -119,7 +105,7 @@ const MyPage = ({ onClose, onNavigate }) => {
               }
             }}
           />
-		  <img 
+		  <img
 		  className="w-7 h-7 rounded-full ml-10 absolute bottom-0 right-[80px]"
 		  src={camera}
 		  alt="camera icon"
@@ -134,7 +120,7 @@ const MyPage = ({ onClose, onNavigate }) => {
           </div>
         </div>
 
-        
+
         <div className="flex items-center mb-8 w-full px-6">
           <div className="flex-1 text-xl text-gray-500 ml-4 text-center">
             {email}

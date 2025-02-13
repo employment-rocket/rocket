@@ -27,13 +27,24 @@ const getStatisticsSchedule = async () => {
 		throw error;
 	}
 };
-const createScheduleItem = async ({ title, dueDate, memo, state }) => {
+const getStatisticsScheduleRate = async () => {
+	try {
+		const response = await api.get("/schedules/statictics/pass-rate");
+		return response.data;
+	} catch (error) {
+		console.error("/schedules/statictics api get error", error);
+		throw error;
+	}
+};
+const createScheduleItem = async ({ title, dueDate, memo, state, type }) => {
 	const body = {
 		title: title,
 		dueDate: dueDate,
 		memo: memo,
 		state: state,
+		type: type,
 	};
+	console.log(body);
 	try {
 		const response = await api.post("/schedules", body);
 		if (response.status === 201) {
@@ -64,7 +75,6 @@ const modifyScheduleItem = async ({ id, type }) => {
 };
 
 const deleteScheduleItem = async ({ id }) => {
-	console.log(id);
 	try {
 		const response = await api.delete(`/schedules/${id}`);
 		if (response.status !== 204) {
@@ -99,4 +109,5 @@ export {
 	updateScheduleItem,
 	getCalendarSchedule,
 	getStatisticsSchedule,
+	getStatisticsScheduleRate,
 };

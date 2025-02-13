@@ -90,6 +90,8 @@ const PersonalQuestion = ({
                     answerId: newAnswerId,
                     content: currentAnswer,
                 });
+                onRemoveCheckedQuestion({ qid, question, category: "PERSONAL", answerId: newAnswerId });
+                onAddCheckedQuestion({ qid, question, category: "PERSONAL", answerId: newAnswerId, content: currentAnswer });
                 alert("답변이 수정되었습니다.");
             }
             setIsEditing(false);

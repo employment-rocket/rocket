@@ -84,7 +84,6 @@ public class ProfileController {
 		return ResponseEntity.ok(profile);
 	}
 
-
 	@PostMapping("/upload")
 	public ResponseEntity<Map<String, String>> uploadFile(
 		@RequestParam MultipartFile file,

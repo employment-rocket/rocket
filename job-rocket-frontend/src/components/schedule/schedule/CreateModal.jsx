@@ -3,26 +3,27 @@ import del from "../../../assets/delete.png";
 import { createScheduleItem } from "../../../api/schedule/schedule";
 import { useQueryClient } from "@tanstack/react-query";
 
-const CreateModal = ({ isOpen, onClose, onCancel }) => {
+const CreateModal = ({ isOpen, onClose, onCancel, type }) => {
 	const queryClient = useQueryClient();
 
 	const [title, setTitle] = useState("");
 	const [date, setDate] = useState("");
 	const [memo, setMemo] = useState("");
-	const [state, setState] = useState("Ongoing");
+	const [state, setState] = useState("진행중");
 
 	const [error, setError] = useState({
 		title: "",
 		date: "",
 	});
 
+	console.log(type);
 	if (!isOpen) return null;
 
 	const resetForm = () => {
 		setTitle("");
 		setDate("");
 		setMemo("");
-		setState("Ongoing");
+		setState("진행중");
 		setError({ title: "", date: "" });
 	};
 
@@ -44,7 +45,7 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 			return;
 		}
 
-		await createScheduleItem({ title, dueDate: date, memo, state });
+		await createScheduleItem({ title, dueDate: date, memo, state, type });
 		queryClient.invalidateQueries(["schedule"]);
 
 		resetForm();
@@ -108,9 +109,9 @@ const CreateModal = ({ isOpen, onClose, onCancel }) => {
 					value={state}
 					onChange={(e) => setState(e.target.value)}
 				>
-					<option value="Ongoing">진행중</option>
-					<option value="Fail">탈락</option>
-					<option value="Passed">최종합격</option>
+					<option value="진행중">진행중</option>
+					<option value="탈락">탈락</option>
+					<option value="최종합격">최종합격</option>
 				</select>
 
 				<div className="flex justify-around mt-2 w-full">

@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import api from "../../api/api";
+import { useAuth } from "../../context/auth/AuthContext";
 import {subscribeToPushNotifications} from "../../api/alarm/AlarmSubscribe.js";
 
 const NaverLogin = () => {
   const navigate = useNavigate();
 
-
+	const { login } = useAuth();
   const code = new URL(window.location.href).searchParams.get("code");
   const state = new URL(window.location.href).searchParams.get("state");
 
@@ -29,12 +30,12 @@ const NaverLogin = () => {
 
         localStorage.setItem("AccessToken", accessToken);
         localStorage.setItem("RefreshToken", refreshToken);
+        login();
 
-
-        if (response.status === 200) {
-          navigate("/career");
+        setTimeout(() => {
+					navigate("/career");
           subscribeToPushNotifications();
-        }
+				}, 100);
       } catch (error) {
         console.error("Naver Login Failed:", error);
       }

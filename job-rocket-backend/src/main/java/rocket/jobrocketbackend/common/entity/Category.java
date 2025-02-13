@@ -13,3 +13,4 @@ public enum Category {
 
     private final String name;
 }
+

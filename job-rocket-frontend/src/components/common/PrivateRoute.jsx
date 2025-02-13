@@ -1,19 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import NotificationHandler from "../alarm/NotificationHandler";
+import { useAuth } from "../../context/auth/AuthContext";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("AccessToken");
+  const { isAuthenticated } = useAuth();
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    if (!accessToken) {
-      alert("로그인이 필요합니다!");
-      navigate("/board", { replace: true });
-    }
-  }, [accessToken, navigate]);
+    console.log("Checking authentication:", isAuthenticated);
 
-  if (!accessToken) {
+    if (!isAuthenticated && !checkingAuth) {
+      setTimeout(() => {
+        if (!isAuthenticated) {
+          alert("로그인이 필요합니다!");
+          navigate("/board", { replace: true });
+        }
+      }, 100);
+    }
+
+    if (checkingAuth) {
+      setCheckingAuth(false);
+    }
+  }, [isAuthenticated, navigate, checkingAuth]);
+
+  if (!isAuthenticated) {
     return null;
   }
 

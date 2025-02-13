@@ -65,6 +65,4 @@ public class ProfileEntity {
 		return withUpdatedSections(updatedSections);
 	}
 
-
-
 }

@@ -5,12 +5,43 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import rocket.jobrocketbackend.question.review_qa.entity.ReviewQAEntity;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
+import rocket.jobrocketbackend.schedule.dto.ScheduleRateDto;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+@SqlResultSetMapping(
+        name = "ScheduleRateMapping",
+        classes = @ConstructorResult(
+                targetClass = ScheduleRateDto.class,
+                columns = {
+                        @ColumnResult(name = "documentPassRate", type = Long.class),
+                        @ColumnResult(name = "firstPassRate", type = Long.class),
+                        @ColumnResult(name = "secondPassRate", type = Long.class),
+                        @ColumnResult(name = "finalPassRate", type = Long.class)
+                }
+        )
+)
+@NamedNativeQuery(
+        name = "Schedule.findScheduleRateByMemberId",
+        query = "SELECT " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN (type = 'DOCUMENT' AND state = 'PASSED') OR (type IN ('FIRST','SECOND','FINAL')) THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN (type = 'DOCUMENT' AND state <> 'ONGOING') OR (type IN ('FIRST','SECOND','FINAL')) THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS documentPassRate, " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN (type = 'FIRST' AND state = 'PASSED') OR (type IN ('SECOND','FINAL')) THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN (type = 'FIRST' AND state <> 'ONGOING') OR (type IN ('SECOND','FINAL')) THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS firstPassRate, " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN (type = 'SECOND' AND state = 'PASSED') OR (type = 'FINAL') THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN (type = 'SECOND' AND state <> 'ONGOING') OR (type = 'FINAL') THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS secondPassRate, " +
+                "IFNULL(CAST(ROUND(1.0 * SUM(CASE WHEN type = 'FINAL' AND state = 'PASSED' THEN 1 ELSE 0 END) / " +
+                "NULLIF(SUM(CASE WHEN type = 'FINAL' AND state <> 'ONGOING' THEN 1 ELSE 0 END), 0) * 100, 0) AS SIGNED), 0) AS finalPassRate " +
+                "FROM schedule " +
+                "WHERE member_id = :userId",
+        resultSetMapping = "ScheduleRateMapping"
+)
 @Entity(name = "schedule")
 @Getter
 @Builder
@@ -36,6 +67,10 @@ public class ScheduleEntity {
     @Enumerated(EnumType.STRING)
     private ScheduleState state;
 
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ReviewQAEntity> questions = new ArrayList<>();
+
     public void modifyType(ScheduleType type){
         this.type = type;
     }
@@ -50,10 +85,12 @@ public class ScheduleEntity {
         return ScheduleEntity.builder()
                 .title(dto.getTitle())
                 .user(user)
-                .type(ScheduleType.Document)
+                .type(ScheduleType.DOCUMENT)
                 .dueDate(dto.getDueDate())
                 .memo(dto.getMemo())
                 .state(ScheduleState.from(dto.getState()))
+                .type(ScheduleType.from(dto.getType()))
+                .questions(null)
                 .build();
     }
 }

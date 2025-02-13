@@ -16,8 +16,6 @@ const Alarm = ({ onClose }) => {
     const fetchAlarms = async ()=>{
         try{
             const data = await alarmList();
-            console.log("알람 데이터: ", data);
-            console.log("알람타입:", data.alarmType);
             setAlarm(data);
         }catch(error){
             console.error("알람 로딩에 실패했습니다", error);
@@ -26,12 +24,6 @@ const Alarm = ({ onClose }) => {
     fetchAlarms();
   },[]);
 
-  const handleAlarmClick = ()=>{
-    if(data.type=='SCHEDULE'){
-        navigate("/schedule");
-    }
-  }
-  
 
   return (
     <div
@@ -54,7 +46,7 @@ const Alarm = ({ onClose }) => {
               key={data.id}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
-              <div className="flex items-center space-x-3" onClick={handleAlarmClick}>
+              <div className="flex items-center space-x-3">
                 <img
                   src={data.alarmType === 'COMMENT' ? comment : schedule}
                   alt="알림 아이콘"

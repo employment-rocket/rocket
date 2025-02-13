@@ -41,16 +41,20 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ScheduleDTO create(final ScheduleCreateDTO dto,final Long userId){
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+    public ScheduleDTO create(final ScheduleCreateDTO dto, final Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
         ScheduleEntity schedule = scheduleRepository.save(ScheduleEntity.create(dto, user));
         return ScheduleDTO.from(schedule);
     }
 
-    public Map<String, List<ScheduleDTO>> getScheduleList(final Long userId){
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+    public Map<String, List<ScheduleDTO>> getScheduleList(final Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+
         Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUser(user)
-                .stream().map(ScheduleDTO::from).collect(Collectors.groupingBy(dto -> dto.getType().name()));
+                .stream().map(ScheduleDTO::from)
+                .collect(Collectors.groupingBy(dto -> dto.getType().name()));
 
         for (ScheduleType type : ScheduleType.values()) {
             String key = type.name();
@@ -58,9 +62,29 @@ public class ScheduleService {
         }
         return result;
     }
+
+    public List<ScheduleDTO> getScheduleListWithQuestions(final Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+
+        return scheduleRepository.findByUser(user).stream()
+                .filter(schedule -> schedule.getQuestions() != null && !schedule.getQuestions().isEmpty())
+                .map(ScheduleDTO::from)
+                .toList();
+    }
+
     @Transactional
-    public ScheduleDTO modifyType(final ScheduleTypeModifyDTO dto){
-        ScheduleEntity schedule = scheduleRepository.findById(dto.getScheduleId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
+    public ScheduleDTO createReview(Long scheduleId) {
+        ScheduleEntity schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFoundException("해당 일정이 존재하지 않습니다."));
+
+        return ScheduleDTO.from(schedule);
+    }
+
+    @Transactional
+    public ScheduleDTO modifyType(final ScheduleTypeModifyDTO dto) {
+        ScheduleEntity schedule = scheduleRepository.findById(dto.getScheduleId())
+                .orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
         schedule.modifyType(dto.getType());
         return ScheduleDTO.from(schedule);
     }
@@ -69,17 +93,18 @@ public class ScheduleService {
         scheduleRepository.deleteById(id);
     }
     @Transactional
-    public void modify(final ScheduleModifyDTO dto){
-        ScheduleEntity schedule = scheduleRepository.findById(dto.getId()).orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
+    public void modify(final ScheduleModifyDTO dto) {
+        ScheduleEntity schedule = scheduleRepository.findById(dto.getId())
+                .orElseThrow(() -> new ScheduleNotFoundException("해당하는 일정을 찾을 수 없습니다."));
         schedule.modify(dto);
     }
 
 //자정마다
-    @Scheduled(cron="0 40 19 * * *")
+    @Scheduled(cron="0 30 20 * * *")
     public void checkScheduleDeadlines(){
         LocalDate tomorrow = LocalDate.now().plusDays(1);
 
-        List<ScheduleEntity> schedules = scheduleRepository.findByStateAndDueDate(ScheduleState.Ongoing, tomorrow);
+        List<ScheduleEntity> schedules = scheduleRepository.findByStateAndDueDate(ScheduleState.ONGOING, tomorrow);
 
         for (ScheduleEntity schedule : schedules) {
             Long userId = schedule.getUser().getId();
