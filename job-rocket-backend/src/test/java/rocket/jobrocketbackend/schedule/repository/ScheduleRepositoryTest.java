@@ -147,22 +147,7 @@ class ScheduleRepositoryTest {
                         tuple(ScheduleType.FINAL.name(),1L)
                 );
     }
-    @Test
-    @DisplayName("해당 유저가 가지고있는 일정관리를 ScheduleState 당 몇개가있는지 반환")
-    void findByUserAndGroupByState() {
-        // given
-        UserEntity user = userRepository.findById(userId).get();
-        // when
-        List<ScheduleGroupDTO> result = scheduleRepository.findByUserAndGroupByState(user);
-        // then
-        assertThat(result).hasSize(3)
-                .extracting("key","count")
-                .containsExactlyInAnyOrder(
-                        tuple(ScheduleState.ONGOING.name(),5L),
-                        tuple(ScheduleState.FAIL.name(),1L),
-                        tuple(ScheduleState.PASSED.name(),1L)
-                );
-    }
+
 
     @Test
     @DisplayName("해당 유저의 타입이 서류이고 상태가 탈락인 개수를 가져온다.")

@@ -31,9 +31,4 @@ public class StatisticsService {
     public ScheduleRateDto getPassRate(Long userId){
         return scheduleRepository.findScheduleRateByMemberId(userId);
     }
-
-    public Long getDocumentFailCount(Long userId){
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("사용자 정보가 없습니다."));
-        return scheduleRepository.findByUserAndTypeDocumentAndStateFailCount(user);
-    }
 }

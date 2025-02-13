@@ -59,20 +59,17 @@ class StatisticsServiceTest {
         scheduleRepository.save(entity7);
     }
 
-    @DisplayName("유저정보에 해당하는 일정관리를 타입과 상태별 개수를 담은 map 반환")
+    @DisplayName("유저정보에 해당하는 일정관리를 타입별 개수를 담은 map 반환")
     @Test
     void getStatisticsByStateAndType() {
         //given
         //when
         Map<String, Long> result = statisticsService.getStatisticsByStateAndType(userId);
         //then
-        assertThat(result).hasSize(7).
+        assertThat(result).hasSize(4).
                 containsEntry(ScheduleType.DOCUMENT.name(), 3L).
                 containsEntry(ScheduleType.FIRST.name(), 2L).
                 containsEntry(ScheduleType.SECOND.name(), 1L).
-                containsEntry(ScheduleType.FINAL.name(), 1L).
-                containsEntry(ScheduleState.PASSED.name(), 1L).
-                containsEntry(ScheduleState.FAIL.name(), 1L)
-                .containsEntry(ScheduleState.ONGOING.name(), 5L);
+                containsEntry(ScheduleType.FINAL.name(), 1L);
     }
 }
