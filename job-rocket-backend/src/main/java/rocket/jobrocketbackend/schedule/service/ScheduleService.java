@@ -74,10 +74,9 @@ public class ScheduleService {
         schedule.modify(dto);
     }
 
-    //자정마다
-    @Scheduled(cron="0 05 21 * * *")
+//자정마다
+    @Scheduled(cron="0 00 00 * * *")
     public void checkScheduleDeadlines(){
-        log.info("확인중");
         LocalDate tomorrow = LocalDate.now().plusDays(1);
 
         List<ScheduleEntity> schedules = scheduleRepository.findByStateAndDueDate(ScheduleState.Ongoing, tomorrow);
@@ -87,7 +86,6 @@ public class ScheduleService {
             String message = "'" + schedule.getTitle() + "' 일정이 하루 남았습니다!";
 
             alarmService.sendScheduleAlarm(userId, message, AlarmType.SCHEDULE);
-            log.info("알림 전송: userId={}, message={}", userId, message);
         }
     }
 }

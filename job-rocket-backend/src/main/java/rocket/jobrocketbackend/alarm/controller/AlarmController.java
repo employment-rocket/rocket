@@ -38,7 +38,6 @@ public class AlarmController {
     public SseEmitter subscribe(@RequestParam("token") String token) {
 
         Long userId = jwtUtil.getUserDto(token).getId();
-        log.info("SSE 연결 요청: userId={}", userId);
         return alarmService.subscribe(userId);
     }
 
@@ -54,11 +53,8 @@ public class AlarmController {
     @PostMapping("/subscribe")
     public ResponseEntity<Void> subscribeToPush(@RequestBody CustomSubscription subscription,
                                             @AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        log.info("받은 구독: {}", subscription);
         alarmService.saveSubscription(customOAuth2User.getId(), subscription);
         return ResponseEntity.ok().build();
     }
-
-
 
 }

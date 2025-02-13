@@ -34,7 +34,7 @@ public class AlarmSubscriptionEntity {
         this.subscriptionJson = subscriptionJson;
     }
 
-    // JSON을 nl.martijndwars.webpush.Subscription 객체로 변환
+
     public Subscription getWebPushSubscription() {
         return convertJsonToWebPushSubscription(subscriptionJson);
     }
@@ -47,7 +47,7 @@ public class AlarmSubscriptionEntity {
         }
     }
 
-    // Subscription을 JSON으로 변환하여 저장
+
     public static String convertSubscriptionToJson(Subscription subscription) {
         try {
             return objectMapper.writeValueAsString(subscription);
@@ -56,7 +56,7 @@ public class AlarmSubscriptionEntity {
         }
     }
 
-    // 구독 정보 업데이트
+
     public void updateSubscription(String subscriptionJson) {
         this.subscriptionJson = subscriptionJson;
     }

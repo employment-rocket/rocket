@@ -111,7 +111,6 @@ public class AlarmService {
                 .build();
 
         alarmRepository.save(alarmEntity);
-        log.info("넣은 알람데이터 내용: {} {}", alarmEntity.getContent(), alarmEntity.getUser());
 
         alarmSubscriptionRepository.findByUserId(userId).ifPresent(subscription->
                 pushAlarmService.sendPushNotification(subscription.getWebPushSubscription(), "댓글 알림", message, alarmEntity.getUrl()));
