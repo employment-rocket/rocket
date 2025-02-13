@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/auth/AuthContext";
 import api from "../../api/api";
+import {subscribeToPushNotifications} from "../../api/alarm/AlarmSubscribe.js";
 
 const KakaoLogin = () => {
 	const navigate = useNavigate();
@@ -29,6 +30,7 @@ const KakaoLogin = () => {
 
 				setTimeout(() => {
 					navigate("/career");
+          subscribeToPushNotifications();
 				}, 100);
 			} catch (error) {
 				console.error("Kakao Login Failed:", error);
@@ -37,8 +39,8 @@ const KakaoLogin = () => {
 
 		if (code) {
 			kakaoLogin();
-		} // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [code, navigate]);
+		}
+	}, [code, navigate, login]);
 
 	return (
 		<div className="LoginHandler">

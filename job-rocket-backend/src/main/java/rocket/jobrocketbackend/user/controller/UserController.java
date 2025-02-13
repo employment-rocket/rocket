@@ -63,12 +63,5 @@ public class UserController {
         return ResponseEntity.ok("이메일 유무 정상 등록.");
     }
 
-    @PostMapping("/settings/alarm/{userId}")
-    public ResponseEntity<String> updateAllowAlarm(
-            @PathVariable("userId") Long userId,
-            @RequestBody UserEditReq request) {
-        userService.updateAllowAlarm(userId, request.getAllowAlarm());
-        return ResponseEntity.ok("알람 유무 정상 등록");
-    }
 
 }

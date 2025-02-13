@@ -7,10 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import rocket.jobrocketbackend.alarm.service.AlarmService;
 import rocket.jobrocketbackend.board.free.dto.request.FreeCreateCommentRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeCommentResponse;
 import rocket.jobrocketbackend.board.free.service.FreeCommentService;
+import rocket.jobrocketbackend.common.entity.AlarmType;
 import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
+import rocket.jobrocketbackend.user.entity.UserEntity;
+import rocket.jobrocketbackend.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -26,6 +30,7 @@ public class FreeCommentController {
             ,@Validated @RequestBody FreeCreateCommentRequest request
             , @AuthenticationPrincipal CustomOAuth2User user){
         freeCommentService.create(request,boardId,user.getId());
+        freeCommentService.createCommentAlarm(user.getId(), boardId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -1,8 +1,10 @@
 package rocket.jobrocketbackend.board.free.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.alarm.service.AlarmService;
 import rocket.jobrocketbackend.board.free.dto.request.FreeCreateCommentRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeCommentResponse;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
@@ -12,6 +14,7 @@ import rocket.jobrocketbackend.board.free.exception.BoardNotFoundException;
 import rocket.jobrocketbackend.board.free.exception.NotFoundCommentException;
 import rocket.jobrocketbackend.board.free.repository.FreeBoardRepository;
 import rocket.jobrocketbackend.board.free.repository.FreeCommentRepository;
+import rocket.jobrocketbackend.common.entity.AlarmType;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
@@ -19,6 +22,7 @@ import rocket.jobrocketbackend.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,12 +31,24 @@ public class FreeCommentService {
     private final FreeBoardRepository freeBoardRepository;
     private final FreeCommentRepository freeCommentRepository;
     private final UserRepository userRepository;
+    private final AlarmService alarmService;
 
     public FreeCommentEntity create(final FreeCreateCommentRequest request, final Long boardId, final Long userId){
         UserEntity user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         FreeBoardEntity board = freeBoardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         FreeCommentEntity comment = FreeCommentEntity.create(user, board, request.getContent(), LocalDate.now());
         return freeCommentRepository.save(comment);
+    }
+
+    public void createCommentAlarm(final Long userId,final Long boardId){
+        UserEntity user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        FreeBoardEntity board = freeBoardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        String nickname = user.getNickname();
+        String title = board.getTitle();
+        Long boardWriterId = freeCommentRepository.findBoardWriterByUserIdAndBoardId(userId, boardId);
+        log.info("게시물 작성자 id: {}",boardWriterId);
+        String message = nickname + "님이 \"" + title + "\" 게시물에 댓글을 달았습니다.";
+        alarmService.sendCommentAlarm(boardWriterId, message, AlarmType.COMMENT, boardId);
     }
 
     public void delete(final Long commentId, final Long userId ){

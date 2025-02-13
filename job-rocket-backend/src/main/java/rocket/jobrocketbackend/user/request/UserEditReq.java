@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 public class UserEditReq {
 
     private Boolean allowEmail;
-    private Boolean allowAlarm;
 
 }

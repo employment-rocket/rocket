@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
+import NotificationHandler from "../alarm/NotificationHandler";
 import { useAuth } from "../../context/auth/AuthContext";
 
 const PrivateRoute = () => {
@@ -28,7 +29,9 @@ const PrivateRoute = () => {
     return null;
   }
 
-  return <Outlet />;
+  return <>
+  <NotificationHandler/>
+  <Outlet /></>;
 };
 
 export default PrivateRoute;

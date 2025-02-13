@@ -41,12 +41,10 @@ public class UserEntity {
     private Role role;
 
     @Column(nullable = false)
-    private Boolean allowEmail = false;
+    private Boolean allowEmail=false;
 
     private String refreshToken;
 
-    @Column(nullable = false)
-    private Boolean allowAlarm = false;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConversationEntity> conversations = new ArrayList<>();
@@ -60,23 +58,32 @@ public class UserEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IntroduceEntity> introduces = new ArrayList<>();
 
+    @Builder
+    public UserEntity(Long id, String email, String nickname, String profile, SocialType socialType, Role role, Boolean allowEmail, String refreshToken) {
+        this.id=id;
+        this.email = email;
+        this.nickname = nickname;
+        this.profile = profile;
+        this.socialType=socialType;
+        this.allowEmail=allowEmail;
+        this.role = role;
+        this.refreshToken=refreshToken;
+
+    }
+
     public UserEntity updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }
 
-    public UserEntity updateAllowEmail(Boolean allowEmail) {
-        this.allowEmail = allowEmail;
+    public UserEntity updateAllowEmail(Boolean allowEmail){
+        this.allowEmail=allowEmail;
         return this;
     }
 
-    public UserEntity updateAllowAlarm(Boolean allowAlarm) {
-        this.allowAlarm = allowAlarm;
+    public UserEntity updateProfileImage(String profileImage){
+        this.profile=profileImage;
         return this;
     }
 
-    public UserEntity updateProfileImage(String profileImage) {
-        this.profile = profileImage;
-        return this;
-    }
 }

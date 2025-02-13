@@ -12,9 +12,7 @@ import rocket.jobrocketbackend.user.entity.UserEntity;
 import java.time.LocalDate;
 
 @Entity(name = "alarm")
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class AlarmEntity {
 
@@ -32,5 +30,17 @@ public class AlarmEntity {
 
     @Enumerated(EnumType.STRING)
     private AlarmType type;
+
+    private String url;
+
+    @Builder
+    public AlarmEntity(Long id, String content, LocalDate alarmDate, UserEntity user, AlarmType type, String url){
+        this.id=id;
+        this.content=content;
+        this.alarmDate=alarmDate;
+        this.user=user;
+        this.type=type;
+        this.url=url;
+    }
 
 }

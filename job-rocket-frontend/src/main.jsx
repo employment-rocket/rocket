@@ -28,8 +28,8 @@ import Site from "./pages/Site.jsx";
 import TalentPool from './pages/TalentPool.jsx';
 import CardUserDetail from "./components/talentPool/talentPoolComponents/CardUserDetail.jsx";
 
-const queryClient = new QueryClient();
 
+const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
 	<AuthProvider>
 		<BrowserRouter>

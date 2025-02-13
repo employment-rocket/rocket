@@ -6,8 +6,10 @@ import org.springframework.data.repository.query.Param;
 import rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleRateDto;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
+import rocket.jobrocketbackend.schedule.entity.ScheduleState;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
@@ -21,11 +23,22 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
             "from schedule s where s.user = :user group by s.type")
     List<ScheduleGroupDTO> findByUserAndGroupByType(@Param("user") UserEntity user);
 
+    @Query("select new rocket.jobrocketbackend.schedule.dto.ScheduleGroupDTO(s.state,count(s)) " +
+            "from schedule s where s.user = :user group by s.state")
+    List<ScheduleGroupDTO> findByUserAndGroupByState(@Param("user") UserEntity user);
 
     @Query("select count(s) from schedule s where s.user = :user and" +
             " s.type = rocket.jobrocketbackend.schedule.entity.ScheduleType.DOCUMENT and" +
             " s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.FAIL")
     Long findByUserAndTypeDocumentAndStateFailCount(@Param("user") UserEntity user);
+
+
+    @Query("SELECT s FROM schedule s WHERE s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.ONGOING " +
+            "AND s.dueDate = :dueDate")
+    List<ScheduleEntity> findByStateAndDueDate(@Param("state") ScheduleState ongoing, @Param("dueDate") LocalDate dueDate);
+
+
+    UserEntity user(UserEntity user);
 
     @Query(nativeQuery = true, name = "Schedule.findScheduleRateByMemberId")
     ScheduleRateDto findScheduleRateByMemberId(@Param("userId") Long userId);
