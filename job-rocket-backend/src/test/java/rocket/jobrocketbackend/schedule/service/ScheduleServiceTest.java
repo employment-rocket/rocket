@@ -91,7 +91,8 @@ class ScheduleServiceTest {
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder()
                 .title("제목")
                 .memo("내용")
-                .state("Ongoing")
+                .state("진행중")
+                .type("서류전형")
                 .dueDate(LocalDate.of(2024, 03, 21))
                 .build();
         //when

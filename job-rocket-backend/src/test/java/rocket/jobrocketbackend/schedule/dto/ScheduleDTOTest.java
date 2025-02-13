@@ -20,7 +20,8 @@ class ScheduleDTOTest {
         //given
         ScheduleCreateDTO dto = ScheduleCreateDTO.builder().memo("메모입니다")
                 .title("제목입니다")
-                .state("Ongoing")
+                .state("진행중")
+                .type("서류전형")
                 .dueDate(LocalDate.of(2024, 12, 23))
                 .build();
         //when

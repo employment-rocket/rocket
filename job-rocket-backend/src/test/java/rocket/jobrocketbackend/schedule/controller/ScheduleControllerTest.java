@@ -57,7 +57,7 @@ class ScheduleControllerTest {
     void scheduleTypeModify() throws Exception {
         //given
         LocalDate date = LocalDate.of(2024, 12, 23);
-        ScheduleModifyTypeRequest request = ScheduleModifyTypeRequest.builder().scheduleId(1L).type("First").build();
+        ScheduleModifyTypeRequest request = ScheduleModifyTypeRequest.builder().scheduleId(1L).type("1차면접").build();
         ScheduleDTO result = ScheduleDTO.builder()
                 .id(1L)
                 .type(ScheduleType.FIRST)
@@ -91,7 +91,8 @@ class ScheduleControllerTest {
                 .title("제목")
                 .memo("메모")
                 .dueDate(date)
-                .state("Ongoing")
+                .state("진행중")
+                .type("서류전형")
                 .build();
         ScheduleDTO result = ScheduleDTO.builder()
                 .id(1L)

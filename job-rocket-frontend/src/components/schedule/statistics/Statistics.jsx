@@ -37,14 +37,15 @@ const Statistics = () => {
 	});
 
 	useEffect(() => {
+		console.log(data);
 		if (data) {
-			setDocument(data.Document || 0);
-			setFirst(data.First || 0);
-			setSecond(data.Second || 0);
-			setFinal(data.Final || 0);
-			setOngoing(data.Ongoing || 0);
-			setFail(data.Fail || 0);
-			setPassed(data.Passed || 0);
+			setDocument(data.DOCUMENT || 0);
+			setFirst(data.FIRST || 0);
+			setSecond(data.SECOND || 0);
+			setFinal(data.FINAL || 0);
+			setOngoing(data.ONGOING || 0);
+			setFail(data.FAIL || 0);
+			setPassed(data.PASSED || 0);
 			setDocumentFail(data.DocumentFail || 0);
 		}
 	}, [data]);
