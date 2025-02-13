@@ -7,7 +7,6 @@ export const api = axios.create({
 	},
 });
 
-// 요청 인터셉터
 api.interceptors.request.use(
 	(config) => {
 		const accessToken = localStorage.getItem("AccessToken");
@@ -21,13 +20,10 @@ api.interceptors.request.use(
 	}
 );
 
-// 응답 인터셉터
 api.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
-
-		// AccessToken이 만료된 경우 (401 Unauthorized)
 		if (
 			error.response &&
 			error.response.status === 401 &&
@@ -39,8 +35,7 @@ api.interceptors.response.use(
 			if (refreshToken) {
 				try {
 					const response = await axios.post(
-						`${
-							import.meta.env.VITE_API_BASE_URL
+						`${import.meta.env.VITE_API_BASE_URL
 						}/login/auth/refresh`,
 						null,
 						{

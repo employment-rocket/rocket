@@ -19,8 +19,7 @@ import java.util.Map;
 @RequestMapping("/user")
 @Slf4j
 public class AlarmController {
-
-
+    
     private final AlarmService alarmService;
 
     @GetMapping("/alarm")
