@@ -4,21 +4,21 @@
 
 @font-face {
 	font-family: "CookieBlack"; /* 원하는 이름 */
-	src: url("./assets/fonts/CookieRunBlack.otf") format("opentype");
+	src: url("./assets/fonts/NotoSansKR-Black.ttf") format("opentype");
 	font-weight: normal;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "CookieBold"; /* 원하는 이름 */
-	src: url("./assets/fonts/CookieRunBold.otf") format("opentype");
+	src: url("./assets/fonts/NotoSansKR-Bold.ttf") format("opentype");
 	font-weight: normal;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: "CookieRegular"; /* 원하는 이름 */
-	src: url("./assets/fonts/CookieRunRegular.otf") format("opentype");
+	src: url("./assets/fonts/NotoSansKR-Medium.ttf") format("opentype");
 	font-weight: normal;
 	font-style: normal;
 }
