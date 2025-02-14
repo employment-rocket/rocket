@@ -15,7 +15,6 @@ const MainBoard = () => {
 		<div
 			className="flex flex-col bg-slate-300 border justify-center"
 			style={{
-				fontFamily: "CookieRegular",
 				height: `calc(100dvh - ${headerHeight}px)`,
 			}}
 		>

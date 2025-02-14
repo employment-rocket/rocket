@@ -38,9 +38,8 @@ const Statistics = () => {
 		queryKey: ["statistics"],
 		queryFn: getStatisticsSchedule,
 	});
-	console.log(data);
+
 	useEffect(() => {
-		console.log(data);
 		if (data) {
 			setDocument(data.DOCUMENT || 0);
 			setFirst(data.FIRST || 0);

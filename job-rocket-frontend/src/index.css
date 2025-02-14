@@ -1,24 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-	font-family: "CookieBlack"; /* 원하는 이름 */
-	src: url("./assets/fonts/CookieRunBlack.otf") format("opentype");
-	font-weight: normal;
+.noto-sans-kr-bold {
+	font-family: "Noto Sans KR", serif;
+	font-optical-sizing: auto;
+	font-weight: 900;
 	font-style: normal;
 }
 
-@font-face {
-	font-family: "CookieBold"; /* 원하는 이름 */
-	src: url("./assets/fonts/CookieRunBold.otf") format("opentype");
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: "CookieRegular"; /* 원하는 이름 */
-	src: url("./assets/fonts/CookieRunRegular.otf") format("opentype");
-	font-weight: normal;
+.noto-sans-kr-regular {
+	font-family: "Noto Sans KR", serif;
+	font-optical-sizing: auto;
+	font-weight: 500;
 	font-style: normal;
 }

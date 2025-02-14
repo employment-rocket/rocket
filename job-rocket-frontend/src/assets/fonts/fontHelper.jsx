@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
-import CookieRunBold from "./CookieRunBoldBase64";
+import NotoSansKorean from "./NotoSansKoreanBase64";
 
 export const addFontToPdf = (pdf) => {
-    pdf.addFileToVFS("CookieRunBold.ttf", CookieRunBold);
-    pdf.addFont("CookieRunBold.ttf", "CookieRunBold", "normal");
+	pdf.addFileToVFS("NotoSansKR-Black-normal.ttf", NotoSansKorean);
+	pdf.addFont("NotoSansKR-Black-normal.ttf", "NotoSansKR-Black", "normal");
 };
