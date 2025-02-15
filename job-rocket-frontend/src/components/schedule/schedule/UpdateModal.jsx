@@ -48,10 +48,7 @@ const UpdateModal = ({ isOpen, onCancel, data }) => {
 	};
 
 	return (
-		<div
-			className="fixed inset-0 flex items-center justify-center z-50"
-			style={{ fontFamily: "CookieBold" }}
-		>
+		<div className="fixed inset-0 flex items-center justify-center z-50 noto-sans-kr-bold">
 			<div className="bg-white p-6 rounded-lg border-2 border-blue-300 shadow-lg w-[600px] space-y-3">
 				<div className="flex justify-between items-center">
 					<div>제목</div>
@@ -65,8 +62,7 @@ const UpdateModal = ({ isOpen, onCancel, data }) => {
 
 				<input
 					type="text"
-					className="border border-blue-300 rounded-lg w-full p-1"
-					style={{ fontFamily: "CookieRegular" }}
+					className="border border-blue-300 rounded-lg w-full p-1 noto-sans-kr-regular"
 					placeholder="제목을 입력하세요"
 					value={title}
 					onChange={(e) => setTitle(e.target.value)}
@@ -78,8 +74,7 @@ const UpdateModal = ({ isOpen, onCancel, data }) => {
 				<div>마감일</div>
 				<input
 					type="date"
-					className="border border-blue-300 rounded-lg w-full p-1"
-					style={{ fontFamily: "CookieRegular" }}
+					className="border border-blue-300 rounded-lg w-full p-1 noto-sans-kr-regular"
 					value={date}
 					onChange={(e) => setDate(e.target.value)}
 				/>
@@ -90,8 +85,7 @@ const UpdateModal = ({ isOpen, onCancel, data }) => {
 
 				<div>메모</div>
 				<textarea
-					className="border border-blue-300 rounded-lg w-full p-1"
-					style={{ fontFamily: "CookieRegular" }}
+					className="border border-blue-300 rounded-lg w-full p-1 noto-sans-kr-regular"
 					placeholder="메모를 입력하세요"
 					rows={10}
 					value={memo}

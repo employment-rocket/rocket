@@ -11,9 +11,8 @@ const Schedule = () => {
 
 	return (
 		<div
-			className="flex flex-col w-full h-screen"
+			className="flex flex-col w-full h-screen noto-sans-kr-bold"
 			style={{
-				fontFamily: "CookieBold",
 				height: `calc(100dvh - ${headerHeight}px)`,
 			}}
 		>

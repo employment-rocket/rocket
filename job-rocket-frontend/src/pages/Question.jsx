@@ -24,13 +24,15 @@ const Question = () => {
 			try {
 				setLoading(true);
 				const data = await getCheckedAnswers();
-				setCheckedQuestions(data || {
-					csAnswerList: [],
-					personalAnswerList: [],
-					companyAnswerList: [],
-					introduceAnswerList: [],
-					reviewAnswerList: [],
-				});
+				setCheckedQuestions(
+					data || {
+						csAnswerList: [],
+						personalAnswerList: [],
+						companyAnswerList: [],
+						introduceAnswerList: [],
+						reviewAnswerList: [],
+					}
+				);
 			} catch (err) {
 				setError("질문을 불러오는 중 문제가 발생했습니다.");
 			} finally {
@@ -42,7 +44,7 @@ const Question = () => {
 	}, []);
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex flex-col w-full h-full noto-sans-kr-bold ">
 			<CategoryTabs category={category} setCategory={setCategory} />
 
 			<div className="flex w-full h-full mt-4 px-6 space-x-4">

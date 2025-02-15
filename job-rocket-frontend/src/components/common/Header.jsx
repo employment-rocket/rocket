@@ -94,9 +94,8 @@ const Header = () => {
 
 	return (
 		<div
-			className="flex items-center w-full top-0 h-[60px] px-6 border-b border-gray-300"
+			className="flex items-center w-full top-0 h-[60px] px-6 border-b border-gray-300 noto-sans-kr-bold"
 			id="header"
-			style={{ fontFamily: "CookieBold" }}
 			ref={headerRef}
 		>
 			<div

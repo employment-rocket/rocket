@@ -29,8 +29,7 @@ const KebabMenu = ({
 	return (
 		<>
 			<div
-				className="absolute top-0 right-0 flex  min-w-max bg-white rounded-xl shadow-lg"
-				style={{ fontFamily: "CookieRegular" }}
+				className="absolute top-0 right-0 flex  min-w-max bg-white rounded-xl shadow-lg noto-sans-kr-regular"
 				ref={menuRef}
 			>
 				<div
