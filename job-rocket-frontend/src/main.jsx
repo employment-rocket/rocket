@@ -25,9 +25,9 @@ import Question from "./pages/Question.jsx";
 import Retrospect from "./pages/Retrospect";
 import Schedule from "./pages/Schedule.jsx";
 import Site from "./pages/Site.jsx";
-import TalentPool from './pages/TalentPool.jsx';
+import TalentPool from "./pages/TalentPool.jsx";
 import CardUserDetail from "./components/talentPool/talentPoolComponents/CardUserDetail.jsx";
-
+import HistoryMain from "./components/schedule/history/HistoryMain.jsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
@@ -36,17 +36,35 @@ createRoot(document.getElementById("root")).render(
 			<QueryClientProvider client={queryClient}>
 				<Header />
 				<Routes>
-					<Route path="/login/oauth2/callback/kakao" element={<KakaoLogin />} />
-					<Route path="/login/oauth2/code/naver" element={<NaverLogin />} />
-					<Route path="/" element={<Navigate to="/board" replace />} />
+					<Route
+						path="/login/oauth2/callback/kakao"
+						element={<KakaoLogin />}
+					/>
+					<Route
+						path="/login/oauth2/code/naver"
+						element={<NaverLogin />}
+					/>
+					<Route
+						path="/"
+						element={<Navigate to="/board" replace />}
+					/>
 					<Route path="/board" element={<Board />}>
 						<Route index element={<MainBoard />} />
 						<Route path="notice" element={<Notice />} />
 						<Route path="free" element={<Free />} />
-						<Route path="free/:boardId" element={<FreeBoardView />} />
+						<Route
+							path="free/:boardId"
+							element={<FreeBoardView />}
+						/>
 						<Route element={<PrivateRoute />}>
-							<Route path="free/form" element={<FreeBoardForm />} />
-							<Route path="free/form/:boardId" element={<FreeBoardUpdate />} />
+							<Route
+								path="free/form"
+								element={<FreeBoardForm />}
+							/>
+							<Route
+								path="free/form/:boardId"
+								element={<FreeBoardUpdate />}
+							/>
 						</Route>
 						<Route path="qa" element={<Qa />} />
 						<Route path="review" element={<Review />} />
@@ -54,6 +72,7 @@ createRoot(document.getElementById("root")).render(
 					<Route element={<PrivateRoute />}>
 						<Route path="/schedule" element={<Schedule />}>
 							<Route index element={<ScheduleMain />} />
+							<Route path="history" element={<HistoryMain />} />
 							<Route path="statistics" element={<Statistics />} />
 						</Route>
 						<Route path="/retrospect" element={<Retrospect />} />
@@ -61,7 +80,10 @@ createRoot(document.getElementById("root")).render(
 						<Route path="/profile" element={<Profile />} />
 						<Route path="/career" element={<Career />} />
 						<Route path="/talent" element={<TalentPool />} />
-						<Route path="/card/:memberId" element={<CardUserDetail />} />
+						<Route
+							path="/card/:memberId"
+							element={<CardUserDetail />}
+						/>
 					</Route>
 					<Route path="/site" element={<Site />} />
 				</Routes>

@@ -1,20 +1,19 @@
-import { React, useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import addIcon from "../../../assets/icon-add.png";
+import { React, useState, useEffect } from "react";
 import {
 	deleteScheduleItem,
 	getSchedules,
 	modifyScheduleItem,
 } from "../../../api/schedule/schedule";
-import ScheduleItem from "./ScheduleItem";
-import CreateModal from "./CreateModal";
-import { TYPE_MAP } from "./const";
+import CreateModal from "../schedule/CreateModal";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import ScheduleItem from "../schedule/ScheduleItem";
+import addIcon from "../../../assets/icon-add.png";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { TYPE_MAP } from "../schedule/const";
 
-const typeList = Object.keys(TYPE_MAP);
-
-export default function ScheduleMain() {
+const HistoryMain = () => {
 	const queryClient = useQueryClient();
+
 	const { data, isLoading } = useQuery({
 		queryKey: ["schedule"],
 		queryFn: getSchedules,
@@ -26,7 +25,7 @@ export default function ScheduleMain() {
 	const [firstItems, setFirstItems] = useState([]);
 	const [secondItems, setSecondItems] = useState([]);
 	const [finalItems, setFinalItems] = useState([]);
-
+	const typeList = Object.keys(TYPE_MAP);
 	useEffect(() => {
 		if (!isLoading && data) {
 			setDocumentItems(data.DOCUMENT || []);
@@ -132,7 +131,9 @@ export default function ScheduleMain() {
 			/>
 		</>
 	);
-}
+};
+
+export default HistoryMain;
 
 function DroppableArea({ droppableId, items, handleDelete, handleCreate }) {
 	return (
@@ -143,12 +144,7 @@ function DroppableArea({ droppableId, items, handleDelete, handleCreate }) {
 					<div>{droppableId}</div>
 				</div>
 
-				<img
-					src={addIcon}
-					alt="추가 버튼"
-					className="w-[20px] h-[20px] self-center cursor-pointer"
-					onClick={() => handleCreate({ type: droppableId })}
-				/>
+				<div className="w-[20px] h-[20px]"></div>
 			</div>
 
 			<Droppable droppableId={droppableId}>
