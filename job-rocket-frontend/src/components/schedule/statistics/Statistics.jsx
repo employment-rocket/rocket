@@ -1,19 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-	Chart as ChartJS,
-	ArcElement,
-	Tooltip,
-	Legend,
-	LinearScale,
-	CategoryScale,
-	BarElement,
-} from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
 import { useQuery } from "@tanstack/react-query";
 import {
-	getStatisticsSchedule,
-	getStatisticsScheduleRate,
-} from "../../../api/schedule/schedule";
+	ArcElement,
+	BarElement,
+	CategoryScale,
+	Chart as ChartJS,
+	Legend,
+	LinearScale,
+	Tooltip,
+} from "chart.js";
+import React, { useEffect, useMemo, useState } from "react";
+import { Bar, Pie } from "react-chartjs-2";
+import { getStatisticsSchedule } from "../../../api/schedule/schedule";
 
 ChartJS.register(
 	ArcElement,

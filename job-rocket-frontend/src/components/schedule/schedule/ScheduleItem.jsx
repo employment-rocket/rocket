@@ -40,7 +40,7 @@ const ScheduleItem = ({ item, droppableId, handleDelete }) => {
 					style={{ fontSize: "0.8rem" }}
 				>
 					<div>{item.state}</div>
-					<div className="text-red-500">{dDay}</div>
+					<div>{dDay}</div>
 				</div>
 			</div>
 			<UpdateModal
