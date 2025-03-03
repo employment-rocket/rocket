@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.alarm.service.AlarmService;
 import rocket.jobrocketbackend.common.entity.AlarmType;
-import rocket.jobrocketbackend.oauth.dto.CustomOAuth2User;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleModifyDTO;
@@ -52,7 +50,22 @@ public class ScheduleService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
 
-        Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUser(user)
+        Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUserAndState(user, ScheduleState.ONGOING)
+                .stream().map(ScheduleDTO::from)
+                .collect(Collectors.groupingBy(dto -> dto.getType().name()));
+
+        for (ScheduleType type : ScheduleType.values()) {
+            String key = type.name();
+            result.putIfAbsent(key, new ArrayList<>());
+        }
+        return result;
+    }
+
+    public Map<String, List<ScheduleDTO>> getScheduleHistoryList(final Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("사용자 정보 없음"));
+
+        Map<String, List<ScheduleDTO>> result = scheduleRepository.findByUserAndStateNot(user, ScheduleState.ONGOING)
                 .stream().map(ScheduleDTO::from)
                 .collect(Collectors.groupingBy(dto -> dto.getType().name()));
 

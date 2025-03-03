@@ -3,11 +3,14 @@ import menu from "../../../assets/menu.png";
 import KebabMenu from "./KebabMenu";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "./DeleteModal";
+import { getDDayCalc } from "./const";
 
 const ScheduleItem = ({ item, droppableId, handleDelete }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
 	const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+	const dDay = getDDayCalc(item.dueDate);
+
 	return (
 		<>
 			<div className="flex flex-col w-full py-2 space-y-3">
@@ -37,7 +40,7 @@ const ScheduleItem = ({ item, droppableId, handleDelete }) => {
 					style={{ fontSize: "0.8rem" }}
 				>
 					<div>{item.state}</div>
-					<div>~{item.dueDate}</div>
+					<div>{dDay}</div>
 				</div>
 			</div>
 			<UpdateModal

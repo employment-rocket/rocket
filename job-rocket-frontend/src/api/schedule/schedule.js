@@ -9,6 +9,15 @@ const getSchedules = async () => {
 		throw error;
 	}
 };
+const getScheduleHistory = async () => {
+	try {
+		const response = await api.get("/schedules/history");
+		return response.data;
+	} catch (error) {
+		console.error("/schedules api get error", error);
+		throw error;
+	}
+};
 const getCalendarSchedule = async () => {
 	try {
 		const response = await api.get("/schedules/calendars");
@@ -21,15 +30,7 @@ const getCalendarSchedule = async () => {
 const getStatisticsSchedule = async () => {
 	try {
 		const response = await api.get("/schedules/statictics");
-		return response.data;
-	} catch (error) {
-		console.error("/schedules/statictics api get error", error);
-		throw error;
-	}
-};
-const getStatisticsScheduleRate = async () => {
-	try {
-		const response = await api.get("/schedules/statictics/pass-rate");
+		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("/schedules/statictics api get error", error);
@@ -102,12 +103,12 @@ const updateScheduleItem = async ({ id, title, memo, dueDate, state }) => {
 	}
 };
 export {
-	getSchedules,
 	createScheduleItem,
-	modifyScheduleItem,
 	deleteScheduleItem,
-	updateScheduleItem,
 	getCalendarSchedule,
+	getSchedules,
+	getScheduleHistory,
 	getStatisticsSchedule,
-	getStatisticsScheduleRate,
+	modifyScheduleItem,
+	updateScheduleItem,
 };

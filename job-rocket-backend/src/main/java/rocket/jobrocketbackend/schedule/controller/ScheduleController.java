@@ -43,6 +43,21 @@ public class ScheduleController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<Map<String, List<ScheduleResponse>>> scheduleHistoryList(@AuthenticationPrincipal CustomOAuth2User user) {
+        HashMap<String, List<ScheduleResponse>> response = new HashMap<>();
+        Map<String, List<ScheduleDTO>> map = scheduleService.getScheduleHistoryList(user.getId());
+
+        for (String key : map.keySet()) {
+            response.put(key, map.get(key).stream()
+                    .map(ScheduleResponse::from)
+                    .sorted(Comparator.comparing(ScheduleResponse::getDueDate))
+                    .toList());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping("/with-questions")
     public ResponseEntity<List<ScheduleResponse>> scheduleListWithQuestions(@AuthenticationPrincipal CustomOAuth2User user) {
         List<ScheduleResponse> response = scheduleService.getScheduleListWithQuestions(user.getId()).stream()
