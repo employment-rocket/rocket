@@ -6,16 +6,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.alarm.service.PushAlarmService;
 import rocket.jobrocketbackend.board.free.dto.request.FreeCreateCommentRequest;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
+import rocket.jobrocketbackend.board.free.entity.FreeCommentCountEntity;
 import rocket.jobrocketbackend.board.free.entity.FreeCommentEntity;
 import rocket.jobrocketbackend.board.free.exception.AccessDeniedException;
 import rocket.jobrocketbackend.board.free.repository.FreeBoardRepository;
+import rocket.jobrocketbackend.board.free.repository.FreeCommentCountRepository;
 import rocket.jobrocketbackend.board.free.repository.FreeCommentRepository;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.repository.UserRepository;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,12 +43,15 @@ class FreeCommentServiceTest {
     @Autowired
     private FreeCommentRepository freeCommentRepository;
 
+    @MockitoBean
+    private PushAlarmService pushAlarmService;
+
     private Long userId;
     private Long boardId;
 
     @BeforeEach
     void init(){
-        UserEntity user = UserEntity.builder().nickname("닉네임").email("test@naver.com").role(Role.MEMBER).allowEmail(false).allowAlarm(false).build();
+        UserEntity user = UserEntity.builder().nickname("닉네임").email("test@naver.com").role(Role.MEMBER).allowEmail(false).build();
         userRepository.save(user);
         FreeBoardEntity board = FreeBoardEntity.builder().build();
         freeBoardRepository.save(board);

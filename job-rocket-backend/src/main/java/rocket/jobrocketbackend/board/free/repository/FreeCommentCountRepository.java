@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import rocket.jobrocketbackend.board.free.entity.FreeCommentCountEntity;
 
+import java.util.Optional;
 public interface FreeCommentCountRepository extends JpaRepository<FreeCommentCountEntity, Long> {
 
     @Query(value = "update free_comment_count set count = count + 1 where free_board_id = :boardId",
@@ -19,5 +21,7 @@ public interface FreeCommentCountRepository extends JpaRepository<FreeCommentCou
             nativeQuery = true)
     @Modifying
     void decrease(@Param("boardId") Long boardId);
+
+    Optional<FreeCommentCountEntity> findFreeCommentCountByBoardId(Long boardId);
 
 }

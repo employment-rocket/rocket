@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.alarm.service.PushAlarmService;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardUpdateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
@@ -35,12 +37,14 @@ class FreeBoardServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+    @MockitoBean
+    private PushAlarmService pushAlarmService;
 
     private Long userId;
 
     @BeforeEach
     void init(){
-        UserEntity user = UserEntity.builder().nickname("닉네임").email("test@naver.com").role(Role.MEMBER).allowEmail(false).allowAlarm(false).build();
+        UserEntity user = UserEntity.builder().nickname("닉네임").email("testFreeBoard@naver.com").role(Role.MEMBER).allowEmail(false).build();
         userRepository.save(user);
         userId = user.getId();
     }
@@ -52,7 +56,7 @@ class FreeBoardServiceTest {
         LocalDate today = LocalDate.now();
         FreeBoardCreateRequest request = FreeBoardCreateRequest.builder().title("제목").content("내용").build();
         //when
-        FreeBoardResponse result = freeBoardService.create(request, "test@naver.com", today);
+        FreeBoardResponse result = freeBoardService.create(request, "testFreeBoard@naver.com", today);
         //then
         assertThat(result.getContent()).isEqualTo("내용");
         assertThat(result.getTitle()).isEqualTo("제목");

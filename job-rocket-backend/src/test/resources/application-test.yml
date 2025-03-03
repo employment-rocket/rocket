@@ -12,7 +12,6 @@ spring:
     secret: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
     expiration: 3600000
 
-
   security:
     oauth2:
       client:

@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.alarm.service.PushAlarmService;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.schedule.dto.ScheduleCreateDTO;
 import rocket.jobrocketbackend.schedule.dto.ScheduleDTO;
@@ -40,12 +42,14 @@ class ScheduleServiceTest {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private ScheduleService scheduleService;
+    @MockitoBean
+    private PushAlarmService pushAlarmService;
 
     private Long testUserId;
 
     @BeforeEach
     void init() {
-        UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).allowAlarm(false).build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").role(Role.MEMBER).nickname("test").allowEmail(false).build();
         userRepository.save(user);
         LocalDate date = LocalDate.of(2024, 12, 23);
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();
@@ -191,7 +195,7 @@ class ScheduleServiceTest {
     }
 
     private UserEntity createUser() {
-        UserEntity user = UserEntity.builder().nickname("test").allowAlarm(false).allowEmail(false).build();
+        UserEntity user = UserEntity.builder().nickname("test").allowEmail(false).build();
         userRepository.save(user);
         return user;
     }

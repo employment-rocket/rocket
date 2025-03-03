@@ -1,15 +1,13 @@
 package rocket.jobrocketbackend.board.free.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "free_comment_count")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@Getter
 public class FreeCommentCountEntity {
     //TODO free_board_id 인덱스 만들기
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

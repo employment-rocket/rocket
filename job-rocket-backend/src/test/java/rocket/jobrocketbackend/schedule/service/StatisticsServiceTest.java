@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
+import rocket.jobrocketbackend.alarm.service.PushAlarmService;
 import rocket.jobrocketbackend.common.entity.Role;
 import rocket.jobrocketbackend.schedule.entity.ScheduleEntity;
 import rocket.jobrocketbackend.schedule.entity.ScheduleState;
@@ -33,13 +35,14 @@ class StatisticsServiceTest {
 
     @Autowired
     private StatisticsService statisticsService;
-
+    @MockitoBean
+    private PushAlarmService pushAlarmService;
     private Long userId;
 
     @BeforeEach
     void init() {
         LocalDate date = LocalDate.of(2024, 12, 23);
-        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).allowAlarm(false).role(Role.MEMBER).nickname("test").build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).nickname("test").build();
         userRepository.save(user);
         userId = user.getId();
         ScheduleEntity entity1 = ScheduleEntity.builder().title("제목1").memo("메모1").dueDate(date).state(ScheduleState.ONGOING).type(ScheduleType.DOCUMENT).user(user).build();

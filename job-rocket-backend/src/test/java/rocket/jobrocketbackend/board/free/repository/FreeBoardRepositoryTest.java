@@ -29,7 +29,7 @@ public class FreeBoardRepositoryTest {
 
     @BeforeEach
     void init(){
-        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).allowAlarm(false).role(Role.MEMBER).build();
+        UserEntity user = UserEntity.builder().email("test@naver.com").allowEmail(false).role(Role.MEMBER).build();
         userRepository.save(user);
     }
 
