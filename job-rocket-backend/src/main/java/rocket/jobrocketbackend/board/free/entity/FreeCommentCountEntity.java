@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class FreeCommentCountEntity {
-
+    //TODO free_board_id 인덱스 만들기
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

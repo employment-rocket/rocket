@@ -13,6 +13,7 @@ import rocket.jobrocketbackend.board.free.exception.AccessDeniedException;
 import rocket.jobrocketbackend.board.free.exception.BoardNotFoundException;
 import rocket.jobrocketbackend.board.free.exception.NotFoundCommentException;
 import rocket.jobrocketbackend.board.free.repository.FreeBoardRepository;
+import rocket.jobrocketbackend.board.free.repository.FreeCommentCountRepository;
 import rocket.jobrocketbackend.board.free.repository.FreeCommentRepository;
 import rocket.jobrocketbackend.common.entity.AlarmType;
 import rocket.jobrocketbackend.user.entity.UserEntity;
@@ -32,11 +33,13 @@ public class FreeCommentService {
     private final FreeCommentRepository freeCommentRepository;
     private final UserRepository userRepository;
     private final AlarmService alarmService;
+    private final FreeCommentCountRepository freeCommentCountRepository;
 
     public FreeCommentEntity create(final FreeCreateCommentRequest request, final Long boardId, final Long userId){
         UserEntity user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         FreeBoardEntity board = freeBoardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         FreeCommentEntity comment = FreeCommentEntity.create(user, board, request.getContent(), LocalDate.now());
+        freeCommentCountRepository.increase(boardId);
         return freeCommentRepository.save(comment);
     }
 
@@ -53,10 +56,12 @@ public class FreeCommentService {
 
     public void delete(final Long commentId, final Long userId ){
         FreeCommentEntity comment = freeCommentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Long boardId = comment.getBoard().getId();
         if(isNotAuthor(userId, comment)){
             throw new AccessDeniedException("본인 댓글만 삭제할 수 있습니다.");
         }
         freeCommentRepository.delete(comment);
+        freeCommentCountRepository.decrease(boardId);
     }
 
     @Transactional(readOnly = true)
