@@ -9,6 +9,15 @@ const getSchedules = async () => {
 		throw error;
 	}
 };
+const getScheduleHistory = async () => {
+	try {
+		const response = await api.get("/schedules/history");
+		return response.data;
+	} catch (error) {
+		console.error("/schedules api get error", error);
+		throw error;
+	}
+};
 const getCalendarSchedule = async () => {
 	try {
 		const response = await api.get("/schedules/calendars");
@@ -98,6 +107,7 @@ export {
 	deleteScheduleItem,
 	getCalendarSchedule,
 	getSchedules,
+	getScheduleHistory,
 	getStatisticsSchedule,
 	modifyScheduleItem,
 	updateScheduleItem,

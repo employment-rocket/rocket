@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import {
 	deleteScheduleItem,
+	getScheduleHistory,
 	getSchedules,
 	modifyScheduleItem,
 } from "../../../api/schedule/schedule";
@@ -16,7 +17,7 @@ const HistoryMain = () => {
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["schedule"],
-		queryFn: getSchedules,
+		queryFn: getScheduleHistory,
 	});
 
 	const [isModalOpen, setModalOpen] = useState(false);

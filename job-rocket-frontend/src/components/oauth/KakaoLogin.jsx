@@ -14,7 +14,6 @@ const KakaoLogin = () => {
 	useEffect(() => {
 		const kakaoLogin = async () => {
 			try {
-				console.log("1123123");
 				const response = await api.get("/login/oauth2/kakao", {
 					params: { code },
 					withCredentials: true,
