@@ -13,7 +13,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
+
     List<ScheduleEntity> findByUser(UserEntity user);
+
+    List<ScheduleEntity> findByUserAndState(UserEntity user, ScheduleState state);
+
+    List<ScheduleEntity> findByUserAndStateNot(UserEntity user, ScheduleState state);
 
     @Query("SELECT s FROM schedule s WHERE s.user = :user " +
             "and s.state = rocket.jobrocketbackend.schedule.entity.ScheduleState.ONGOING")

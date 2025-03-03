@@ -7,7 +7,10 @@ const Schedule = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const headerHeight = useHeaderHeightStore((state) => state.headerHeight);
-	const isActive = location.pathname === "/schedule";
+
+	const isHistoryActive = location.pathname === "/schedule/history";
+	const isScheduleActive = location.pathname === "/schedule";
+	const isStatisticsActive = location.pathname === "/schedule/statistics";
 
 	return (
 		<div
@@ -21,7 +24,18 @@ const Schedule = () => {
 					<div className="flex w-full items-center justify-around p-3">
 						<div
 							className={`w-full text-xl cursor-pointer text-center ${
-								isActive ? "text-black" : "text-gray-300"
+								isHistoryActive ? "text-black" : "text-gray-300"
+							}`}
+							onClick={() => navigate("/schedule/history")}
+						>
+							히스토리
+						</div>
+						<div className="w-1 h-full bg-gray-300"></div>
+						<div
+							className={`w-full text-xl cursor-pointer text-center ${
+								isScheduleActive
+									? "text-black"
+									: "text-gray-300"
 							}`}
 							onClick={() => navigate("/schedule")}
 						>
@@ -30,10 +44,11 @@ const Schedule = () => {
 						<div className="w-1 h-full bg-gray-300"></div>
 						<div
 							className={`w-full text-xl cursor-pointer text-center ${
-								isActive ? "text-gray-300" : "text-black"
+								isStatisticsActive
+									? "text-black"
+									: "text-gray-300"
 							}`}
 							onClick={() => navigate("/schedule/statistics")}
-							style={{ text: `${isActive} ? gray : blue` }}
 						>
 							내 통계
 						</div>
