@@ -7,9 +7,11 @@ import rocket.jobrocketbackend.board.free.dto.request.FreeBoardCreateRequest;
 import rocket.jobrocketbackend.board.free.dto.request.FreeBoardUpdateRequest;
 import rocket.jobrocketbackend.board.free.dto.response.FreeBoardResponse;
 import rocket.jobrocketbackend.board.free.entity.FreeBoardEntity;
+import rocket.jobrocketbackend.board.free.entity.FreeCommentCountEntity;
 import rocket.jobrocketbackend.board.free.exception.AccessDeniedException;
 import rocket.jobrocketbackend.board.free.exception.BoardNotFoundException;
 import rocket.jobrocketbackend.board.free.repository.FreeBoardRepository;
+import rocket.jobrocketbackend.board.free.repository.FreeCommentCountRepository;
 import rocket.jobrocketbackend.user.entity.UserEntity;
 import rocket.jobrocketbackend.user.exception.UserNotFoundException;
 import rocket.jobrocketbackend.user.repository.UserRepository;
@@ -24,10 +26,12 @@ public class FreeBoardService {
 
     private final FreeBoardRepository freeBoardRepository;
     private final UserRepository userRepository;
+    private final FreeCommentCountRepository freeCommentCountRepository;
 
     public FreeBoardResponse create(final FreeBoardCreateRequest request, final String email,final LocalDate today) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저입니다."));
         FreeBoardEntity board = freeBoardRepository.save(request.toEntity(today, user));
+        freeCommentCountRepository.save(FreeCommentCountEntity.create(board));
         return FreeBoardResponse.from(board);
     }
 

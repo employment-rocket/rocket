@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "free_comment_count")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
@@ -20,4 +20,9 @@ public class FreeCommentCountEntity {
     FreeBoardEntity board;
 
     private Long count;
+
+    public static FreeCommentCountEntity create(FreeBoardEntity board) {
+        return FreeCommentCountEntity.builder().board(board)
+                .count(0L).build();
+    }
 }
