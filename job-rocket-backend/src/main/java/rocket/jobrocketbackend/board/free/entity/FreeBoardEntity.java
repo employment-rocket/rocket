@@ -31,6 +31,9 @@ public class FreeBoardEntity {
     @JoinColumn(name = "member_id")
     private UserEntity user;
 
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FreeCommentCountEntity commentCount;
+
     public void update(String title, String content){
         this.title = title;
         this.content = content;
