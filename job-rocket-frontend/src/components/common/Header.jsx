@@ -25,6 +25,8 @@ const Header = () => {
 	const [isAlarmOpen, setAlarmOpen] = useState(false);
 	const [isChatOpen, setChatOpen] = useState(false);
 	const headerRef = useRef(null);
+	const [hasNewAlarm, setHasNewAlarm] = useState(true);
+
 	const setHeaderHeight = useHeaderHeightStore(
 		(state) => state.setHeaderHeight
 	);
@@ -79,6 +81,7 @@ const Header = () => {
 		setAlarmOpen(!isAlarmOpen);
 		setMyPageOpen(false);
 		setChatOpen(false);
+		setHasNewAlarm(false);
 	};
 
 	const handleChatClick = () => {
@@ -191,7 +194,7 @@ const Header = () => {
 							alt="알림"
 							className="h-6 w-6 cursor-pointer"
 							onClick={handleAlarmClick}
-						/>
+						/>{hasNewAlarm&&<span className="text-red-500 text-xs">new</span>}
 						{isAlarmOpen && (
 							<Alarm onClose={() => setAlarmOpen(false)} />
 						)}

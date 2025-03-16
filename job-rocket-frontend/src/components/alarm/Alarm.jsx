@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import del from "../../assets/delete.png";
 import useSSE from "../../api/alarm/AlarmApi";
 import comment from "../../assets/comment.png";
@@ -8,24 +8,66 @@ import { useNavigate } from "react-router";
 
 const Alarm = ({ onClose }) => {
 	const alarms = useSSE();
-
 	const [alarm, setAlarm] = useState([]);
+	const [seenAlarms, setSeenAlarms] = useState(new Set());
 	const navigate = useNavigate();
+	const alarmRef = useRef();
 
+  const handleClose = () => {
+		markAlarmsAsSeen();
+		onClose();
+	};
+	
 	useEffect(() => {
 		const fetchAlarms = async () => {
 			try {
 				const data = await alarmList();
+
+	
+				const seenAlarmsFromStorage = new Set(
+					JSON.parse(localStorage.getItem("seenAlarms")) || []
+				);
+				setSeenAlarms(seenAlarmsFromStorage);
+
 				setAlarm(data);
 			} catch (error) {
 				console.error("알람 로딩에 실패했습니다", error);
 			}
 		};
 		fetchAlarms();
-	}, []);
+
+		const handleClickOutside = (event) => {
+			const profileImage = document.querySelector(".profile-image");
+			if (
+				alarmRef.current &&
+				!alarmRef.current.contains(event.target) &&
+				(!profileImage || !profileImage.contains(event.target))
+			) {
+				handleClose();
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [handleClose]);
+
+	
+	const markAlarmsAsSeen = () => {
+		const alarmIds = alarm.map((data) => data.id);
+		const updatedSeenAlarms = new Set([...seenAlarms, ...alarmIds]);
+
+		setSeenAlarms(updatedSeenAlarms);
+		localStorage.setItem("seenAlarms", JSON.stringify([...updatedSeenAlarms]));
+	};
+
+
+	
 
 	return (
 		<div
+			ref={alarmRef}
 			className="absolute right-2 top-12 mt-2 w-72 bg-white shadow-lg z-10 rounded-2xl border border-gray-300"
 			style={{
 				scrollbarWidth: "thin",
@@ -37,30 +79,26 @@ const Alarm = ({ onClose }) => {
 				<img
 					src={del}
 					alt="닫기버튼"
-					onClick={onClose}
+					onClick={handleClose}
 					className="cursor-pointer w-5 h-5"
 				/>
 			</div>
 			<div className="max-h-80 overflow-y-auto">
 				{alarm.length > 0 ? (
 					alarm.map((data) => (
-						<div
-							key={data.id}
-							className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-						>
+						<div key={data.id} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
 							<div className="flex items-center space-x-3">
 								<img
-									src={
-										data.alarmType === "COMMENT"
-											? comment
-											: schedule
-									}
+									src={data.alarmType === "COMMENT" ? comment : schedule}
 									alt="알림 아이콘"
 									className="h-7 w-7"
 								/>
 								<div>
-									<div className="text-sm text-gray-600">
+									<div className="text-sm text-gray-600 flex items-center">
 										{data.content}
+										{!seenAlarms.has(data.id) && (
+											<span className="text-red-500 text-xs font-bold ml-2">New!</span>
+										)}
 									</div>
 									<div className="text-xs text-gray-400">
 										{`${data.alarmDate[0]}-${String(
