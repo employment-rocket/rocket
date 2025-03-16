@@ -14,4 +14,5 @@ import java.util.Optional;
 public interface AlarmRepository extends JpaRepository<AlarmEntity, Long> {
 
     List<AlarmEntity> findByUserId(Long memberId);
+    List<AlarmEntity> findByUserIdOrderByAlarmDateDesc(Long memberId);
 }

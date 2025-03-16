@@ -43,7 +43,7 @@ public class AlarmController {
 
     @GetMapping("/list")
     public ResponseEntity<List<AlarmDTO>> getUserAlarms(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
-        List<AlarmDTO> alarms = alarmRepository.findByUserId(customOAuth2User.getId())
+        List<AlarmDTO> alarms = alarmRepository.findByUserIdOrderByAlarmDateDesc(customOAuth2User.getId())
                 .stream()
                 .map(AlarmDTO::from)
                 .collect(Collectors.toList());

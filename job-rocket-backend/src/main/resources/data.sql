@@ -2,7 +2,7 @@
 -- member 테이블 INSERT
 INSERT INTO member (email, role, nickname, profile, allow_email,social_type,refresh_token)
 VALUES ('testuser@example.com', 'MEMBER', '테스트유저', 'default-profile.png', true, 'KAKAO', 'refreshtoken'),
-('woneveryy@naver.com', 'MEMBER', '위험한 흰색 토끼', 'default.png', true, 'NAVER', '');
+('woneveryday@naver.com', 'MEMBER', '위험한 흰색 토끼', 'default.png', true, 'NAVER', '');
 
 
 -- cs 테이블 INSERT
@@ -70,13 +70,8 @@ VALUES
     ('이 직무에 필요한 핵심 역량은 무엇이라고 생각하나요?', 1);
 
 INSERT INTO alarm (type, content, alarm_date, member_id)
-VALUES
-       ('SCHEDULE', '농협은행 1차면접 마감 하루 남았습니다','2025-01-20','2'),
-       ('SCHEDULE', '기업은행 서류전형 마감 하루 남았습니다','2025-01-20','2'),
-       ('SCHEDULE', 'LG 2차면접 마감 하루 남았습니다','2025-01-20','2'),
-       ('COMMENT', '난 백수다. 게시글에 이상한 갈색 펭귄님이 댓글을 달았습니다','2025-11-12','2'),
-       ('SCHEDULE', '기술보증기금 1차면접 마감 하루 남았습니다','2025-12-01','2'),
-       ('COMMENT', '나 취직할수 있을까? 게시글에 소심한 하얀 새님이 댓글을 달았습니다','2025-01-20','2');
+VALUES ('SCHEDULE','기업은행 서류마감 하루 남았습니다','2025-03-17','2'),
+        ('COMMENT','화가난 하얀 곰 님이 나 취직할 수 있을까? 게시물에 댓글을 달았습니다','2025-03-15','2');
 
 INSERT INTO free_board (title, content, post_date, member_id)
 values ('제목1', '내용1', '2025-01-24', 2),
